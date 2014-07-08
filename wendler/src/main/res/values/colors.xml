@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="card_background">#FFF</color>
+    <color name="black_transparent">#BB000000</color>
+    <color name="bg_handle_pressed">#a0a0a0</color>
+    <color name="drawer_no_shadow">#00000000</color>
+    <color name="theme_color">#ff99cc00</color>
+
+</resources>

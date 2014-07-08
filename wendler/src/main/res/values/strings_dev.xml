@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="round_default_value">"2.5"</string>
+
+    <array name="round_entries">
+        <item>"2.5"</item>
+        <item>"5"</item>
+    </array>
+
+    <array name="round_entry_values">
+        <item>"2.5"</item>
+        <item>"5"</item>
+    </array>
+
+    <string name="deload_type_default_value">"0"</string>
+
+    <array name="deload_type_entry_values">
+        <item>"0"</item>
+        <item>"1"</item>
+        <item>"2"</item>
+    </array>
+
+    <array name="deload_type_entries">
+        <item>@string/increment_deload</item>
+        <item>@string/ten_percentage_deload</item>
+        <item>@string/custom_percentage_deload</item>
+    </array>
+</resources>

@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:filter="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/hint_one_rm"
+            android:layout_marginStart="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="25dp"
+            style="@android:style/TextAppearance.DeviceDefault.Large"/>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginRight="15dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/press"
+                android:ellipsize="end"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/deadlift"
+                android:ellipsize="end"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/bench"
+                android:ellipsize="end"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/squat"
+                android:ellipsize="end"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"/>
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/theme_color"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"/>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp">
+
+            <se.johan.wendler.view.FilterEditText
+                android:id="@+id/et_one_rm_press"
+                android:hint="@string/press"
+                style="@style/EditIncrementEditText"
+                filter:min="1"
+                filter:max="9999"/>
+
+            <se.johan.wendler.view.FilterEditText
+                android:id="@+id/et_one_rm_deadlift"
+                style="@style/EditIncrementEditText"
+                android:hint="@string/deadlift"
+                filter:min="1"
+                filter:max="9999"/>
+
+            <se.johan.wendler.view.FilterEditText
+                android:id="@+id/et_one_rm_bench"
+                style="@style/EditIncrementEditText"
+                android:hint="@string/bench"
+                filter:min="1"
+                filter:max="9999"/>
+
+            <se.johan.wendler.view.FilterEditText
+                android:id="@+id/et_one_rm_squat"
+                style="@style/EditIncrementEditText"
+                android:hint="@string/squat"
+                filter:min="1"
+                filter:max="9999"/>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/title_increments"
+            android:layout_marginStart="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="25dp"
+            style="@android:style/TextAppearance.DeviceDefault.Large"/>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginRight="15dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/press"
+                android:ellipsize="end"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/deadlift"
+                android:ellipsize="end"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/bench"
+                android:ellipsize="end"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/squat"
+                android:ellipsize="end"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"/>
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/theme_color"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"/>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp">
+
+            <se.johan.wendler.view.FilterEditText
+                android:id="@+id/et_increment_press"
+                android:hint="@string/press"
+                style="@style/EditIncrementEditText"
+                filter:min="1"
+                filter:max="100"/>
+
+            <se.johan.wendler.view.FilterEditText
+                android:id="@+id/et_increment_deadlift"
+                style="@style/EditIncrementEditText"
+                android:hint="@string/deadlift"
+                filter:min="1"
+                filter:max="100"/>
+
+            <se.johan.wendler.view.FilterEditText
+                android:id="@+id/et_increment_bench"
+                style="@style/EditIncrementEditText"
+                android:hint="@string/bench"
+                filter:min="1"
+                filter:max="100"/>
+
+            <se.johan.wendler.view.FilterEditText
+                android:id="@+id/et_increment_squat"
+                style="@style/EditIncrementEditText"
+                android:hint="@string/squat"
+                filter:min="1"
+                filter:max="100"/>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/deload_reps"
+            android:layout_marginStart="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="25dp"
+            style="@android:style/TextAppearance.DeviceDefault.Large"/>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/hint_set_one"
+                android:ellipsize="end"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/hint_set_two"
+                android:ellipsize="end"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/hint_set_three"
+                android:ellipsize="end"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"/>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/theme_color"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"/>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp">
+
+            <se.johan.wendler.view.FilterEditText
+                android:id="@+id/et_deload_set_one"
+                style="@style/EditIncrementEditText"
+                android:hint="@string/hint_set_one"
+                filter:min="1"
+                filter:max="100"
+                android:inputType="numberSigned"/>
+
+            <se.johan.wendler.view.FilterEditText
+                android:id="@+id/et_deload_set_two"
+                style="@style/EditIncrementEditText"
+                android:hint="@string/hint_set_two"
+                filter:min="1"
+                filter:max="100"
+                android:inputType="numberSigned"/>
+
+            <se.johan.wendler.view.FilterEditText
+                android:id="@+id/et_deload_set_three"
+                style="@style/EditIncrementEditText"
+                android:hint="@string/hint_set_three"
+                filter:min="1"
+                filter:max="100"
+                android:inputType="numberSigned"/>
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<merge
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_title"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_marginTop="10dp"
+        android:layout_centerHorizontal="true"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@+id/tv_title"
+        android:layout_centerHorizontal="true">
+
+        <se.johan.wendler.view.FloatLabelLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:floatLabelTextAppearance="@style/TextAppearance.Wendlerized.FloatLabel">
+
+            <se.johan.wendler.view.FilterEditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal"
+                android:id="@+id/edit_text_weight"
+                android:hint="@string/hint_weight"
+                app:min="1"
+                app:max="9999"
+                android:gravity="center"/>
+        </se.johan.wendler.view.FloatLabelLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tv_multiply"
+            android:layout_gravity="center_vertical"/>
+
+        <se.johan.wendler.view.FloatLabelLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:floatLabelTextAppearance="@style/TextAppearance.Wendlerized.FloatLabel">
+
+            <se.johan.wendler.view.FilterEditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="numberSigned"
+                android:id="@+id/edit_text_reps"
+                android:hint="@string/hint_reps"
+                app:min="1"
+                app:max="9999"
+                android:gravity="center"/>
+        </se.johan.wendler.view.FloatLabelLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tv_equals"
+            android:layout_gravity="center_vertical"/>
+
+        <se.johan.wendler.view.FloatLabelLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:floatLabelTextAppearance="@style/TextAppearance.Wendlerized.FloatLabel">
+
+            <se.johan.wendler.view.FilterEditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal"
+                android:id="@+id/edit_text_one_rm"
+                android:hint="@string/hint_one_rm"
+                app:min="1"
+                app:max="9999"
+                android:gravity="center"/>
+        </se.johan.wendler.view.FloatLabelLayout>
+    </LinearLayout>
+</merge>

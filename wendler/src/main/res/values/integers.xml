@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="undobar_hide_delay">5000</integer>
+</resources>

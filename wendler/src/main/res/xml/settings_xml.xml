@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/pref_cat_workout">
+        <CheckBoxPreference
+            android:key="key_show_warm_up"
+            android:summary="@string/pref_warm_show_summary"
+            android:title="@string/pref_warm_show_title"
+            android:defaultValue="true"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/pref_cat_deload">
+        <CheckBoxPreference
+            android:key="key_auto_deload"
+            android:summary="@string/pref_auto_deload_summary"
+            android:title="@string/pref_auto_deload_title"
+            android:defaultValue="true"/>
+        <CheckBoxPreference
+            android:key="key_reset_cycle_deload"
+            android:summary="@string/pref_reset_cycle_summary"
+            android:title="@string/pref_reset_cycle_title"
+            android:defaultValue="false"/>
+        <CheckBoxPreference
+            android:key="key_weight_type_deload"
+            android:summary="@string/pref_weight_type_summary"
+            android:title="@string/pref_weight_type_title"
+            android:defaultValue="true"/>
+        <ListPreference
+            android:key="key_deload_type"
+            android:title="@string/pref_deload_type_title"
+            android:defaultValue="@string/deload_type_default_value"
+            android:entries="@array/deload_type_entries"
+            android:entryValues="@array/deload_type_entry_values"/>
+        <Preference
+            android:key="key_custom_deload_type"
+            android:title="@string/pref_custom_deload_title"
+            android:enabled="false"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/pref_cat_misc">
+        <CheckBoxPreference
+            android:key="key_use_volume_button"
+            android:summary="@string/pref_vb_summary"
+            android:title="@string/pref_vb_title"
+            android:defaultValue="true"/>
+        <CheckBoxPreference
+            android:key="key_keep_screen_on_stopwatch"
+            android:summary="@string/pref_screen_on_summary"
+            android:title="@string/pref_screen_on_title"
+            android:defaultValue="true"/>
+        <ListPreference
+            android:key="key_round"
+            android:title="@string/pref_round_title"
+            android:defaultValue="@string/round_default_value"
+            android:entries="@array/round_entries"
+            android:entryValues="@array/round_entry_values"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/pref_cat_other">
+        <Preference
+            android:key="key_clear_data"
+            android:title="@string/pref_clear_title"
+            android:summary="@string/pref_clear_summary"/>
+    </PreferenceCategory>
+
+</PreferenceScreen>

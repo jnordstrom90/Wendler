@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Titles -->
+    <string name="app_name">Wendlerized</string>
+    <string name="title_about">About</string>
+    <string name="title_starting_weights">Starting weights</string>
+    <string name="title_order_of_workouts">Order of workouts</string>
+    <string name="title_workout_percentages">Workout percentages</string>
+    <string name="title_increments">Increments</string>
+    <string name="title_welcome">Welcome</string>
+    <string name="title_open">Open</string>
+    <string name="title_close">Close</string>
+
+    <!-- ActionItems -->
+    <string name="action_item_done">Done</string>
+    <string name="action_item_help">Help</string>
+    <string name="action_item_about">About</string>
+    <string name="action_item_settings">Settings</string>
+    <string name="action_item_notes">Notes</string>
+    <string name="menu_settings">Settings</string>
+    <string name="menu_helps">Help</string>
+
+    <!-- ContextMenu -->
+    <string name="context_edit">Edit</string>
+    <string name="context_delete">Delete</string>
+
+    <!-- EditText hints -->
+    <string name="hint_weight">Weight</string>
+    <string name="hint_reps">Reps</string>
+    <string name="hint_reps_or_sets">Set or rep goal</string>
+    <string name="hint_one_rm">1RM</string>
+    <string name="hint_percentage">Percentage</string>
+    <string name="hint_set_one">Set one</string>
+    <string name="hint_set_two">Set two</string>
+    <string name="hint_set_three">Set three</string>
+    <string name="hint_increment">Increment</string>
+    <string name="hint_exercise_name">Name</string>
+
+    <!-- Help dialogs texts -->
+    <string name="help_weight_dialog">Calculate your 1 rep max either using
+        Wendler\'s formula by entering weight and reps performed or you can enter
+        your desired weight directly. You\'ll also set the percentage you calculate your training
+        max, Wendler recommends 90%.</string>
+    <string name="help_order_dialog">Drag the workouts in the order you desire to complete
+     them.</string>
+    <string name="help_percentage_dialog">Choose what percentages to calculate the
+        workouts with.</string>
+    <string name="help_increment_dialog">Enter the increments which your 1 rep maxes will
+        increase with after a successful cycle.</string>
+    <string name="first_time_dialog">Thanks for trying my 531 application! Please
+        note that is an unofficial application and support will not be given from Wendler
+        himself. I highly recommend you to buy his books since they are very informative
+        and Wendler should get credits for this wonderful program. Please now setup the
+        workouts and feel free to explore the application, many of the features you set
+        up will be able to be customized later on as well.</string>
+
+    <!-- Toasts -->
+    <string name="toast_error_init">Fill in needed information on this page</string>
+    <string name="toast_error_name">Choose a name for the exercise</string>
+    <string name="toast_error_weight">Set a goal either in reps or sets</string>
+
+    <!-- Buttons -->
+    <string name="btn_ok">OK</string>
+    <string name="btn_set">Set</string>
+    <string name="btn_cancel">Cancel</string>
+    <string name="btn_negative">-</string>
+    <string name="btn_positive">+</string>
+    <string name="btn_start">Start</string>
+    <string name="btn_stop">Stop</string>
+    <string name="btn_reset">Reset</string>
+    <string name="btn_percentage">Percentage: %1$s</string>
+    <string name="btn_backup">Backup</string>
+    <string name="btn_restore">Restore</string>
+
+    <!-- Math -->
+    <string name="tv_multiply">x</string>
+    <string name="tv_equals">=</string>
+
+    <!-- Weeks -->
+    <string name="tv_week_one">Week one</string>
+    <string name="tv_week_two">Week two</string>
+    <string name="tv_week_three">Week three</string>
+    <string name="tv_week_four">Week four</string>
+
+    <!-- Radio buttons -->
+    <string name="rb_fresh">Fresh</string>
+    <string name="rb_heavy">Heavy</string>
+    <string name="rb_custom">Custom</string>
+
+    <!-- Exercises -->
+    <string name="squat">Squat</string>
+    <string name="bench">Bench</string>
+    <string name="press">Press</string>
+    <string name="deadlift">Deadlift</string>
+    <string name="cycle">Cycle</string>
+    <string name="week">Week</string>
+
+    <!-- Exercise text values -->
+    <string name="reps_performed">Reps performed</string>
+    <string name="warm_up">Warm up: %1$s &#x00d7; %2$s</string>
+    <string name="exercise_set_one">Set one: %1$s &#x00d7; %2$s</string>
+    <string name="exercise_set_two">Set two: %1$s &#x00d7; %2$s</string>
+    <string name="exercise_set_three">Set three: %1$s &#x00d7; %2$s</string>
+    <string name="one_rm_with_number">1RM: %1$s</string>
+    <string name="performed_reps_with_number">Reps: %1$s</string>
+    <string name="extra_exercise_weight">Weight: %1$s</string>
+    <string name="extra_exercise_progress">Progress: %1$s/%2$s</string>
+    <string name="extra_exercise_goal">Goal: %1$s</string>
+
+    <!-- On/Off state explanation texts -->
+    <string name="weight_base_main">Weight based on a main exercise</string>
+
+    <!-- Drawer items -->
+    <string name="drawer_workouts">Workouts</string>
+    <string name="drawer_old_workouts">Old workouts</string>
+    <string name="drawer_backup">Backup</string>
+    <string name="drawer_additional">Additional exercises</string>
+    <string name="drawer_edit">Edit</string>
+
+    <!-- Undo bar -->
+    <string name="undo">Undo</string>
+    <string name="tap_to_undo">%1$s deleted, tap to undo</string>
+
+    <!-- Actionbar titles -->
+    <string name="actionbar_subtitle_workout">%1$s, week %2$s</string>
+    <string name="main_exercise">Main Exercise</string>
+
+    <plurals name="additional_exercise">
+        <item quantity="one">Additional exercise</item>
+        <item quantity="other">@string/drawer_additional</item>
+    </plurals>
+
+    <string name="add_exercise">Add exercise</string>
+    <string name="add_additional_exercise">{0,choice,0#Add an exercise|1#Add another}</string>
+    <string name="add">Add</string>
+    <string name="save">Save</string>
+    <string name="not_available">N/A</string>
+    <string name="enter_notes">How did it go?</string>
+    <string name="my_notes">My notes</string>
+    <string name="stopwatch_title">Stopwatch</string>
+    <string name="ic_action_calendar_title">Change date</string>
+    <string name="error">Error, try again</string>
+    <string name="success">Success!</string>
+    <string name="week_cycle_string">Week %1$s, Cycle %2$s</string>
+    <string name="load_more">Load more</string>
+    >
+    <plurals name="performance_text">
+        <item quantity="one">1 rep on %1$s</item>
+        <item quantity="other">%1$s reps on %2$s</item>
+    </plurals>
+    <plurals name="nbr_additional_exercises">
+        <item quantity="one">1 Additional exercise</item>
+        <item quantity="other">%1$s additional exercises</item>
+    </plurals>
+
+    <!-- Preferences -->
+    <!-- Workout -->
+    <string name="pref_cat_workout">Workout settings</string>
+    <string name="pref_warm_show_title">Show warm up sets</string>
+    <string name="pref_warm_show_summary">Show warm up sets for your main exercise</string>
+
+    <!-- Misc -->
+    <string name="pref_cat_misc">Misc settings</string>
+    <string name="pref_vb_title">Use volume buttons</string>
+    <string name="pref_vb_summary">Use volume buttons to control the stopwatch</string>
+    <string name="pref_screen_on_title">Keep screen on</string>
+    <string name="pref_screen_on_summary">Keep the screen on when the stopwatch is running</string>
+    <string name="pref_round_title">Round to value</string>
+    <string name="pref_round_summary">Round to the closest value when calculating weights</string>
+
+    <!-- Other -->
+    <string name="pref_cat_other">Other settings</string>
+    <string name="pref_clear_title">Clear application data</string>
+    <string name="pref_clear_summary">Reset the application and start over</string>
+    <string name="pref_clear_dialog_title">Reset data</string>
+    <string name="pref_clear_dialog_summary">This will reset all the data in the
+        application and restart it. It cannot be undone, so be sure to backup if you want
+        to revert.</string>
+
+    <string name="version">Version: %1$s</string>
+    <string name="change_log">Changelog</string>
+    <string name="contact">Contact the developer</string>
+    <string name="licences">Licences</string>
+    <string name="send_email_title">Send email</string>
+
+    <string name="edit_order_title">Order</string>
+    <string name="edit_other_title">Other</string>
+    <string name="edit_percentages_title">Percentages</string>
+    <string name="deload_reps">Deload repetitions</string>
+
+    <string name="showcase_workout_title">Set number of reps</string>
+    <string name="showcase_workout_detail">Press the last row to set the amount of reps performed</string>
+    <string name="showcase_old_workout_title">Swipe away!</string>
+    <string name="showcase_old_workout_detail">Swipe to delete old workouts</string>
+    <string name="showcase_workout_finish_title">Finished workout</string>
+    <string name="showcase_workout_finish_detail">Finishing a workout without any
+        performed reps will automatically fail the workout</string>
+
+    <string name="pref_cat_deload">Deload</string>
+    <string name="pref_auto_deload_summary">Automatically deload when you fail a workout</string>
+    <string name="pref_auto_deload_title">Automatic deload</string>
+    <string name="pref_reset_cycle_summary">Reset cycle to 1 when deloading</string>
+    <string name="pref_reset_cycle_title">Reset cycle</string>
+    <string name="pref_deload_type_title">How to deload</string>
+    <string name="pref_weight_type_summary">Deload real max instead of training max</string>
+    <string name="pref_weight_type_title">Deload max</string>
+    <string name="pref_custom_deload_title">Custom deload percentage</string>
+    <string name="custom_deload_value">%1s%%</string>
+    <string name="delayed_deload_message">Earlier this cycle you failed a workout, do you want to deload or ignore the failed workout and continue with the next cycle?</string>
+    <string name="delayed_deload_title">Deload</string>
+    <string name="do_continue">Continue</string>
+    <string name="do_deload">Deload</string>
+    <string name="increment_deload">Decrease current weight by 3 x increment</string>
+    <string name="ten_percentage_deload">Decrease by 10 percent</string>
+    <string name="custom_percentage_deload">Custom percentage</string>
+    <string name="last_successful_backup">Last backup: %1$s</string>
+
+</resources>

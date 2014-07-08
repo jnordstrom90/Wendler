@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="exercises">
+        <item>@string/press</item>
+        <item>@string/deadlift</item>
+        <item>@string/bench</item>
+        <item>@string/squat</item>
+    </string-array>
+
+    <string-array name="drawer">
+        <item>@string/drawer_workouts</item>
+        <item>@string/drawer_additional</item>
+        <item>@string/drawer_edit</item>
+        <item>@string/drawer_old_workouts</item>
+        <item>@string/drawer_backup</item>
+    </string-array>
+
+    <string-array name="sets">
+        <item>@string/exercise_set_one</item>
+        <item>@string/exercise_set_two</item>
+        <item>@string/exercise_set_three</item>
+    </string-array>
+
+    <string-array name="additional_exercises">
+        <item>Dips</item>
+        <item>Chins</item>
+        <item>Push Up</item>
+        <item>Dumbbell Rows</item>
+        <item>Bench Press</item>
+        <item>Military Press</item>
+        <item>Squat</item>
+        <item>Deadlift</item>
+        <item>Barbell Rows</item>
+        <item>Shrugs</item>
+        <item>Dumbbell Bench Press</item>
+        <item>Dumbbell Military Press</item>
+        <item>Dumbbell Incline Bench Press</item>
+        <item>Barbell Incline Bench Press</item>
+        <item>Lunges</item>
+        <item>Step-ups</item>
+        <item>Leg Press</item>
+        <item>Good Morning</item>
+        <item>Glute Ham Raise</item>
+        <item>Sit-ups</item>
+        <item>Dumbbell Side Bends</item>
+        <item>Hanging Leg Raises</item>
+        <item>Abdominal Wheel</item>
+        <item>Leg Curl</item>
+        <item>T-bar Rows</item>
+        <item>Cable Pulldown</item>
+        <item>Cable Rear Pulldown</item>
+        <item>Cable Close Grip Pulldown</item>
+        <item>Cable Seated Row</item>
+        <item>Face Pulls</item>
+        <item>High Row</item>
+        <item>Triceps Push down</item>
+        <item>Triceps Extension</item>
+        <item>Hack Squat</item>
+        <item>Dumbbell Curl</item>
+        <item>Barbell Curl</item>
+        <item>Cable Crunches</item>
+        <item>Leg Extension</item>
+        <item>Dumbbell Lateral Raise</item>
+        <item>Dumbbell Rear Delt Raise</item>
+        <item>Front Squat</item>
+        <item>Hyper extensions</item>
+        <item>Straight-leg Deadlift</item>
+        <item>Dragon flag</item>
+        <item>Crunches</item>
+        <item>Flyes</item>
+        <item>Pullover</item>
+    </string-array>
+</resources>

@@ -1,0 +1,16 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="item_height">67dp</dimen>
+    <dimen name="item_height_small">50dp</dimen>
+    <dimen name="drawer_size">240dp</dimen>
+    <dimen name="drawer_content_padding">0dp</dimen>
+
+    <dimen name="text_size_init_weight">18sp</dimen>
+    <dimen name="drag_grip_ridge_size">4dp</dimen>
+    <dimen name="drag_grip_ridge_gap">2dp</dimen>
+    <dimen name="init_increment_margin">5dp</dimen>
+    <dimen name="card_background_default_radius">1dip</dimen>
+    <dimen name="spacing_medium">16dp</dimen>
+</resources>
