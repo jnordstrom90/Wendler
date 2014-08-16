@@ -37,6 +37,9 @@ public class SettingsFragment extends PreferenceFragment implements
 
     public static final String TAG = SettingsFragment.class.getName();
 
+    private static final int DELOAD_REF = 1;
+    private static final int ROUND_REF = 2;
+
     public SettingsFragment() {
     }
 
@@ -57,6 +60,7 @@ public class SettingsFragment extends PreferenceFragment implements
         addPreferencesFromResource(R.xml.settings_xml);
         updateDefaultValues();
         updateNumberPref();
+        updateRoundToPref();
         findPreference(PreferenceUtil.KEY_CLEAR_DATA).setOnPreferenceClickListener(this);
         return super.onCreateView(inflater, container, savedInstanceState);
 
@@ -94,6 +98,7 @@ public class SettingsFragment extends PreferenceFragment implements
         if (key.equals(PreferenceUtil.KEY_ROUND_TO)) {
             preference.setSummary(((ListPreference) preference).getEntry());
             MathHelper.getInstance().resetRoundToValue();
+            updateRoundToPref();
         } else if (key.equals(PreferenceUtil.KEY_DELOAD_TYPE)) {
             preference.setSummary(((ListPreference) preference).getEntry());
             updateNumberPref();
@@ -118,6 +123,7 @@ public class SettingsFragment extends PreferenceFragment implements
                     .setDecimalVisibility(View.GONE)
                     .setPlusMinusVisibility(View.GONE)
                     .setStyleResId(R.style.BetterPickersDialogFragment_Light)
+                    .setReference(DELOAD_REF)
                     .show();
             return true;
         } else if (preference.getKey().equals(PreferenceUtil.KEY_CLEAR_DATA)) {
@@ -128,6 +134,17 @@ public class SettingsFragment extends PreferenceFragment implements
                     getString(R.string.btn_cancel),
                     this).show(getActivity().getSupportFragmentManager(), ConfirmationDialog.TAG);
             return true;
+        } else if (preference.getKey().equals(PreferenceUtil.KEY_CUSTOM_ROUND_TO)) {
+            new NumberPickerBuilder()
+                    .setFragmentManager(getActivity().getSupportFragmentManager())
+                    .setDecimalVisibility(View.VISIBLE)
+                    .setMaxNumber(50)
+                    .setMinNumber(0)
+                    .setTargetFragment(this)
+                    .setPlusMinusVisibility(View.GONE)
+                    .setStyleResId(R.style.BetterPickersDialogFragment_Light)
+                    .setReference(ROUND_REF)
+                    .show();
         }
         return false;
     }
@@ -138,14 +155,28 @@ public class SettingsFragment extends PreferenceFragment implements
     @Override
     public void onDialogNumberSet(
             int reference, int number, double decimal, boolean isNegative, double fullNumber) {
-        Preference pref = findPreference(PreferenceUtil.KEY_CUSTOM_DELOAD_TYPE);
-        String value = String.format(getString(R.string.custom_deload_value), number);
+        switch (reference) {
+            case DELOAD_REF:
+                Preference pref = findPreference(PreferenceUtil.KEY_CUSTOM_DELOAD_TYPE);
+                String value = String.format(getString(R.string.custom_deload_value), number);
 
-        PreferenceUtil.putString(
-                getActivity(),
-                PreferenceUtil.KEY_CUSTOM_DELOAD_TYPE_VALUE,
-                String.valueOf(number));
-        pref.setSummary(value);
+                PreferenceUtil.putString(
+                        getActivity(),
+                        PreferenceUtil.KEY_CUSTOM_DELOAD_TYPE_VALUE,
+                        String.valueOf(number));
+                pref.setSummary(value);
+                break;
+            case ROUND_REF:
+                if (fullNumber > 0) {
+                    PreferenceUtil.putFloat(
+                            getActivity(),
+                            PreferenceUtil.KEY_ROUND_TO_VALUE,
+                            (float) fullNumber);
+                    MathHelper.getInstance().resetRoundToValue();
+                    updateRoundToPref();
+                }
+                break;
+        }
     }
 
     /**
@@ -184,6 +215,33 @@ public class SettingsFragment extends PreferenceFragment implements
         numberPref.setOnPreferenceClickListener(this);
 
         updateNumberSummary(numberPref);
+    }
+
+    /**
+     * Update the round to preference.
+     */
+    private void updateRoundToPref() {
+        Preference roundToPref = findPreference(PreferenceUtil.KEY_CUSTOM_ROUND_TO);
+        ListPreference roundToType = (ListPreference) findPreference(PreferenceUtil.KEY_ROUND_TO);
+
+        String[] array = getResources().getStringArray(R.array.round_entry_values);
+        boolean enabled = roundToType.getValue().equals(array[array.length - 1]);
+        roundToPref.setEnabled(enabled);
+        if (enabled) {
+            roundToPref.setOnPreferenceClickListener(this);
+        } else {
+            float value = roundToType.getEntry() == null ?
+                    WendlerConstants.DEFAULT_ROUND_TO :
+                    Float.valueOf(String.valueOf(roundToType.getEntry()));
+            PreferenceUtil.putFloat(
+                    getActivity(),
+                    PreferenceUtil.KEY_ROUND_TO_VALUE,
+                    value);
+        }
+
+        String value = String.format(getString(R.string.custom_round_to_pref_summary),
+                MathHelper.getInstance().getRoundToValue(getActivity()));
+        roundToPref.setSummary(value);
     }
 
     /**

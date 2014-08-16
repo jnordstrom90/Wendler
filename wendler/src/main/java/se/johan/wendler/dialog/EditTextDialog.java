@@ -46,10 +46,6 @@ public class EditTextDialog extends AnimationDialog implements DialogInterface.O
     @SuppressLint("InflateParams")
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
-        builder.setTitle(getArguments().getString(EXTRA_TITLE));
-
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
         View view = inflater.inflate(R.layout.dialog_edit_text, null, false);
@@ -60,7 +56,9 @@ public class EditTextDialog extends AnimationDialog implements DialogInterface.O
         return new AlertDialog.Builder(getActivity())
                 .setPositiveButton(getString(R.string.btn_ok), this)
                 .setNegativeButton(getString(R.string.btn_cancel), null)
-                .setView(view).create();
+                .setView(view)
+                .setTitle(getArguments().getString(EXTRA_TITLE))
+                .create();
     }
 
     /**

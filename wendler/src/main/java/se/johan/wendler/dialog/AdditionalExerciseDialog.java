@@ -284,8 +284,8 @@ public class AdditionalExerciseDialog extends AnimationDialog implements
         SqlHandler handler = new SqlHandler(getActivity());
         try {
             handler.open();
-            double weight = handler.getTrainingMax(name);
-            weight = WendlerMath.calculateSetWeight(getActivity(), weight, percentage, 100);
+            double weight = handler.getOneRmForExercise(name);
+            weight = WendlerMath.calculateWeight(getActivity(), weight, percentage);
             mWeightEditText.setText(String.valueOf(weight));
         } catch (SQLException e) {
             WendlerizedLog.e("Failed to get one RM for " + name, e);

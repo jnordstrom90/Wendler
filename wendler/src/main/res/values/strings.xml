@@ -215,5 +215,6 @@
     <string name="ten_percentage_deload">Decrease by 10 percent</string>
     <string name="custom_percentage_deload">Custom percentage</string>
     <string name="last_successful_backup">Last backup: %1$s</string>
-
+    <string name="custom_round_to_value">Custom value</string>
+    <string name="custom_round_to_pref_summary">Round do closest: %1$s</string>
 </resources>

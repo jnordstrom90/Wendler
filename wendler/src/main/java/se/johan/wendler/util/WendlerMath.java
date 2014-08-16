@@ -25,17 +25,14 @@ public class WendlerMath {
     }
 
     /**
-     * Calculate the mWeight for a given set based on percentage of one rm
+     * Calculate the training max.
      */
-    public static double calculateSetWeight(Context context,
-                                            double weight,
-                                            int workoutPercentage,
-                                            int setPercentage) {
+    public static double calculateWeight(Context context,
+                                         double weight,
+                                         int percentage) {
+        double trainingMax = weight * ((double) percentage / 100);
 
-        double weightWithWorkoutPercentage = weight * ((double) workoutPercentage / 100);
-
-        double newWeight = Math.round(weightWithWorkoutPercentage) * ((double) setPercentage / 100);
-        return roundToClosest(newWeight, MathHelper.getInstance().getRoundToValue(context));
+        return roundToClosest(trainingMax, MathHelper.getInstance().getRoundToValue(context));
     }
 
     /**
@@ -90,10 +87,9 @@ public class WendlerMath {
 
             if (!PreferenceUtil.getBoolean(context, PreferenceUtil.KEY_WEIGHT_TYPE_DELOAD, true)) {
                 deloadItem.setWeight(
-                        calculateSetWeight(context,
+                        calculateWeight(context,
                                 deloadItem.getWeight(),
-                                trainingPercentage,
-                                100)
+                                100 + (100 - trainingPercentage))
                 );
             }
             deloadItem.setWeight(calculateDeloadWeight(
@@ -127,7 +123,7 @@ public class WendlerMath {
         } else if (deloadType.equals(deloadValues[1])) {
             int percentage = 100 - WendlerConstants.DEFAULT_DELOAD_PERCENTAGE;
 
-            oldWeight = calculateSetWeight(context, oldWeight, percentage, 100);
+            oldWeight = calculateWeight(context, oldWeight, percentage);
 
         } else if (deloadType.equals(deloadValues[2])) {
             int percentage = Integer.parseInt(
@@ -137,7 +133,7 @@ public class WendlerMath {
             );
             percentage = 100 - percentage;
 
-            oldWeight = calculateSetWeight(context, oldWeight, percentage, 100);
+            oldWeight = calculateWeight(context, oldWeight, percentage);
         }
         return oldWeight;
     }
@@ -147,7 +143,7 @@ public class WendlerMath {
      */
     private static double calculateReverseDeloadWeight(
             double oldWeight, Context context, double increment) {
-        WendlerizedLog.d("old weight is " + oldWeight);
+
         String deloadType = PreferenceUtil.getString(
                 context, PreferenceUtil.KEY_DELOAD_TYPE,
                 context.getString(R.string.deload_type_default_value));
@@ -198,7 +194,6 @@ public class WendlerMath {
     public static ArrayList<ExerciseSet> getWorkoutSets(Context context,
                                                         double oneRm,
                                                         int[] setPercentages,
-                                                        int workoutPercentage,
                                                         int week,
                                                         int progress) {
         ArrayList<ExerciseSet> sets = new ArrayList<ExerciseSet>();
@@ -208,7 +203,7 @@ public class WendlerMath {
 
             sets.add(new ExerciseSet(
                     type,
-                    calculateSetWeight(context, oneRm, workoutPercentage, setPercentages[i]),
+                    calculateWeight(context, oneRm, setPercentages[i]),
                     setReps[i],
                     progress,
                     progress > -1));
@@ -223,7 +218,6 @@ public class WendlerMath {
     public static ArrayList<ExerciseSet> getWarmupSets(Context context,
                                                        double oneRm,
                                                        String[] percentages,
-                                                       int workoutPercentage,
                                                        int progress) {
         ArrayList<ExerciseSet> sets = new ArrayList<ExerciseSet>();
 
@@ -239,7 +233,7 @@ public class WendlerMath {
 
             sets.add(new ExerciseSet(
                     SetType.WARM_UP,
-                    calculateSetWeight(context, oneRm, workoutPercentage, percentagesAsInt[i]),
+                    calculateWeight(context, oneRm, percentagesAsInt[i]),
                     warmupRepsAsInt[i],
                     progress,
                     progress != -1));

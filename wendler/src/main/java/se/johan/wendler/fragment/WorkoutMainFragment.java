@@ -172,6 +172,14 @@ public class WorkoutMainFragment extends WorkoutFragment implements
         return mMainExercise.getLastSetProgress() > -1;
     }
 
+
+    /**
+     * Return the MainExercise of the workout.
+     */
+    public MainExercise getMainExercise() {
+        return mMainExercise;
+    }
+
     /**
      * Show the ShowcaseView.
      */

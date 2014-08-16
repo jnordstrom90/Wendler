@@ -23,8 +23,10 @@ import se.johan.wendler.fragment.InitPercentageFragment;
 import se.johan.wendler.fragment.InitWeightFragment;
 import se.johan.wendler.fragment.base.InitFragment;
 import se.johan.wendler.sql.SqlHandler;
+import se.johan.wendler.util.Constants;
 import se.johan.wendler.util.PreferenceUtil;
 import se.johan.wendler.util.Util;
+import se.johan.wendler.util.WendlerMath;
 import se.johan.wendler.util.WendlerizedLog;
 import se.johan.wendler.view.SlidingTabLayout;
 
@@ -46,6 +48,9 @@ public class StartupActivity extends BaseActivity
 
         if (isInitialized()) {
             WendlerizedLog.d("Already initialized! Start the MainActivity");
+
+            recalculateOneRmIfNeeded();
+
             startActivity(new Intent(this, MainActivity.class));
             finish();
             return;
@@ -254,6 +259,52 @@ public class StartupActivity extends BaseActivity
     private void displayErrorAndScroll(int position) {
         mViewPager.setCurrentItem(position);
         mFragmentList.get(position).notifyError();
+    }
+
+    /**
+     * Due to the change with using TM instead of real max we need to calculate the tm and update
+     * it properly.
+     */
+    private void recalculateOneRmIfNeeded() {
+
+        if (!PreferenceUtil.getBoolean(this, PreferenceUtil.KEY_UPDATE_TO_TM)) {
+            SqlHandler handler = new SqlHandler(this);
+            try {
+                handler.open();
+                double newPressWeight = WendlerMath.calculateWeight(
+                        this,
+                        handler.getOneRmForExercise(Constants.EXERCISES[0]),
+                        handler.getWorkoutPercentage(Constants.EXERCISES[0]));
+
+                double newDeadliftWeight = WendlerMath.calculateWeight(
+                        this,
+                        handler.getOneRmForExercise(Constants.EXERCISES[1]),
+                        handler.getWorkoutPercentage(Constants.EXERCISES[1]));
+
+                double newBenchWeight = WendlerMath.calculateWeight(
+                        this,
+                        handler.getOneRmForExercise(Constants.EXERCISES[2]),
+                        handler.getWorkoutPercentage(Constants.EXERCISES[2]));
+
+                double newSquatWeight = WendlerMath.calculateWeight(
+                        this,
+                        handler.getOneRmForExercise(Constants.EXERCISES[3]),
+                        handler.getWorkoutPercentage(Constants.EXERCISES[3]));
+
+                handler.updateOneRm(
+                        newPressWeight,
+                        newDeadliftWeight,
+                        newBenchWeight,
+                        newSquatWeight);
+
+                handler.updateOldWorkouts();
+                PreferenceUtil.putBoolean(this, PreferenceUtil.KEY_UPDATE_TO_TM, true);
+            } catch (SQLException e) {
+                WendlerizedLog.e("Failed to update to TM", e);
+            } finally {
+                handler.close();
+            }
+        }
     }
 
     /**

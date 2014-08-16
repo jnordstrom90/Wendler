@@ -10,20 +10,22 @@ import android.widget.TextView;
 
 import se.johan.wendler.R;
 import se.johan.wendler.util.GenericTextWatcher;
+import se.johan.wendler.util.Util;
 
 /**
- * InitWeightView
+ * View for entering and calculating weights.
  */
+@SuppressWarnings("ALL")
 public class InitWeightView extends RelativeLayout {
 
-    private static final String WEIGHT = "mWeight";
-    private static final String REPS = "reps";
-    private static final String ONE_RM = "oneRm";
+    private static final String EXTRA_WEIGHT_VALUE = "weight";
+    private static final String EXTRA_REPS_VALUE = "reps";
+    private static final String EXTRA_ONE_RM_VALUE = "oneRm";
 
     private FilterEditText mEditTextWeight;
     private FilterEditText mEditTextReps;
     private FilterEditText mEditTextOneRm;
-    private Bundle savedInstance;
+    private Bundle mSavedInstanceState;
 
     public InitWeightView(Context context, String title) {
         super(context);
@@ -39,10 +41,13 @@ public class InitWeightView extends RelativeLayout {
         init(context, attrs);
     }
 
+    /**
+     * Initialize the view.
+     */
     private void init(Context context, AttributeSet attrs) {
 
-        LayoutInflater inflater = (LayoutInflater) context
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater =
+                (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.init_weight_view, this, true);
 
         TypedArray attr = context.obtainStyledAttributes(attrs, R.styleable.InitWeightViewTitle);
@@ -56,33 +61,21 @@ public class InitWeightView extends RelativeLayout {
         mEditTextOneRm = (FilterEditText) findViewById(R.id.edit_text_one_rm);
 
         setGenericTextWatcher(mEditTextWeight, mEditTextReps, mEditTextOneRm);
-
-
     }
 
-    private void setGenericTextWatcher(FilterEditText weight,
-                                       FilterEditText reps,
-                                       FilterEditText oneRm) {
-        weight.addTextChangedListener(new GenericTextWatcher(weight, reps, oneRm));
-        reps.addTextChangedListener(new GenericTextWatcher(weight, reps, oneRm));
+    /**
+     * Return the one rm.
+     */
+    public double getOneRm() {
+        return Double.parseDouble(mEditTextOneRm.getText().toString());
     }
 
-    private int getText(FilterEditText editText) {
-        if (editText.getText().toString().trim().length() > 0) {
-            Double d = Double.parseDouble(editText.getText().toString());
-            return d.intValue();
-        }
-        return -1;
-    }
-
-    public int getOneRm() {
-        Double d = Double.parseDouble(mEditTextOneRm.getText().toString());
-        return d.intValue();
-    }
-
+    /**
+     * Return if the data is ok.
+     */
     public boolean isDataOk() {
         return mEditTextOneRm.getText().toString().trim().length() > 0
-                && getText(mEditTextOneRm) > 0;
+                && Util.getDoubleFromEditText(mEditTextOneRm) > 0;
     }
 
     /**
@@ -90,44 +83,63 @@ public class InitWeightView extends RelativeLayout {
      * the instance of the last one. Instead update each individually
      */
     public void restoreInstance() {
-        if (savedInstance != null) {
-            if (savedInstance.containsKey(WEIGHT)) {
-                mEditTextWeight.setText("" + savedInstance.getInt(WEIGHT));
+        if (mSavedInstanceState != null) {
+            if (mSavedInstanceState.containsKey(EXTRA_WEIGHT_VALUE)) {
+                mEditTextWeight.setText(
+                        String.valueOf(mSavedInstanceState.getDouble(EXTRA_WEIGHT_VALUE)));
             }
 
-            if (savedInstance.containsKey(REPS)) {
-                mEditTextReps.setText("" + savedInstance.getInt(REPS));
+            if (mSavedInstanceState.containsKey(EXTRA_REPS_VALUE)) {
+                mEditTextReps.setText(
+                        String.valueOf(mSavedInstanceState.getInt(EXTRA_REPS_VALUE)));
             }
 
-            if (savedInstance.containsKey(ONE_RM)) {
-                mEditTextOneRm.setText("" + savedInstance.getInt(ONE_RM));
+            if (mSavedInstanceState.containsKey(EXTRA_ONE_RM_VALUE)) {
+                mEditTextOneRm.setText(
+                        String.valueOf(mSavedInstanceState.getDouble(EXTRA_ONE_RM_VALUE)));
             }
         }
     }
 
+    /**
+     * Set the saved instance state.
+     */
     public void setSavedInstance(Bundle savedInstance) {
-        this.savedInstance = savedInstance;
+        mSavedInstanceState = savedInstance;
     }
 
+    /**
+     * Return the instance state to save.
+     */
     public Bundle getSavedInstance() {
         Bundle bundle = new Bundle();
-        int val = getText(mEditTextOneRm);
+        double val = Util.getDoubleFromEditText(mEditTextOneRm);
 
         if (val > 0) {
-            bundle.putInt(ONE_RM, val);
+            bundle.putDouble(EXTRA_ONE_RM_VALUE, val);
         }
 
-        val = getText(mEditTextReps);
+        int intVal = Util.getIntFromEditText(mEditTextReps);
 
-        if (val > 0) {
-            bundle.putInt(REPS, val);
+        if (intVal > 0) {
+            bundle.putInt(EXTRA_REPS_VALUE, intVal);
         }
 
-        val = getText(mEditTextWeight);
+        val = Util.getDoubleFromEditText(mEditTextOneRm);
 
         if (val > 0) {
-            bundle.putInt(WEIGHT, val);
+            bundle.putDouble(EXTRA_WEIGHT_VALUE, val);
         }
         return bundle;
+    }
+
+    /**
+     * Set the text watcher for the needed views.
+     */
+    private void setGenericTextWatcher(FilterEditText weight,
+                                       FilterEditText reps,
+                                       FilterEditText oneRm) {
+        weight.addTextChangedListener(new GenericTextWatcher(weight, reps, oneRm));
+        reps.addTextChangedListener(new GenericTextWatcher(weight, reps, oneRm));
     }
 }

@@ -17,6 +17,7 @@ import se.johan.wendler.animation.CustomObjectAnimator;
 import se.johan.wendler.fragment.base.InitFragment;
 import se.johan.wendler.sql.SqlHandler;
 import se.johan.wendler.util.WendlerConstants;
+import se.johan.wendler.util.WendlerMath;
 import se.johan.wendler.view.InitWeightView;
 
 /**
@@ -40,7 +41,7 @@ public class InitWeightFragment extends InitFragment implements
 
     private Button mPercentageButton;
 
-    private int mSetPercentage = WendlerConstants.DEFAULT_WORKOUT_PERCENTAGE;
+    private int mWorkoutPercentage = WendlerConstants.DEFAULT_WORKOUT_PERCENTAGE;
 
     public InitWeightFragment() {
     }
@@ -67,7 +68,7 @@ public class InitWeightFragment extends InitFragment implements
         mInitSquat = (InitWeightView) view.findViewById(id.init_squat);
 
         if (savedInstanceState != null) {
-            mSetPercentage = savedInstanceState.getInt(
+            mWorkoutPercentage = savedInstanceState.getInt(
                     EXTRA_PERCENTAGE, WendlerConstants.DEFAULT_WORKOUT_PERCENTAGE);
             mInitPress.setSavedInstance(savedInstanceState.getBundle(EXTRA_PRESS));
             mInitDeadlift.setSavedInstance(savedInstanceState.getBundle(EXTRA_DEADLIFT));
@@ -79,7 +80,7 @@ public class InitWeightFragment extends InitFragment implements
         mPercentageButton.setOnClickListener(this);
 
         mPercentageButton.setText(
-                String.format(getString(string.btn_percentage), "" + mSetPercentage));
+                String.format(getString(string.btn_percentage), "" + mWorkoutPercentage));
 
         return view;
     }
@@ -102,11 +103,11 @@ public class InitWeightFragment extends InitFragment implements
     @Override
     public void saveData(SqlHandler handler) {
         handler.insertOneRmAndWorkoutPercentage(
-                mInitPress.getOneRm(),
-                mInitDeadlift.getOneRm(),
-                mInitBench.getOneRm(),
-                mInitSquat.getOneRm(),
-                mSetPercentage);
+                getTrainingMax(mInitPress.getOneRm()),
+                getTrainingMax(mInitDeadlift.getOneRm()),
+                getTrainingMax(mInitBench.getOneRm()),
+                getTrainingMax(mInitSquat.getOneRm()),
+                mWorkoutPercentage);
     }
 
     /**
@@ -171,7 +172,7 @@ public class InitWeightFragment extends InitFragment implements
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(EXTRA_PERCENTAGE, mSetPercentage);
+        outState.putInt(EXTRA_PERCENTAGE, mWorkoutPercentage);
         outState.putBundle(EXTRA_PRESS, mInitPress.getSavedInstance());
         outState.putBundle(EXTRA_DEADLIFT, mInitDeadlift.getSavedInstance());
         outState.putBundle(EXTRA_BENCH, mInitBench.getSavedInstance());
@@ -184,8 +185,17 @@ public class InitWeightFragment extends InitFragment implements
     @Override
     public void onDialogNumberSet(
             int reference, int number, double decimal, boolean isNegative, double fullNumber) {
-        mSetPercentage = number;
+        mWorkoutPercentage = number;
         mPercentageButton.setText(
-                String.format(getString(string.btn_percentage), "" + mSetPercentage));
+                String.format(getString(string.btn_percentage),
+                        String.valueOf(mWorkoutPercentage))
+        );
+    }
+
+    /**
+     * Return the training max.
+     */
+    private double getTrainingMax(double oneRm) {
+        return WendlerMath.calculateWeight(getActivity(), oneRm, mWorkoutPercentage);
     }
 }

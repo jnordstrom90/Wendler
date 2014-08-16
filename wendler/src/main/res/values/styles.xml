@@ -185,6 +185,9 @@
         <item name="cpb_cornerRadius">48dp</item>
         <item name="cpb_textComplete">@string/success</item>
         <item name="cpb_textError">@string/error</item>
+        <item name="cpb_selectorIdle">@drawable/idle_state_selector</item>
+        <item name="cpb_selectorComplete">@drawable/complete_state_selector</item>
+        <item name="cpb_selectorError">@drawable/error_state_selector</item>
     </style>
 
     <style name="CircularProgressButtonBackup" parent="CircularProgressButton">

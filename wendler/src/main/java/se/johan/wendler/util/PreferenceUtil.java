@@ -13,6 +13,8 @@ public class PreferenceUtil {
     public static final String KEY_WARM_UP_SETS = "key_warm_up_sets";
     public static final String KEY_WARM_UP_REPS = "key_warm_up_reps";
     public static final String KEY_ROUND_TO = "key_round";
+    public static final String KEY_CUSTOM_ROUND_TO = "key_custom_round_to";
+    public static final String KEY_ROUND_TO_VALUE = "key_round_to_value";
     public static final String KEY_DELOAD_REPS = "key_deload_reps";
     public static final String KEY_USE_VOLUME_BUTTONS = "key_use_volume_button";
     public static final String KEY_KEEP_SCREEN_ON_STOPWATCH = "key_keep_screen_on_stopwatch";
@@ -33,6 +35,7 @@ public class PreferenceUtil {
     public static final String KEY_CUSTOM_DELOAD_TYPE_VALUE = "key_custom_deload_type_value";
     public static final String KEY_CLEAR_DATA = "key_clear_data";
     public static final String KEY_TIME_OF_LAST_BACKUP = "key_time_of_last_backup";
+    public static final String KEY_UPDATE_TO_TM = "key_update_to_tm";
 
     /**
      * Get a boolean stored in preferences. Default value is false.
@@ -113,6 +116,18 @@ public class PreferenceUtil {
      * Write a float value to preferences.
      */
     public static void putLong(Context context, String tag, long value) {
+        WendlerizedLog.i("Store " + value + " for " + tag);
+        PreferenceManager
+                .getDefaultSharedPreferences(context)
+                .edit()
+                .putString(tag, String.valueOf(value))
+                .apply();
+    }
+
+    /**
+     * Store a float value.
+     */
+    public static void putFloat(Context context, String tag, float value) {
         WendlerizedLog.i("Store " + value + " for " + tag);
         PreferenceManager
                 .getDefaultSharedPreferences(context)

@@ -194,6 +194,13 @@ public class WorkoutAdditionalFragment extends WorkoutFragment implements
     }
 
     /**
+     * Return the additional exercises.
+     */
+    public ArrayList<AdditionalExercise> getAdditionalExercises() {
+        return sAdditionalExercises;
+    }
+
+    /**
      * Called to launch the additional exercise dialog.
      */
     private void showAdditionalExerciseDialog(AdditionalExercise exercise, int id) {
@@ -208,6 +215,9 @@ public class WorkoutAdditionalFragment extends WorkoutFragment implements
      * Called to remove an additional exercise at a given position.
      */
     private void onRemove(int which) {
+        if (which >= sAdditionalExercises.size()) {
+            return;
+        }
         AdditionalExercise exercise = sAdditionalExercises.get(which);
         sAdditionalExercises.remove(which);
         String text = String.format(getString(R.string.tap_to_undo), exercise.getName());
@@ -292,5 +302,4 @@ public class WorkoutAdditionalFragment extends WorkoutFragment implements
             showAdditionalExerciseDialog(exercise, exercise.getExerciseId());
         }
     };
-
 }

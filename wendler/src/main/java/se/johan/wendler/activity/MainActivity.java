@@ -30,8 +30,10 @@ import se.johan.wendler.model.ListItemType;
 import se.johan.wendler.model.WendlerListItem;
 import se.johan.wendler.sql.SqlHandler;
 import se.johan.wendler.util.Constants;
+import se.johan.wendler.util.MathHelper;
 import se.johan.wendler.util.PreferenceUtil;
 import se.johan.wendler.util.Util;
+import se.johan.wendler.util.WendlerConstants;
 import se.johan.wendler.util.WendlerizedLog;
 import se.johan.wendler.view.MyDrawerLayout;
 import se.johan.wendler.view.MyDrawerLayout.OnHideListener;
@@ -98,6 +100,7 @@ public class MainActivity extends BaseActivity {
         showChangelogIfNeeded();
         purgeExtraExercisesIfNeeded();
         updateCycleNameIfNeeded();
+        migrateFromOldRoundToValues();
     }
 
     /**
@@ -275,6 +278,31 @@ public class MainActivity extends BaseActivity {
             }
 
             PreferenceUtil.putBoolean(this, PreferenceUtil.KEY_HAS_PURGED, true);
+        }
+    }
+
+
+    /**
+     * Migrate from the old round to values.
+     */
+    private void migrateFromOldRoundToValues() {
+        String roundToValue = PreferenceUtil.getString(
+                this,
+                PreferenceUtil.KEY_ROUND_TO_VALUE,
+                String.valueOf(WendlerConstants.DEFAULT_ROUND_TO));
+
+        if (roundToValue.equals("0")) {
+            PreferenceUtil.putFloat(
+                    this,
+                    PreferenceUtil.KEY_ROUND_TO_VALUE,
+                    2.5f);
+            MathHelper.getInstance().resetRoundToValue();
+        } else if (roundToValue.equals("1")) {
+            PreferenceUtil.putFloat(
+                    this,
+                    PreferenceUtil.KEY_ROUND_TO_VALUE,
+                    5f);
+            MathHelper.getInstance().resetRoundToValue();
         }
     }
 

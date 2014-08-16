@@ -27,4 +27,6 @@ public class WendlerConstants {
     public static final int[] FRESH_PERCENTAGES_W_2 = new int[] {70, 80, 90};
     public static final int[] FRESH_PERCENTAGES_W_3 = new int[] {75, 85, 95};
     public static final int[] FRESH_PERCENTAGES_W_4 = new int[] {40, 50, 60};
+
+    public static final float DEFAULT_ROUND_TO = 2.5f;
 }

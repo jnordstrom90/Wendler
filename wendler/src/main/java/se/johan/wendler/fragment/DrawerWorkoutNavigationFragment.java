@@ -58,8 +58,7 @@ public class DrawerWorkoutNavigationFragment extends DrawerFragment {
         View view = inflater.inflate(R.layout.empty_view_pager_layout, container, false);
 
         try {
-            mAdapter = new WorkoutNavigationAdapter(
-                    getActivity().getSupportFragmentManager(), getActivity());
+            mAdapter = new WorkoutNavigationAdapter(getChildFragmentManager(), getActivity());
         } catch (SQLException e) {
             WendlerizedLog.e("Unable to load workouts", e);
             getActivity().finish();

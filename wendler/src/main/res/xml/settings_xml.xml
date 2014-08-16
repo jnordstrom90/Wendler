@@ -56,6 +56,11 @@
             android:defaultValue="@string/round_default_value"
             android:entries="@array/round_entries"
             android:entryValues="@array/round_entry_values"/>
+        <Preference
+            android:key="key_custom_round_to"
+            android:title="@string/pref_custom_deload_title"
+            android:defaultValue="@string/round_default_value"
+            android:enabled="false"/>
     </PreferenceCategory>
 
     <PreferenceCategory

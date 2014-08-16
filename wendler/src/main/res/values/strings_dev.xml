@@ -5,11 +5,13 @@
     <array name="round_entries">
         <item>"2.5"</item>
         <item>"5"</item>
+        <item>@string/custom_round_to_value</item>
     </array>
 
     <array name="round_entry_values">
         <item>"2.5"</item>
         <item>"5"</item>
+        <item>@string/custom_round_to_value</item>
     </array>
 
     <string name="deload_type_default_value">"0"</string>

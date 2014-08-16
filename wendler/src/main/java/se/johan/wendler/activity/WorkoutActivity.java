@@ -51,8 +51,8 @@ public class WorkoutActivity extends BaseActivity implements TabListener,
 
     private static final String EXTRA_ELAPSED_TIME = "elapsedTime";
     private static final String EXTRA_TIMER_IS_RUNNING = "timerIsRunning";
-    private static final String EXTRA_KEY_NOTES = "keyNotes";
     private static final String EXTRA_CURRENT_PAGE = "mCurrentPage";
+    private static final String EXTRA_WORKOUT = "workout";
 
     private ViewPager mViewPager;
     private Workout mWorkout;
@@ -75,7 +75,7 @@ public class WorkoutActivity extends BaseActivity implements TabListener,
             mCurrentPage = savedInstanceState.getInt(EXTRA_CURRENT_PAGE, 0);
             mTimeElapsed = savedInstanceState.getLong(EXTRA_ELAPSED_TIME, -1);
             mTimerIsRunning = savedInstanceState.getBoolean(EXTRA_TIMER_IS_RUNNING, false);
-            mWorkout.updateNotes(savedInstanceState.getString(EXTRA_KEY_NOTES, ""));
+            mWorkout = savedInstanceState.getParcelable(EXTRA_WORKOUT);
         }
 
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -149,7 +149,8 @@ public class WorkoutActivity extends BaseActivity implements TabListener,
         outState.putInt(EXTRA_CURRENT_PAGE, position);
         outState.putLong(EXTRA_ELAPSED_TIME, mTimeElapsed);
         outState.putBoolean(EXTRA_TIMER_IS_RUNNING, mTimerIsRunning);
-        outState.putString(EXTRA_KEY_NOTES, mWorkout.getNotes());
+        saveMainAndAdditionalExercises();
+        outState.putParcelable(EXTRA_WORKOUT, mWorkout);
     }
 
     /**
@@ -342,6 +343,21 @@ public class WorkoutActivity extends BaseActivity implements TabListener,
         } finally {
             handler.close();
         }
+    }
+
+    /**
+     * Collect the data from the main and additional exercises
+     */
+    private void saveMainAndAdditionalExercises() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+
+        WorkoutMainFragment main =
+                (WorkoutMainFragment) fragmentManager.findFragmentByTag(WorkoutMainFragment.TAG);
+        WorkoutAdditionalFragment extra = (WorkoutAdditionalFragment)
+                fragmentManager.findFragmentByTag(WorkoutAdditionalFragment.TAG);
+
+        mWorkout.setMainExercise(main.getMainExercise());
+        mWorkout.setAdditionalExercises(extra.getAdditionalExercises());
     }
 
     /**

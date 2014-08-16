@@ -9,7 +9,7 @@ public class MathHelper {
 
     private static MathHelper sInstance;
 
-    private static float roundToValue = 0;
+    private static float roundToValue = 0.0f;
 
     /**
      * Private constructor.
@@ -34,8 +34,12 @@ public class MathHelper {
      */
     public float getRoundToValue(Context context) {
 
-        if (roundToValue == 0) {
-            roundToValue = PreferenceUtil.getFloat(context, PreferenceUtil.KEY_ROUND_TO, 2.5f);
+        if (roundToValue == 0.0f) {
+            roundToValue =
+                    PreferenceUtil.getFloat(
+                            context,
+                            PreferenceUtil.KEY_ROUND_TO_VALUE,
+                            WendlerConstants.DEFAULT_ROUND_TO);
         }
 
         return roundToValue;
@@ -45,6 +49,7 @@ public class MathHelper {
      * Reset the rounding value.
      */
     public void resetRoundToValue() {
-        roundToValue = 0;
+        roundToValue = 0.0f;
     }
+
 }

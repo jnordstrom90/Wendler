@@ -1,25 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
 
+    <changelogversion versionName="1.1.2" changeDate="August 16th, 2014">
+        <changelogtext>Added custom round to value</changelogtext>
+        <changelogtext>Updated libraries</changelogtext>
+        <changelogtext>Fixed crashes</changelogtext>
+    </changelogversion>
+
+    <changelogversion versionName="1.1.1" changeDate="July 9th, 2014">
+        <changelogtext>Use training max as base for everything instead of the one RM, hopefully this won't cause any problems for anyone</changelogtext>
+        <changelogtext>Re-added the title for the notes dialog</changelogtext>
+        <changelogtext>Stopped the hint in old workouts to show over and over</changelogtext>
+    </changelogversion>
+
     <changelogversion versionName="1.1" changeDate="July 8th, 2014">
         <changelogtext>Rewrote the core of the application. No (hopefully) functional difference, but major improvements to make it easier for future updates</changelogtext>
         <changelogtext>Design updates</changelogtext>
         <changelogtext>Fixed rounding issues</changelogtext>
         <changelogtext>Fixed reported crashes</changelogtext>
-    </changelogversion>
-
-    <changelogversion versionName="1.0.5+" changeDate="June 4, 2014">
-        <changelogtext>Loads of crash fixes</changelogtext>
-        <changelogtext>Additional exercises now always show up</changelogtext>
-        <changelogtext>Additional exercises weights are now based of the TM</changelogtext>
-        <changelogtext>Made stuff prettier</changelogtext>
-    </changelogversion>
-
-    <changelogversion versionName="1.0.4" changeDate="April 22, 2014">
-        <changelogtext>Fixed bug with additional exercises not changing</changelogtext>
-        <changelogtext>Added new number picker</changelogtext>
-        <changelogtext>Added new deload options under settings</changelogtext>
-        <changelogtext>Fixed crash on startup</changelogtext>
-        <changelogtext>Squashed bugs</changelogtext>
     </changelogversion>
 </changelog>

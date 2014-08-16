@@ -143,10 +143,10 @@ public class SqlHandler {
     /**
      * Insert one rm for all exercises as well as the workout percentage.
      */
-    public void insertOneRmAndWorkoutPercentage(int pressOneRm,
-                                                int deadliftOneRm,
-                                                int benchOneRm,
-                                                int squatOneRm,
+    public void insertOneRmAndWorkoutPercentage(double pressOneRm,
+                                                double deadliftOneRm,
+                                                double benchOneRm,
+                                                double squatOneRm,
                                                 int workoutPercentage) {
         ContentValues cv = new ContentValues();
         cv.put(KEY_1RM, pressOneRm);
@@ -406,11 +406,11 @@ public class SqlHandler {
                             WendlerConstants.DEFAULT_WARMUP_PERCENTAGES);
 
                     sets.addAll(WendlerMath.getWarmupSets(
-                            mContext, oneRm, serialized.split(","), workoutPercentage, -1));
+                            mContext, oneRm, serialized.split(","), -1));
                 }
 
                 sets.addAll(WendlerMath.getWorkoutSets(
-                        mContext, oneRm, setPercentages, workoutPercentage, workout.getWeek(), -1));
+                        mContext, oneRm, setPercentages, workout.getWeek(), -1));
 
                 return new MainExercise(name, oneRm, increment, sets, workoutPercentage);
             }
@@ -477,8 +477,10 @@ public class SqlHandler {
                     ArrayList<ExerciseSet> exerciseSets = new ArrayList<ExerciseSet>();
 
                     if (!TextUtils.isEmpty(mainExerciseName)) {
-                        weight = WendlerMath.calculateSetWeight(mContext,
-                                getTrainingMax(mainExerciseName), percentage, 100);
+                        weight = WendlerMath.calculateWeight(
+                                mContext,
+                                getOneRmForExercise(mainExerciseName),
+                                percentage);
                     }
 
                     ExerciseSet set = new ExerciseSet(SetType.REGULAR, weight, sets, 0, false);
@@ -515,29 +517,6 @@ public class SqlHandler {
                 weight = cursor.getDouble(cursor.getColumnIndex(KEY_1RM));
             }
             return weight;
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
-    }
-
-    /**
-     * Get the current training max for a given exercise.
-     */
-    public double getTrainingMax(String name) {
-        double weight = 100;
-        int workoutPercentage = 100;
-        String[] columns = new String[]{KEY_1RM, KEY_TRAINING_PERCENTAGE};
-        Cursor cursor = null;
-        try {
-            cursor = mDatabase.query(DATABASE_TABLE_WENDLER_STATS, columns, KEY_NAME + "=?",
-                    new String[]{name}, null, null, null);
-            if (cursor != null && cursor.moveToFirst()) {
-                weight = cursor.getDouble(cursor.getColumnIndex(KEY_1RM));
-                workoutPercentage = cursor.getInt(cursor.getColumnIndex(KEY_TRAINING_PERCENTAGE));
-            }
-            return WendlerMath.calculateSetWeight(mContext, weight, workoutPercentage, 100);
         } finally {
             if (cursor != null) {
                 cursor.close();
@@ -1012,6 +991,65 @@ public class SqlHandler {
     }
 
     /**
+     * Return the workout percentage for a given exercise.
+     */
+    public int getWorkoutPercentage(String workoutName) {
+        Cursor c = null;
+        try {
+            c = mDatabase.query(DATABASE_TABLE_WENDLER_STATS, new String[]{KEY_TRAINING_PERCENTAGE},
+                    KEY_NAME + "=?", new String[]{workoutName}, null, null, null);
+            if (c != null && c.moveToFirst()) {
+                return c.getInt(c.getColumnIndex(KEY_TRAINING_PERCENTAGE));
+            }
+        } finally {
+            if (c != null) {
+                c.close();
+            }
+        }
+        return WendlerConstants.DEFAULT_WORKOUT_PERCENTAGE;
+    }
+
+    /**
+     * Update the old workouts to reflect using Training Max.
+     */
+    public void updateOldWorkouts() {
+
+        Cursor cursor = null;
+        try {
+            cursor = mDatabase.query(DATABASE_TABLE_WENDLER_WORKOUT,
+                    new String[]{KEY_WORKOUT_EXERCISE, KEY_1RM, KEY_WORKOUT_ID},
+                    KEY_WORKOUT_COMPLETED + "=?", new String[]{String.valueOf(1)}, null, null,
+                    null, null);
+            if (cursor.moveToFirst()) {
+                do {
+                    String name = cursor.getString(cursor.getColumnIndex(KEY_WORKOUT_EXERCISE));
+
+                    double oneRm = cursor.getFloat(cursor.getColumnIndex(KEY_1RM));
+                    int workoutId = cursor.getInt(cursor.getColumnIndex(KEY_WORKOUT_ID));
+                    updateOneRm(name, oneRm, workoutId);
+                } while (cursor.moveToNext());
+            }
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+    }
+
+    /**
+     * Update the old workouts with the new TM
+     */
+    private void updateOneRm(String workoutName, double oneRm, int workoutId) {
+        ContentValues value = new ContentValues();
+        value.put(KEY_1RM, WendlerMath.calculateWeight(
+                mContext,
+                oneRm,
+                getWorkoutPercentage(workoutName)));
+        mDatabase.update(DATABASE_TABLE_WENDLER_WORKOUT, value, KEY_WORKOUT_ID + "=?",
+                new String[]{String.valueOf(workoutId)});
+    }
+
+    /**
      * Return if the next workout should deload.
      */
     private boolean getWorkoutShouldDeload(Workout workout) {
@@ -1237,12 +1275,11 @@ public class SqlHandler {
                             mContext,
                             oneRm,
                             serialized.split(","),
-                            workoutPercentage,
                             repsPerformed));
                 }
 
                 sets.addAll(WendlerMath.getWorkoutSets(
-                        mContext, oneRm, setPercentages, workoutPercentage, week, repsPerformed));
+                        mContext, oneRm, setPercentages, week, repsPerformed));
 
                 mainExercise = new MainExercise(name, oneRm, increment, sets, workoutPercentage);
             }
@@ -1294,8 +1331,10 @@ public class SqlHandler {
                     ArrayList<ExerciseSet> exerciseSets = new ArrayList<ExerciseSet>();
 
                     if (!TextUtils.isEmpty(mainExerciseName)) {
-                        weight = WendlerMath.calculateSetWeight(mContext,
-                                getTrainingMax(mainExerciseName), percentage, 100);
+                        weight = WendlerMath.calculateWeight(
+                                mContext,
+                                getOneRmForExercise(mainExerciseName),
+                                percentage);
                     }
 
                     ExerciseSet set = new ExerciseSet(SetType.REGULAR, weight, sets, repsPerformed);
@@ -1373,8 +1412,6 @@ public class SqlHandler {
         double increment = getIncrement(workout.getName());
         double weight;
         boolean hasWorkoutOutcomeChanged = hasWorkoutOutComeChanged(workout);
-
-        WendlerizedLog.d("Update " + hasWorkoutOutcomeChanged);
 
         if (hasWorkoutOutcomeChanged) {
             currentCycle = workout.getCycle();

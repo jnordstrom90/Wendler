@@ -232,7 +232,7 @@ public class DrawerOldWorkoutsFragment extends DrawerFragment implements
      * Called to display the informative ShowcaseView.
      */
     private void showShowcaseView(final ListView listView) {
-        if (mAdapter.getCount() > 0 && PreferenceUtil.getBoolean(getActivity(),
+        if (mAdapter.getCount() > 0 && !PreferenceUtil.getBoolean(getActivity(),
                 PreferenceUtil.KEY_HAS_SEEN_SHOWCASE_OLD_WORKOUTS)) {
 
             final View child = listView.getChildAt(listView.getLastVisiblePosition());
@@ -317,14 +317,15 @@ public class DrawerOldWorkoutsFragment extends DrawerFragment implements
     private final OnShowcaseEventListener mShowcaseListener = new OnShowcaseEventListener() {
         @Override
         public void onShowcaseViewHide(ShowcaseView showcaseView) {
-        }
-
-        @Override
-        public void onShowcaseViewDidHide(ShowcaseView showcaseView) {
             if (isAdded()) {
                 PreferenceUtil.putBoolean(getActivity(),
                         PreferenceUtil.KEY_HAS_SEEN_SHOWCASE_OLD_WORKOUTS, true);
             }
+        }
+
+        @Override
+        public void onShowcaseViewDidHide(ShowcaseView showcaseView) {
+
         }
 
         @Override

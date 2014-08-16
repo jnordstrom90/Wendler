@@ -61,10 +61,9 @@ public class MainExerciseFooterView extends RelativeLayout {
 
             int percentage = getLastSetPercentage(week);
 
-            double exerciseWeight = WendlerMath.calculateSetWeight(
+            double exerciseWeight = WendlerMath.calculateWeight(
                     getContext(),
                     exercise.getWeight(),
-                    exercise.getWorkoutPercentage(),
                     percentage);
 
             double weight = WendlerMath.calculateOneRm(
