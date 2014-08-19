@@ -30,6 +30,7 @@
     <string name="hint_reps">Reps</string>
     <string name="hint_reps_or_sets">Set or rep goal</string>
     <string name="hint_one_rm">1RM</string>
+    <string name="hint_one_tm">Training Max</string>
     <string name="hint_percentage">Percentage</string>
     <string name="hint_set_one">Set one</string>
     <string name="hint_set_two">Set two</string>

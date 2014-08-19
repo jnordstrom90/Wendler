@@ -78,26 +78,13 @@ public class WorkoutMainFragment extends WorkoutFragment implements
     }
 
     /**
-     * Called when the state needs to be saved.
-     */
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putParcelable(EXTRA_EXERCISE_ITEM, mMainExercise);
-    }
-
-    /**
      * Called when the activity is created.
      */
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        if (savedInstanceState != null) {
-            mMainExercise = savedInstanceState.getParcelable(EXTRA_EXERCISE_ITEM);
-        } else {
-            mMainExercise = getArguments().getParcelable(EXTRA_EXERCISE_ITEM);
-        }
+        mMainExercise = getArguments().getParcelable(EXTRA_EXERCISE_ITEM);
 
         mAdapter = new MainExerciseAdapter(getActivity(), mMainExercise);
         updateFooter();

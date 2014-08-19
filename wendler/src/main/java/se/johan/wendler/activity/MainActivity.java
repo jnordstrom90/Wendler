@@ -288,7 +288,7 @@ public class MainActivity extends BaseActivity {
     private void migrateFromOldRoundToValues() {
         String roundToValue = PreferenceUtil.getString(
                 this,
-                PreferenceUtil.KEY_ROUND_TO_VALUE,
+                PreferenceUtil.KEY_ROUND_TO,
                 String.valueOf(WendlerConstants.DEFAULT_ROUND_TO));
 
         if (roundToValue.equals("0")) {

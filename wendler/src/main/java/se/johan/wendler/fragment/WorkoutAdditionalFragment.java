@@ -78,11 +78,7 @@ public class WorkoutAdditionalFragment extends WorkoutFragment implements
 
         View view = inflater.inflate(R.layout.drag_list_view_view, container, false);
 
-        if (savedInstanceState != null && savedInstanceState.containsKey(EXTRA_EXERCISE_ITEM)) {
-            sAdditionalExercises = savedInstanceState.getParcelableArrayList(EXTRA_EXERCISE_ITEM);
-        } else if (getArguments() != null) {
-            sAdditionalExercises = getArguments().getParcelableArrayList(EXTRA_EXERCISE_ITEM);
-        }
+        sAdditionalExercises = getArguments().getParcelableArrayList(EXTRA_EXERCISE_ITEM);
 
         mListView = (DragSortListView) view.findViewById(R.id.list_drag);
         mAdapter = new AdditionalExerciseAdapter(
@@ -108,7 +104,6 @@ public class WorkoutAdditionalFragment extends WorkoutFragment implements
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         mUndoController.onSaveInstanceState(outState);
-        outState.putParcelableArrayList(EXTRA_EXERCISE_ITEM, sAdditionalExercises);
     }
 
     /**

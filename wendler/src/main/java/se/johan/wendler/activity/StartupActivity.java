@@ -244,7 +244,7 @@ public class StartupActivity extends BaseActivity
             } finally {
                 handler.close();
             }
-
+            PreferenceUtil.putBoolean(this, PreferenceUtil.KEY_UPDATE_TO_TM, true);
             startActivity(new Intent(this, MainActivity.class));
             overridePendingTransition(anim.fade_in, anim.fade_out);
             finish();
