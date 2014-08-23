@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
 
-    <changelogversion versionName="1.1.2+" changeDate="August 19th, 2014">
+    <changelogversion versionName="1.1.2+" changeDate="August 23th, 2014">
         <changelogtext>Added custom round to value, you might have to set it again in settings!</changelogtext>
         <changelogtext>Tried fixing TM being lowered, please contact me if the problem still occurs</changelogtext>
         <changelogtext>Fixed workouts sometimes resetting while in progress</changelogtext>
         <changelogtext>Updated libraries</changelogtext>
-        <changelogtext>Fixed crashes</changelogtext>
         <changelogtext>Fixed crashes</changelogtext>
     </changelogversion>
 

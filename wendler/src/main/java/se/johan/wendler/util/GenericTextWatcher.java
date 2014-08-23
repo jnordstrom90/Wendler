@@ -44,11 +44,17 @@ public class GenericTextWatcher implements TextWatcher {
      */
     @Override
     public void afterTextChanged(Editable editable) {
-        if (mWeight.getText().toString().trim().length() > 0
-                && mReps.getText().toString().trim().length() > 0) {
-            int oneRm = WendlerMath.calculateOneRm(Double.parseDouble(mWeight.getText()
-                    .toString()), Integer.parseInt(mReps.getText().toString()));
-            mOneRm.setText(String.valueOf(oneRm));
+        try {
+            if (mWeight.getText().toString().trim().length() > 0
+                    && mReps.getText().toString().trim().length() > 0) {
+                int oneRm = WendlerMath.calculateOneRm(
+                        Double.parseDouble(mWeight.getText().toString()),
+                        Integer.parseInt(mReps.getText().toString()));
+
+                mOneRm.setText(String.valueOf(oneRm));
+            }
+        } catch (NumberFormatException e) {
+            // Sometimes they still are empty
         }
     }
 }

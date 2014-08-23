@@ -226,7 +226,8 @@ public class WorkoutActivity extends BaseActivity implements TabListener,
      */
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        menu.findItem(R.id.action_calendar).setVisible(mWorkout.isComplete());
+        menu.findItem(R.id.action_calendar).setVisible(
+                mWorkout != null && mWorkout.isComplete());
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -349,6 +350,10 @@ public class WorkoutActivity extends BaseActivity implements TabListener,
      * Collect the data from the main and additional exercises
      */
     private void saveMainAndAdditionalExercises() {
+        if (mWorkout == null) {
+            return;
+        }
+
         FragmentManager fragmentManager = getSupportFragmentManager();
 
         WorkoutMainFragment main =
@@ -356,8 +361,12 @@ public class WorkoutActivity extends BaseActivity implements TabListener,
         WorkoutAdditionalFragment extra = (WorkoutAdditionalFragment)
                 fragmentManager.findFragmentByTag(WorkoutAdditionalFragment.TAG);
 
-        mWorkout.setMainExercise(main.getMainExercise());
-        mWorkout.setAdditionalExercises(extra.getAdditionalExercises());
+        if (main != null) {
+            mWorkout.setMainExercise(main.getMainExercise());
+        }
+        if (extra != null) {
+            mWorkout.setAdditionalExercises(extra.getAdditionalExercises());
+        }
     }
 
     /**
