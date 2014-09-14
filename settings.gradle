@@ -1,1 +1,1 @@
-include ':wendler', ':libraries:drag-sort-listview', 'libraries:preferencefragment', ':library'
+include ':wendler', ':libraries:drag-sort-listview', ':library'

@@ -6,6 +6,11 @@ buildscript {
         maven {
             url 'https://oss.sonatype.org/content/repositories/snapshots'
         }
+        maven {
+            url {
+                'https://raw.github.com/kolavar/android-support-v4-preferencefragment/master/maven-repository/'
+            }
+        }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:0.12.+'
@@ -17,6 +22,11 @@ allprojects {
         mavenCentral()
         maven {
             url 'https://oss.sonatype.org/content/repositories/snapshots'
+        }
+        maven {
+            url {
+                'https://raw.github.com/kolavar/android-support-v4-preferencefragment/master/maven-repository/'
+            }
         }
     }
 }

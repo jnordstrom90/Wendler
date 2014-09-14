@@ -27,10 +27,10 @@ dependencies {
     }
     compile 'com.github.gabrielemariotti.changeloglib:library:1.5.1'
     compile project(':libraries:drag-sort-listview')
-    compile project(':libraries:preferencefragment')
     compile 'com.github.amlcurran.showcaseview:library:5.0.0'
     compile('de.psdev.licensesdialog:licensesdialog:1.5.0') {
         exclude module: 'support-v4'
     }
     compile 'com.github.dmytrodanylyk.circular-progress-button:library:1.1.0'
+    compile 'com.android.support:support-v4-preferencefragment:1.0.0@aar'
 }
