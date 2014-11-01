@@ -70,6 +70,22 @@ public class MainExercise extends Exercise implements Parcelable {
     }
 
     /**
+     * Return the goal of the last set.
+     */
+    public int getGoal() {
+        int size = mExerciseSets.size();
+        return mExerciseSets.get(size - 1).getGoal();
+    }
+
+    /**
+     * Return the weight of the last set.
+     */
+    public double getLastSetWeight() {
+        int size = mExerciseSets.size();
+        return mExerciseSets.get(size - 1).getWeight();
+    }
+
+    /**
      * Parcelable constructor
      */
     public MainExercise(Parcel in) {

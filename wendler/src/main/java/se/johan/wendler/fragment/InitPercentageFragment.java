@@ -9,12 +9,11 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.RadioButton;
 
 import se.johan.wendler.R;
-import se.johan.wendler.R.string;
 import se.johan.wendler.animation.CustomObjectAnimator;
-import se.johan.wendler.fragment.base.InitFragment;
 import se.johan.wendler.sql.SqlHandler;
+import se.johan.wendler.fragment.base.InitFragment;
+import se.johan.wendler.ui.view.InitPercentView;
 import se.johan.wendler.util.WendlerConstants;
-import se.johan.wendler.view.InitPercentView;
 
 /**
  * Initialize the percentages to be used for workouts.
@@ -56,7 +55,7 @@ public class InitPercentageFragment extends InitFragment implements
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.init_percentage_layout, container, false);
+        View view = inflater.inflate(R.layout.fragment_init_percentage, container, false);
 
         mWeekOneView = (InitPercentView) view.findViewById(R.id.init_one);
         mWeekTwoView = (InitPercentView) view.findViewById(R.id.init_two);
@@ -132,7 +131,15 @@ public class InitPercentageFragment extends InitFragment implements
      */
     @Override
     public String getHelpingMessage() {
-        return getString(string.help_percentage_dialog);
+        return getString(R.string.help_percentage_dialog);
+    }
+
+    /**
+     * Return the helping message of the view.
+     */
+    @Override
+    public int getHelpingMessageRes() {
+        return R.string.help_percentage_dialog;
     }
 
     /**

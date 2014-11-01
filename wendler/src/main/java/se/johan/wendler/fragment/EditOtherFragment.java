@@ -16,7 +16,7 @@ import se.johan.wendler.util.PreferenceUtil;
 import se.johan.wendler.util.Util;
 import se.johan.wendler.util.WendlerConstants;
 import se.johan.wendler.util.WendlerizedLog;
-import se.johan.wendler.view.FilterEditText;
+import se.johan.wendler.ui.view.FilterEditText;
 
 /**
  * Edit fragment where misc settings can be changed.
@@ -54,7 +54,7 @@ public class EditOtherFragment extends EditFragment {
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.edit_other_fragment, container, false);
+        View view = inflater.inflate(R.layout.fragment_edit_other, container, false);
         initViews(view);
         initValues();
 

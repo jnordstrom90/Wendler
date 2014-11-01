@@ -1,24 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
 
-    <changelogversion versionName="1.1.2+" changeDate="August 23th, 2014">
-        <changelogtext>Added custom round to value, you might have to set it again in settings!</changelogtext>
-        <changelogtext>Tried fixing TM being lowered, please contact me if the problem still occurs</changelogtext>
-        <changelogtext>Fixed workouts sometimes resetting while in progress</changelogtext>
+    <changelogversion versionName="1.2" changeDate="November 11th, 2014">
+        <changelogtext>Adopted Material Design</changelogtext>
         <changelogtext>Updated libraries</changelogtext>
         <changelogtext>Fixed crashes</changelogtext>
     </changelogversion>
 
-    <changelogversion versionName="1.1.1" changeDate="July 9th, 2014">
-        <changelogtext>Use training max as base for everything instead of the one RM, hopefully this won't cause any problems for anyone</changelogtext>
-        <changelogtext>Re-added the title for the notes dialog</changelogtext>
-        <changelogtext>Stopped the hint in old workouts to show over and over</changelogtext>
-    </changelogversion>
-
-    <changelogversion versionName="1.1" changeDate="July 8th, 2014">
-        <changelogtext>Rewrote the core of the application. No (hopefully) functional difference, but major improvements to make it easier for future updates</changelogtext>
-        <changelogtext>Design updates</changelogtext>
-        <changelogtext>Fixed rounding issues</changelogtext>
-        <changelogtext>Fixed reported crashes</changelogtext>
-    </changelogversion>
 </changelog>

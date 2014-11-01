@@ -1,0 +1,38 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <se.johan.wendler.ui.view.MyDrawerLayout
+        android:id="@+id/drawer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <include layout="@layout/toolbar_with_help"/>
+
+            <!-- The main content view -->
+            <FrameLayout
+                android:id="@+id/content_frame"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="0dp"
+                android:layout_marginLeft="0dp"/>
+        </LinearLayout>
+
+        <!-- The navigation drawer -->
+        <ListView
+            android:id="@+id/left_drawer"
+            android:layout_width="@dimen/drawer_size"
+            android:layout_height="match_parent"
+            android:layout_gravity="start|left"
+            android:choiceMode="singleChoice"
+            android:dividerHeight="1dp"
+            android:background="#fff"/>
+    </se.johan.wendler.ui.view.MyDrawerLayout>
+</LinearLayout>

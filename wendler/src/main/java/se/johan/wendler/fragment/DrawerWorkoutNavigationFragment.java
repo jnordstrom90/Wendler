@@ -15,12 +15,12 @@ import java.sql.SQLException;
 
 import se.johan.wendler.R;
 import se.johan.wendler.activity.MainActivity;
-import se.johan.wendler.adapter.WorkoutNavigationAdapter;
+import se.johan.wendler.ui.adapter.WorkoutNavigationAdapter;
 import se.johan.wendler.animation.ZoomOutPageTransformer;
 import se.johan.wendler.fragment.base.DrawerFragment;
 import se.johan.wendler.sql.SqlHandler;
 import se.johan.wendler.util.WendlerizedLog;
-import se.johan.wendler.view.SlidingTabLayout;
+import se.johan.wendler.ui.view.SlidingTabLayout;
 
 /**
  * Navigation fragment
@@ -39,6 +39,11 @@ public class DrawerWorkoutNavigationFragment extends DrawerFragment {
         return TAG;
     }
 
+    @Override
+    public int getMessageText() {
+        return R.string.help_main_workouts;
+    }
+
     public DrawerWorkoutNavigationFragment() {
     }
 
@@ -55,7 +60,7 @@ public class DrawerWorkoutNavigationFragment extends DrawerFragment {
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.empty_view_pager_layout, container, false);
+        View view = inflater.inflate(R.layout.view_pager, container, false);
 
         try {
             mAdapter = new WorkoutNavigationAdapter(getChildFragmentManager(), getActivity());

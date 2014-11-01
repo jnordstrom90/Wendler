@@ -6,15 +6,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import se.johan.wendler.R;
 import se.johan.wendler.R.id;
 import se.johan.wendler.R.layout;
-import se.johan.wendler.R.string;
 import se.johan.wendler.animation.CustomObjectAnimator;
-import se.johan.wendler.fragment.base.InitFragment;
 import se.johan.wendler.sql.SqlHandler;
+import se.johan.wendler.fragment.base.InitFragment;
+import se.johan.wendler.ui.view.FilterEditText;
 import se.johan.wendler.util.Util;
 import se.johan.wendler.util.WendlerConstants;
-import se.johan.wendler.view.FilterEditText;
 
 /**
  * Initialize the increment for each exercise.
@@ -44,7 +44,7 @@ public class InitIncrementFragment extends InitFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(layout.init_increment_layout, container, false);
+        View view = inflater.inflate(layout.fragment_init_increment, container, false);
 
         mPressIncrement = (FilterEditText) view.findViewById(id.et_increment_press);
         mDeadliftIncrement = (FilterEditText) view.findViewById(id.et_increment_deadlift);
@@ -92,7 +92,15 @@ public class InitIncrementFragment extends InitFragment {
      */
     @Override
     public String getHelpingMessage() {
-        return getString(string.help_increment_dialog);
+        return getString(R.string.help_increment_dialog);
+    }
+
+    /**
+     * Return the helping message of the view.
+     */
+    @Override
+    public int getHelpingMessageRes() {
+        return R.string.help_increment_dialog;
     }
 
     /**

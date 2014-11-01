@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:dslv="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.mobeta.android.dslv.DragSortListView
+        android:id="@+id/list_drag"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/spacing_small"
+        android:dividerHeight="@dimen/spacing_small"
+        android:divider="@android:color/transparent"
+        dslv:collapsed_height="2dp"
+        dslv:remove_enabled="false"
+        dslv:remove_mode="flingRemove"
+        dslv:fling_handle_id="@+id/card_layout"
+        android:clipToPadding="false"
+        android:scrollbarStyle="outsideOverlay"/>
+</RelativeLayout>

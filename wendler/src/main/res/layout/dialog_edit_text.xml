@@ -1,16 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:windowMinWidthMajor="@android:dimen/dialog_min_width_major"
+    android:padding="@dimen/spacing_medium">
+
+    <TextView
+        android:id="@+id/title"
+        style="@style/DialogTitle"/>
 
     <EditText
+        android:layout_below="@+id/title"
+        android:layout_above="@+id/button_bar"
         android:id="@+id/editText"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:gravity="top|start|left"
+        android:gravity="top|start"
         android:hint="@string/enter_notes"
         android:minLines="10"/>
-</LinearLayout>
+
+    <LinearLayout
+        android:layout_alignParentBottom="true"
+        android:id="@+id/button_bar"
+        style="@style/DialogButtonBar">
+
+        <Button
+            android:id="@+id/button_cancel"
+            style="@style/DialogButton"
+            android:text="@string/btn_cancel"/>
+
+        <Button
+            android:id="@+id/button_save"
+            style="@style/DialogButton"/>
+    </LinearLayout>
+</RelativeLayout>

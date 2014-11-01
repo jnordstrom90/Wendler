@@ -1,0 +1,46 @@
+apply plugin: 'com.android.library'
+
+repositories {
+    jcenter()
+}
+
+//noinspection GroovyAssignabilityCheck
+dependencies {
+    compile 'com.android.support:support-v4:21.0.+'
+    compile 'com.nineoldandroids:library:2.4.0'
+}
+
+android {
+    compileSdkVersion 21
+    buildToolsVersion '21.1.0'
+
+    defaultConfig {
+        applicationId 'com.doomonafireball.betterpickers'
+        minSdkVersion 9
+        targetSdkVersion 21
+        versionCode 14
+        versionName '2.2.0'
+    }
+
+    lintOptions {
+        quiet true
+        abortOnError false
+    }
+
+    packagingOptions {
+        exclude "META-INF/LICENSE.txt"
+        exclude "META-INF/NOTICE.txt"
+        exclude ".readme"
+    }
+
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = ['src']
+            res.srcDirs = ['res']
+            assets.srcDirs = ['assets']
+        }
+
+        androidTest.setRoot('tests')
+    }
+}

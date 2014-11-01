@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +16,8 @@ import java.util.ArrayList;
 
 import de.psdev.licensesdialog.LicensesDialogFragment;
 import se.johan.wendler.R;
-import se.johan.wendler.adapter.AboutAdapter;
-import se.johan.wendler.dialog.ChangelogDialog;
+import se.johan.wendler.ui.adapter.AboutAdapter;
+import se.johan.wendler.ui.dialog.ChangelogDialog;
 import se.johan.wendler.model.ListItemType;
 import se.johan.wendler.model.WendlerListItem;
 import se.johan.wendler.util.Util;
@@ -44,17 +46,31 @@ public class AboutFragment extends Fragment implements AdapterView.OnItemClickLi
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.listview_empty, container, false);
-
+        ListView view = (ListView) inflater.inflate(R.layout.list_empty, container, false);
 
         AboutAdapter adapter = new AboutAdapter(
                 getActivity(),
                 generateListItems());
 
-        ListView list = (ListView) view.findViewById(R.id.listView);
-        list.setAdapter(adapter);
-        list.setOnItemClickListener(this);
+        view.setAdapter(adapter);
+        view.setOnItemClickListener(this);
         return view;
+    }
+
+    /**
+     * Create the Toolbar.
+     */
+    private void initToolbar(View view) {
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.tool_bar);
+        toolbar.setTitle(R.string.title_about);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().finish();
+            }
+        });
+        ((ActionBarActivity) getActivity()).setSupportActionBar(toolbar);
     }
 
     /**
@@ -77,7 +93,7 @@ public class AboutFragment extends Fragment implements AdapterView.OnItemClickLi
 
                 sendIntent.putExtra(
                         Intent.EXTRA_SUBJECT,
-                        getString(R.string.app_name) + " " +
+                        getString(R.string.wendlerized) + " " +
                                 Util.getCurrentAppVersion(getActivity()) + " " + "feedback"
                 );
                 startActivity(
@@ -102,19 +118,19 @@ public class AboutFragment extends Fragment implements AdapterView.OnItemClickLi
                 ListItemType.REGULAR,
                 getString(R.string.change_log),
                 version,
-                R.drawable.ic_changelog));
+                R.drawable.ic_format_list_bulleted_black_24dp));
 
         items.add(new WendlerListItem(
                 ListItemType.REGULAR,
                 getString(R.string.contact),
                 null,
-                R.drawable.ic_mail));
+                R.drawable.ic_mail_black_24dp));
 
         items.add(new WendlerListItem(
                 ListItemType.REGULAR,
                 getString(R.string.licences),
                 null,
-                R.drawable.ic_licenses));
+                R.drawable.ic_format_align_justify_black_24dp));
         return items;
     }
 }

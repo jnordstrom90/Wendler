@@ -18,9 +18,8 @@ import java.util.Arrays;
 import se.johan.wendler.R;
 import se.johan.wendler.R.array;
 import se.johan.wendler.R.layout;
-import se.johan.wendler.R.string;
-import se.johan.wendler.fragment.base.InitFragment;
 import se.johan.wendler.sql.SqlHandler;
+import se.johan.wendler.fragment.base.InitFragment;
 
 /**
  * Set the order for the exercises.
@@ -63,7 +62,7 @@ public class InitOrderFragment extends InitFragment implements DropListener {
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.init_order_layout, container, false);
+        View view = inflater.inflate(R.layout.fragment_init_order, container, false);
 
         mListView = (DragSortListView) view.findViewById(R.id.list_workout_order);
         mListView.setDropListener(this);
@@ -85,7 +84,15 @@ public class InitOrderFragment extends InitFragment implements DropListener {
      */
     @Override
     public String getHelpingMessage() {
-        return getString(string.help_order_dialog);
+        return getString(R.string.help_order_dialog);
+    }
+
+    /**
+     * Return the helping message of the view.
+     */
+    @Override
+    public int getHelpingMessageRes() {
+        return R.string.help_order_dialog;
     }
 
     /**
@@ -142,7 +149,7 @@ public class InitOrderFragment extends InitFragment implements DropListener {
         }
 
         mAdapter = new ArrayAdapter<String>(
-                getActivity(), layout.dslv_item_handle_right, R.id.text, mListOfExercises);
+                getActivity(), layout.item_dslv, R.id.text, mListOfExercises);
         mListView.setAdapter(mAdapter);
     }
 

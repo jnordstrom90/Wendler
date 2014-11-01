@@ -18,7 +18,7 @@ import se.johan.wendler.fragment.base.EditFragment;
 import se.johan.wendler.sql.SqlHandler;
 import se.johan.wendler.util.Util;
 import se.johan.wendler.util.WendlerizedLog;
-import se.johan.wendler.view.SlidingTabLayout;
+import se.johan.wendler.ui.view.SlidingTabLayout;
 
 /**
  * Parent fragment used for editable fragments in the drawer.
@@ -38,6 +38,11 @@ public class DrawerEditFragment extends DrawerFragment {
     @Override
     public String getFragmentTag() {
         return TAG;
+    }
+
+    @Override
+    public int getMessageText() {
+        return R.string.help_edit;
     }
 
     public DrawerEditFragment() {
@@ -60,7 +65,7 @@ public class DrawerEditFragment extends DrawerFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              final Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.empty_view_pager_layout, container, false);
+        View view = inflater.inflate(R.layout.view_pager, container, false);
 
         mAdapter = new SectionsPagerAdapter(getActivity().getSupportFragmentManager());
         mViewPager = (ViewPager) view.findViewById(R.id.pager);

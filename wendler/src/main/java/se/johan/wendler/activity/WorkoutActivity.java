@@ -5,12 +5,14 @@ import android.app.ActionBar.TabListener;
 import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.content.res.Resources;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.support.v7.widget.Toolbar;
 import android.text.format.Time;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,27 +22,26 @@ import android.view.ViewGroup;
 import com.doomonafireball.betterpickers.calendardatepicker.CalendarDatePickerDialog;
 import com.github.amlcurran.showcaseview.OnShowcaseEventListener;
 import com.github.amlcurran.showcaseview.ShowcaseView;
-import com.github.amlcurran.showcaseview.targets.ActionItemTarget;
+import com.github.amlcurran.showcaseview.targets.Target;
 
 import java.sql.SQLException;
 
 import se.johan.wendler.R;
-import se.johan.wendler.R.layout;
-import se.johan.wendler.R.string;
-import se.johan.wendler.activity.base.BaseActivity;
 import se.johan.wendler.animation.ZoomOutPageTransformer;
-import se.johan.wendler.dialog.ConfirmationDialog;
-import se.johan.wendler.dialog.EditTextDialog;
-import se.johan.wendler.dialog.StopwatchDialog;
+import se.johan.wendler.model.Workout;
+import se.johan.wendler.sql.SqlHandler;
+import se.johan.wendler.activity.base.BaseActivity;
+import se.johan.wendler.ui.dialog.ConfirmationDialog;
+import se.johan.wendler.ui.dialog.EditTextDialog;
+import se.johan.wendler.ui.dialog.StopwatchDialog;
 import se.johan.wendler.fragment.WorkoutAdditionalFragment;
 import se.johan.wendler.fragment.WorkoutMainFragment;
 import se.johan.wendler.fragment.base.WorkoutFragment;
-import se.johan.wendler.model.Workout;
-import se.johan.wendler.sql.SqlHandler;
+import se.johan.wendler.ui.view.SlidingTabLayout;
 import se.johan.wendler.util.Constants;
 import se.johan.wendler.util.PreferenceUtil;
 import se.johan.wendler.util.WendlerizedLog;
-import se.johan.wendler.view.SlidingTabLayout;
+import se.johan.wendler.util.WorkoutHolder;
 
 /**
  * Activity for handling the workout fragments
@@ -52,30 +53,32 @@ public class WorkoutActivity extends BaseActivity implements TabListener,
     private static final String EXTRA_ELAPSED_TIME = "elapsedTime";
     private static final String EXTRA_TIMER_IS_RUNNING = "timerIsRunning";
     private static final String EXTRA_CURRENT_PAGE = "mCurrentPage";
-    private static final String EXTRA_WORKOUT = "workout";
 
     private ViewPager mViewPager;
     private Workout mWorkout;
     private ShowcaseView mShowcaseView;
     private int mCurrentPage;
     private long mTimeElapsed = -1;
-    private boolean mTimerIsRunning = false;
+    private boolean mTimerIsRunning;
 
     /**
      * Called when our activity is created.
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(layout.workout_activity_view);
-
-        mWorkout = getIntent().getExtras().getParcelable(Constants.BUNDLE_EXERCISE_ITEM);
+        super.onCreate(savedInstanceState, R.layout.activity_workout);
 
         if (savedInstanceState != null) {
+            mWorkout = savedInstanceState.getParcelable(Constants.BUNDLE_EXERCISE_ITEM);
+            mTimerIsRunning = savedInstanceState.getBoolean(EXTRA_TIMER_IS_RUNNING);
             mCurrentPage = savedInstanceState.getInt(EXTRA_CURRENT_PAGE, 0);
             mTimeElapsed = savedInstanceState.getLong(EXTRA_ELAPSED_TIME, -1);
-            mTimerIsRunning = savedInstanceState.getBoolean(EXTRA_TIMER_IS_RUNNING, false);
-            mWorkout = savedInstanceState.getParcelable(EXTRA_WORKOUT);
+        } else {
+            WorkoutHolder.WorkoutItem item = WorkoutHolder.getInstance().getWorkout();
+            mWorkout = item.getWorkout();
+            mTimerIsRunning = item.isTimerRunning();
+            mCurrentPage = item.getCurrentPage();
+            mTimeElapsed = item.getElapsedTime();
         }
 
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -106,7 +109,7 @@ public class WorkoutActivity extends BaseActivity implements TabListener,
 
         mViewPager = (ViewPager) findViewById(R.id.pager);
         TwoFragmentAdapter adapter =
-                new TwoFragmentAdapter(fragmentManager, main, extra, mWorkout, getResources());
+                new TwoFragmentAdapter(fragmentManager, main, extra, getResources());
 
         if (mViewPager != null) {
             mViewPager.setAdapter(adapter);
@@ -123,10 +126,6 @@ public class WorkoutActivity extends BaseActivity implements TabListener,
                     .commit();
         }
 
-        String text = String.format(
-                getString(string.actionbar_subtitle_workout),
-                mWorkout.getDisplayName(),
-                mWorkout.getWeek());
 
         CalendarDatePickerDialog dialog = (CalendarDatePickerDialog)
                 fragmentManager.findFragmentByTag(CalendarDatePickerDialog.class.getName());
@@ -134,32 +133,46 @@ public class WorkoutActivity extends BaseActivity implements TabListener,
             dialog.setOnDateSetListener(mDateSetListener);
         }
 
-        if (getActionBar() != null) {
-            getActionBar().setTitle(text);
-        }
+        String text = String.format(
+                getString(R.string.actionbar_title_workout), mWorkout.getDisplayName());
+        updateTitle(text);
+
+        String subtitle = getString(
+                R.string.actionbar_subtitle_workout,
+                mWorkout.getWeek(),
+                mWorkout.getCycle(),
+                mWorkout.getMainExercise().getWeight());
+        updateHelpMessage(subtitle);
+
     }
 
     /**
-     * Called when we need to save our instance
+     * Called when the application is paused.
      */
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        int position = mViewPager != null ? mViewPager.getCurrentItem() : mCurrentPage;
-        outState.putInt(EXTRA_CURRENT_PAGE, position);
-        outState.putLong(EXTRA_ELAPSED_TIME, mTimeElapsed);
-        outState.putBoolean(EXTRA_TIMER_IS_RUNNING, mTimerIsRunning);
-        saveMainAndAdditionalExercises();
-        outState.putParcelable(EXTRA_WORKOUT, mWorkout);
+    protected void onPause() {
+        super.onPause();
+        WorkoutHolder.getInstance().putWorkout(
+                new WorkoutHolder.WorkoutItem(
+                        mWorkout,
+                        mCurrentPage,
+                        mTimerIsRunning,
+                        mTimeElapsed));
     }
 
-    /**
-     * Called when back is pressed.
-     */
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        checkWorkoutForDeload(false);
+    protected int getNavigationResource() {
+        return R.drawable.ic_arrow_back_black_24dp;
+    }
+
+    @Override
+    protected String getToolbarTitle() {
+        return "";
+    }
+
+    @Override
+    protected int getToolbarHelpMessage() {
+        return 0;
     }
 
     /**
@@ -207,11 +220,40 @@ public class WorkoutActivity extends BaseActivity implements TabListener,
     }
 
     /**
+     * Override on back press to store the workout.
+     */
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        checkWorkoutForDeload(false);
+    }
+
+    /**
+     * Save our instance when needed.
+     */
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        int pos = mViewPager != null ? mViewPager.getCurrentItem() : mCurrentPage;
+        outState.putParcelable(Constants.BUNDLE_EXERCISE_ITEM, mWorkout);
+        outState.putBoolean(EXTRA_TIMER_IS_RUNNING, mTimerIsRunning);
+        outState.putInt(EXTRA_CURRENT_PAGE, pos);
+        outState.putLong(EXTRA_ELAPSED_TIME, mTimeElapsed);
+    }
+
+    /**
      * Show the ShowcaseView for the user informing him/her about not entering any repetitions.
      */
     private void showShowcaseView() {
+        Target target = new Target() {
+            @Override
+            public Point getPoint() {
+                Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
+                return new Point(toolbar.getRight(), (toolbar.getHeight() / 2));
+            }
+        };
         mShowcaseView = new ShowcaseView.Builder(this, true)
-                .setTarget(new ActionItemTarget(this, R.id.action_done))
+                .setTarget(target)
                 .setContentTitle(R.string.showcase_workout_finish_title)
                 .setContentText(R.string.showcase_workout_finish_detail)
                 .setShowcaseEventListener(mShowcaseListener)
@@ -253,9 +295,7 @@ public class WorkoutActivity extends BaseActivity implements TabListener,
      */
     @Override
     public void onPageSelected(int i) {
-        if (getActionBar() != null) {
-            getActionBar().setSelectedNavigationItem(i);
-        }
+        // Not used
     }
 
     /**
@@ -347,29 +387,6 @@ public class WorkoutActivity extends BaseActivity implements TabListener,
     }
 
     /**
-     * Collect the data from the main and additional exercises
-     */
-    private void saveMainAndAdditionalExercises() {
-        if (mWorkout == null) {
-            return;
-        }
-
-        FragmentManager fragmentManager = getSupportFragmentManager();
-
-        WorkoutMainFragment main =
-                (WorkoutMainFragment) fragmentManager.findFragmentByTag(WorkoutMainFragment.TAG);
-        WorkoutAdditionalFragment extra = (WorkoutAdditionalFragment)
-                fragmentManager.findFragmentByTag(WorkoutAdditionalFragment.TAG);
-
-        if (main != null) {
-            mWorkout.setMainExercise(main.getMainExercise());
-        }
-        if (extra != null) {
-            mWorkout.setAdditionalExercises(extra.getAdditionalExercises());
-        }
-    }
-
-    /**
      * Return if we should display the ShowcaseView in case the user hasn't entered any repetitions.
      */
     private boolean shouldShowShowcaseView() {
@@ -377,8 +394,8 @@ public class WorkoutActivity extends BaseActivity implements TabListener,
                 (WorkoutMainFragment) getSupportFragmentManager()
                         .findFragmentByTag(WorkoutMainFragment.TAG);
         return !main.hasSetReps()
-                && !PreferenceUtil.getBoolean(this,
-                PreferenceUtil.KEY_HAS_SEEN_SHOWCASE_FINISH_WORKOUTS, false)
+                && !PreferenceUtil.getBoolean(
+                this, PreferenceUtil.KEY_HAS_SEEN_SHOWCASE_FINISH_WORKOUTS, false)
                 && mShowcaseView == null
                 && mWorkout.getWeek() != 4;
     }
@@ -431,6 +448,7 @@ public class WorkoutActivity extends BaseActivity implements TabListener,
         }
         WendlerizedLog.d("Stored workout and we were successful: " + (code == Activity.RESULT_OK));
         setResult(code);
+        WorkoutHolder.getInstance().destroy();
         finish();
     }
 
@@ -482,14 +500,12 @@ public class WorkoutActivity extends BaseActivity implements TabListener,
         private android.support.v4.app.FragmentTransaction currentTransaction = null;
         private Fragment currentPrimaryItem = null;
         private final Resources res;
-        private final Workout mWorkout;
 
-        public TwoFragmentAdapter(FragmentManager fragmentManager, Fragment one,
-                                  Fragment two, Workout workout, Resources res) {
+        public TwoFragmentAdapter(
+                FragmentManager fragmentManager, Fragment one, Fragment two, Resources res) {
             this.fragmentManager = fragmentManager;
             this.one = one;
             this.two = two;
-            this.mWorkout = workout;
             this.res = res;
         }
 
@@ -552,8 +568,7 @@ public class WorkoutActivity extends BaseActivity implements TabListener,
                 case 0:
                     return res.getString(R.string.main_exercise).toUpperCase();
                 default:
-                    int count = mWorkout.getAdditionalExercises().size();
-                    return res.getQuantityString(R.plurals.additional_exercise, count);
+                    return res.getString(R.string.additional_exercise).toUpperCase();
             }
         }
 

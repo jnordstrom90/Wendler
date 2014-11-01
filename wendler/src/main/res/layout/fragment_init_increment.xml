@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:padding="@dimen/spacing_medium">
+
+    <TextView
+        android:text="@string/press"
+        android:id="@+id/textView"
+        style="@style/ListHeader"
+        android:layout_alignStart="@+id/et_increment_press"
+        android:layout_alignLeft="@+id/et_increment_press"/>
+
+    <TextView
+        android:text="@string/deadlift"
+        android:id="@+id/textView2"
+        style="@style/ListHeader"
+        android:layout_alignStart="@+id/et_increment_deadlift"
+        android:layout_alignLeft="@+id/et_increment_deadlift"
+        android:layout_below="@+id/et_increment_press"
+        android:paddingTop="@dimen/spacing_small"/>
+
+    <TextView
+        android:text="@string/bench"
+        android:id="@+id/textView3"
+        style="@style/ListHeader"
+        android:layout_alignStart="@+id/et_increment_bench"
+        android:layout_alignLeft="@+id/et_increment_bench"
+        android:layout_below="@+id/et_increment_deadlift"
+        android:paddingTop="@dimen/spacing_small"/>
+
+    <TextView
+        style="@style/ListHeader"
+        android:text="@string/squat"
+        android:id="@+id/textView4"
+        android:layout_alignStart="@+id/et_increment_press"
+        android:layout_alignLeft="@+id/et_increment_press"
+        android:layout_below="@+id/et_increment_bench"
+        android:paddingTop="@dimen/spacing_small"/>
+
+    <se.johan.wendler.ui.view.FilterEditText
+        android:inputType="numberDecimal"
+        android:id="@+id/et_increment_press"
+        android:layout_centerHorizontal="true"
+        android:hint="@string/hint_increment"
+        app:max="100"
+        app:min="1"
+        android:ems="10"
+        style="@style/CenterEditText"
+        android:layout_below="@+id/textView"/>
+
+    <se.johan.wendler.ui.view.FilterEditText
+        android:inputType="numberDecimal"
+        android:id="@+id/et_increment_deadlift"
+        android:layout_centerHorizontal="true"
+        android:hint="@string/hint_increment"
+        app:min="1"
+        app:max="100"
+        android:ems="10"
+        style="@style/CenterEditText"
+        android:layout_below="@+id/textView2"/>
+
+    <se.johan.wendler.ui.view.FilterEditText
+        android:inputType="numberDecimal"
+        android:id="@+id/et_increment_bench"
+        android:hint="@string/hint_increment"
+        app:min="1"
+        app:max="100"
+        android:ems="10"
+        style="@style/CenterEditText"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/textView3"/>
+
+    <se.johan.wendler.ui.view.FilterEditText
+        android:inputType="numberDecimal"
+        android:id="@+id/et_increment_squat"
+        android:layout_centerHorizontal="true"
+        android:hint="@string/hint_increment"
+        app:min="1"
+        app:max="100"
+        android:ems="10"
+        style="@style/CenterEditText"
+        android:layout_below="@+id/textView4"/>
+</RelativeLayout>

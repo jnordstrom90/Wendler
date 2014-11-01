@@ -13,7 +13,7 @@ import se.johan.wendler.R;
 import se.johan.wendler.animation.ZoomOutPageTransformer;
 import se.johan.wendler.fragment.base.DrawerFragment;
 import se.johan.wendler.util.Constants;
-import se.johan.wendler.view.SlidingTabLayout;
+import se.johan.wendler.ui.view.SlidingTabLayout;
 
 /**
  * Parent fragment for adding permanent additional exercises to a workout.
@@ -25,6 +25,11 @@ public class DrawerAdditionalWorkoutsFragment extends DrawerFragment {
     @Override
     public String getFragmentTag() {
         return TAG;
+    }
+
+    @Override
+    public int getMessageText() {
+        return R.string.help_additional_exercises;
     }
 
     public DrawerAdditionalWorkoutsFragment() {
@@ -44,7 +49,7 @@ public class DrawerAdditionalWorkoutsFragment extends DrawerFragment {
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.empty_view_pager_layout, container, false);
+        View view = inflater.inflate(R.layout.view_pager, container, false);
 
         SectionsPagerAdapter adapter =
                 new SectionsPagerAdapter(getActivity().getSupportFragmentManager());

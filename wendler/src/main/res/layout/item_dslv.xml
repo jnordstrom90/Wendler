@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="@dimen/list_single_line_height"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/list_single_line_height"
+        android:layout_weight="1"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:gravity="center_vertical"
+        android:paddingStart="8dp"
+        android:paddingLeft="8dp"/>
+
+    <se.johan.wendler.ui.view.DragGripView
+        android:id="@+id/drag_handle"
+        android:layout_width="64dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="fill_vertical|end|right"
+        android:paddingStart="16dp"
+        android:paddingLeft="16dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
+        android:color="#2333"/>
+</LinearLayout>

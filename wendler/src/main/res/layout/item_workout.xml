@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="@dimen/spacing_medium"
+    android:background="?attr/selectableItemBackground">
+
+    <TextView
+        style="@style/CardView.Title"
+        android:id="@+id/textExercise"
+        android:drawablePadding="@dimen/spacing_small"/>
+
+    <TextView
+        style="@style/CardView.Subtitle"
+        android:id="@+id/textWeekCycle"/>
+
+    <TextView
+        style="@style/CardView.Subtitle"
+        android:id="@+id/textGoal"/>
+</LinearLayout>

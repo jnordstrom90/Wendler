@@ -11,4 +11,9 @@ public abstract class DrawerFragment extends Fragment {
      * Get the tag for the currently displayed fragment
      */
     public abstract String getFragmentTag();
+
+    /**
+     * Returns the help text for the displayed fragment.
+     */
+    public abstract int getMessageText();
 }

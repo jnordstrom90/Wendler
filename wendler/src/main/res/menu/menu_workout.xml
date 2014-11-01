@@ -1,24 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_notes"
         android:title="@string/action_item_notes"
-        android:icon="@drawable/ic_action_document"
-        android:showAsAction="ifRoom"/>
+        android:icon="@drawable/ic_assignment_white_24dp"
+        app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/action_timer"
         android:title="@string/stopwatch_title"
-        android:icon="@drawable/ic_action_clock"
-        android:showAsAction="ifRoom"/>
+        android:icon="@drawable/ic_timer_white_24dp"
+        app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/action_calendar"
         android:title="@string/ic_action_calendar_title"
-        android:icon="@drawable/ic_action_calendar_month"
-        android:showAsAction="ifRoom"/>
+        android:icon="@drawable/ic_today_white_24dp"
+        app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/action_done"
         android:title="@string/action_item_done"
-        android:icon="@drawable/ic_action_accept"
-        android:showAsAction="always"/>
+        android:icon="@drawable/ic_check_white_24dp"
+        app:showAsAction="always"/>
 </menu>

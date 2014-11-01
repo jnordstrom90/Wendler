@@ -40,6 +40,11 @@ public class DrawerBackupManagerFragment extends DrawerFragment {
         return TAG;
     }
 
+    @Override
+    public int getMessageText() {
+        return R.string.help_backup_and_restore;
+    }
+
     public DrawerBackupManagerFragment() {
     }
 
@@ -56,7 +61,7 @@ public class DrawerBackupManagerFragment extends DrawerFragment {
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.backup_restore_layout, container, false);
+        View view = inflater.inflate(R.layout.fragment_backup_restore, container, false);
         mBtnBackup = (CircularProgressButton) view.findViewById(R.id.btnBackup);
         mBtnBackup.setOnClickListener(mBackupClickListener);
         mBtnRestore = (CircularProgressButton) view.findViewById(R.id.btnRestore);

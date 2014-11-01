@@ -25,6 +25,11 @@ public abstract class InitFragment extends Fragment {
     public abstract String getHelpingMessage();
 
     /**
+     * Return the helping message resource for this fragment.
+     */
+    public abstract int getHelpingMessageRes();
+
+    /**
      * Notify the user of an error in the input fields.
      */
     public abstract void notifyError();

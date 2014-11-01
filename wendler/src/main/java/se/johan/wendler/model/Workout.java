@@ -35,13 +35,15 @@ public class Workout implements Parcelable {
                    int week,
                    int cycle,
                    int cycleName,
-                   int workoutId) {
+                   int workoutId,
+                   MainExercise mainExercise) {
         mName = name;
         mWeek = week;
         mCycle = cycle;
         mCycleDisplayName = cycleName;
         mWorkoutId = workoutId;
         mDisplayName = displayName;
+        mMainExercise = mainExercise;
     }
 
     /**

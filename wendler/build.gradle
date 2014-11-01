@@ -1,36 +1,39 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 19
-    buildToolsVersion "19.1"
+    compileSdkVersion 21
+    buildToolsVersion "21.1.0"
 
     defaultConfig {
-        minSdkVersion 14
-        targetSdkVersion 19
-        versionCode 24
-        versionName "1.1.2.2"
+        minSdkVersion 15
+        targetSdkVersion 21
+        versionCode 25
+        versionName "1.2"
     }
     buildTypes {
         release {
             runProguard false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            minifyEnabled true
+            shrinkResources true
         }
     }
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar', '*.aare'])
-    compile 'com.nhaarman.listviewanimations:library:2.6.0'
-    compile 'com.android.support:support-v4:20+'
-    compile ("com.doomonafireball.betterpickers:library:1.5.2") {
-        exclude module: 'support-v4'
-    }
-    compile 'com.github.gabrielemariotti.changeloglib:library:1.5.1'
+    compile 'com.android.support:support-v4:21.0.+'
+    compile 'com.android.support:appcompat-v7:21.0.+'
+    compile 'com.android.support:cardview-v7:21.0.+'
+    compile 'com.github.gabrielemariotti.changeloglib:library:1.5.2'
     compile project(':libraries:drag-sort-listview')
-    compile 'com.github.amlcurran.showcaseview:library:5.0.0'
-    compile('de.psdev.licensesdialog:licensesdialog:1.5.0') {
+    compile project(':libraries:betterpickers')
+    compile 'com.github.amlcurran.showcaseview:library:5.1.0-SNAPSHOT@aar'
+    compile('de.psdev.licensesdialog:licensesdialog:1.6.0') {
         exclude module: 'support-v4'
     }
-    compile 'com.github.dmytrodanylyk.circular-progress-button:library:1.1.0'
+    compile 'com.melnykov:floatingactionbutton:1.0.6'
+    compile 'com.github.dmytrodanylyk.circular-progress-button:library:1.1.3'
     compile 'com.android.support:support-v4-preferencefragment:1.0.0@aar'
+    compile 'com.williammora:snackbar:1.4.0'
 }

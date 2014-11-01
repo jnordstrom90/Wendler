@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    xmlns:dslv="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.mobeta.android.dslv.DragSortListView
+            android:id="@+id/list_drag"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/spacing_small"
+            android:dividerHeight="@dimen/spacing_small"
+            android:divider="@android:color/transparent"
+            dslv:collapsed_height="2dp"
+            dslv:drag_enabled="false"
+            dslv:drag_handle_id="@+id/card_layout"
+            dslv:drag_scroll_start="0.33"
+            dslv:drag_start_mode="onLongPress"
+            dslv:float_alpha="0.6"
+            dslv:max_drag_scroll_speed="0.5"
+            dslv:remove_enabled="false"
+            dslv:remove_mode="flingRemove"
+            dslv:slide_shuffle_speed="0.3"
+            dslv:sort_enabled="true"
+            dslv:fling_handle_id="@+id/card_layout"
+            android:clipToPadding="false"
+            android:scrollbarStyle="outsideOverlay"/>
+
+        <com.melnykov.fab.FloatingActionButton
+            android:id="@+id/button_floating_action"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/spacing_medium"
+            android:src="@drawable/ic_add_white_36dp"
+            fab:fab_colorNormal="@color/accent_color"
+            fab:fab_colorPressed="@color/theme_pink_pressed"/>
+    </FrameLayout>
+</RelativeLayout>

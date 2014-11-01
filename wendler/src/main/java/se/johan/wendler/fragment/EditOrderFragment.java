@@ -58,7 +58,7 @@ public class EditOrderFragment extends EditFragment implements DragSortListView.
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.init_order_layout, container, false);
+        View view = inflater.inflate(R.layout.fragment_init_order, container, false);
 
         mListView = (DragSortListView) view.findViewById(R.id.list_workout_order);
         mListView.setDropListener(this);
@@ -141,7 +141,7 @@ public class EditOrderFragment extends EditFragment implements DragSortListView.
         }
 
         mAdapter = new ArrayAdapter<String>(
-                getActivity(), R.layout.dslv_item_handle_right, R.id.text, mListOfExercises);
+                getActivity(), R.layout.item_dslv, R.id.text, mListOfExercises);
         mListView.setAdapter(mAdapter);
     }
 

@@ -18,15 +18,15 @@ import com.github.amlcurran.showcaseview.targets.Target;
 
 import se.johan.wendler.R;
 import se.johan.wendler.R.layout;
-import se.johan.wendler.adapter.MainExerciseAdapter;
-import se.johan.wendler.fragment.base.WorkoutFragment;
+import se.johan.wendler.ui.adapter.MainExerciseAdapter;
 import se.johan.wendler.model.MainExercise;
 import se.johan.wendler.model.Workout;
 import se.johan.wendler.sql.SqlHandler;
+import se.johan.wendler.fragment.base.WorkoutFragment;
+import se.johan.wendler.ui.view.MainExerciseFooterView;
 import se.johan.wendler.util.PreferenceUtil;
 import se.johan.wendler.util.Util;
 import se.johan.wendler.util.WendlerMath;
-import se.johan.wendler.view.MainExerciseFooterView;
 
 /**
  * WorkoutFragment for the main exercise.
@@ -67,10 +67,10 @@ public class WorkoutMainFragment extends WorkoutFragment implements
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.listview_empty, container, false);
+        View view = inflater.inflate(R.layout.list_empty, container, false);
         mListView = (ListView) view.findViewById(R.id.listView);
         mListView.setOnItemClickListener(this);
-        mFooter = (MainExerciseFooterView) inflater.inflate(layout.main_exercise_footer, null);
+        mFooter = (MainExerciseFooterView) inflater.inflate(layout.footer_main_exercise, null);
 
         setObserver();
 

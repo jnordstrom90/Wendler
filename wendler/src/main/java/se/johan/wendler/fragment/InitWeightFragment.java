@@ -18,7 +18,7 @@ import se.johan.wendler.fragment.base.InitFragment;
 import se.johan.wendler.sql.SqlHandler;
 import se.johan.wendler.util.WendlerConstants;
 import se.johan.wendler.util.WendlerMath;
-import se.johan.wendler.view.InitWeightView;
+import se.johan.wendler.ui.view.InitWeightView;
 
 /**
  * This Fragment will let the user set the starting weights for the workouts.
@@ -60,7 +60,7 @@ public class InitWeightFragment extends InitFragment implements
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.init_weight_fragment, container, false);
+        View view = inflater.inflate(R.layout.fragment_init_weight, container, false);
 
         mInitPress = (InitWeightView) view.findViewById(id.init_press);
         mInitDeadlift = (InitWeightView) view.findViewById(id.init_deadlift);
@@ -126,7 +126,16 @@ public class InitWeightFragment extends InitFragment implements
      */
     @Override
     public String getHelpingMessage() {
-        return getString(string.help_weight_dialog);
+        return getString(R.string.help_weight_dialog);
+
+    }
+
+    /**
+     * Return the helping message of the view.
+     */
+    @Override
+    public int getHelpingMessageRes() {
+        return R.string.help_weight_dialog;
 
     }
 

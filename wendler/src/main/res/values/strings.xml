@@ -2,7 +2,7 @@
 <resources>
 
     <!-- Titles -->
-    <string name="app_name">Wendlerized</string>
+    <string name="wendlerized">Wendlerized</string>
     <string name="title_about">About</string>
     <string name="title_starting_weights">Starting weights</string>
     <string name="title_order_of_workouts">Order of workouts</string>
@@ -24,6 +24,7 @@
     <!-- ContextMenu -->
     <string name="context_edit">Edit</string>
     <string name="context_delete">Delete</string>
+    <string name="context_complete">Complete</string>
 
     <!-- EditText hints -->
     <string name="hint_weight">Weight</string>
@@ -39,27 +40,15 @@
     <string name="hint_exercise_name">Name</string>
 
     <!-- Help dialogs texts -->
-    <string name="help_weight_dialog">Calculate your 1 rep max either using
-        Wendler\'s formula by entering weight and reps performed or you can enter
-        your desired weight directly. You\'ll also set the percentage you calculate your training
-        max, Wendler recommends 90%.</string>
-    <string name="help_order_dialog">Drag the workouts in the order you desire to complete
-     them.</string>
-    <string name="help_percentage_dialog">Choose what percentages to calculate the
-        workouts with.</string>
-    <string name="help_increment_dialog">Enter the increments which your 1 rep maxes will
-        increase with after a successful cycle.</string>
+    <string name="help_weight_dialog">Calculate your 1RM and set your TM-percentage</string>
+    <string name="help_order_dialog">Drag the workouts in the order you wish to complete them</string>
+    <string name="help_percentage_dialog">Enter the percentages used for the workout weights</string>
+    <string name="help_increment_dialog">Setup the increment which each exercise increases with</string>
     <string name="first_time_dialog">Thanks for trying my 531 application! Please
-        note that is an unofficial application and support will not be given from Wendler
+        note that this is an unofficial application and support will not be given from Wendler
         himself. I highly recommend you to buy his books since they are very informative
-        and Wendler should get credits for this wonderful program. Please now setup the
-        workouts and feel free to explore the application, many of the features you set
-        up will be able to be customized later on as well.</string>
-
-    <!-- Toasts -->
-    <string name="toast_error_init">Fill in needed information on this page</string>
-    <string name="toast_error_name">Choose a name for the exercise</string>
-    <string name="toast_error_weight">Set a goal either in reps or sets</string>
+        and Wendler should get credits for this wonderful program. Now setup your workouts
+        as you wish and explore the application.</string>
 
     <!-- Buttons -->
     <string name="btn_ok">OK</string>
@@ -106,8 +95,9 @@
     <string name="one_rm_with_number">1RM: %1$s</string>
     <string name="performed_reps_with_number">Reps: %1$s</string>
     <string name="extra_exercise_weight">Weight: %1$s</string>
+    <string name="extra_exercise_percentage">%1$s%% of %2$s</string>
     <string name="extra_exercise_progress">Progress: %1$s/%2$s</string>
-    <string name="extra_exercise_goal">Goal: %1$s</string>
+    <string name="exercise_goal">Goal: %1$s</string>
 
     <!-- On/Off state explanation texts -->
     <string name="weight_base_main">Weight based on a main exercise</string>
@@ -121,16 +111,13 @@
 
     <!-- Undo bar -->
     <string name="undo">Undo</string>
-    <string name="tap_to_undo">%1$s deleted, tap to undo</string>
+    <string name="snack_bar_deleted">%1$s deleted</string>
 
     <!-- Actionbar titles -->
-    <string name="actionbar_subtitle_workout">%1$s, week %2$s</string>
-    <string name="main_exercise">Main Exercise</string>
-
-    <plurals name="additional_exercise">
-        <item quantity="one">Additional exercise</item>
-        <item quantity="other">@string/drawer_additional</item>
-    </plurals>
+    <string name="actionbar_title_workout">%1$s</string>
+    <string name="actionbar_subtitle_workout">Week %1$s, Cycle %2$s\nTraining Max: %3$s</string>
+    <string name="main_exercise">Main</string>
+    <string name="additional_exercise">Additional</string>
 
     <string name="add_exercise">Add exercise</string>
     <string name="add_additional_exercise">{0,choice,0#Add an exercise|1#Add another}</string>
@@ -218,4 +205,14 @@
     <string name="last_successful_backup">Last backup: %1$s</string>
     <string name="custom_round_to_value">Custom value</string>
     <string name="custom_round_to_pref_summary">Round do closest: %1$s</string>
+
+    <string name="main_exercise_goal">Goal: %1$s+ on %2$s</string>
+    <string name="decrease_string">decrease</string>
+    <string name="increase_string">increase</string>
+    <string name="help_backup_and_restore">Keep your workouts safe or restore your them from a save file</string>
+    <string name="help_old_workouts">View and manage your completed workouts</string>
+    <string name="help_edit">Edit the order, your percentages or current stats</string>
+    <string name="help_additional_exercises">Additional exercises which show up on the given workout</string>
+    <string name="help_main_workouts">Your workouts for the current cycle</string>
+    <string name="help_workouts">Awesomesauce</string>
 </resources>

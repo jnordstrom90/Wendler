@@ -2959,6 +2959,7 @@ public class DragSortListView extends ListView {
         private boolean mTracking = false;
 
         public DragSortTracker() {
+            if (true) return;
             File root = Environment.getExternalStorageDirectory();
             mFile = new File(root, "dslv_state.txt");
 

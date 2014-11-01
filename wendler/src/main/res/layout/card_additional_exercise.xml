@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/card_layout">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/spacing_medium">
+
+            <ImageButton
+                android:id="@+id/overflow_button"
+                style="@style/CardView.Overflow"/>
+
+            <LinearLayout
+                android:id="@+id/layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_toStartOf="@id/overflow_button"
+                android:layout_toLeftOf="@id/overflow_button">
+
+                <TextView
+                    android:id="@+id/textViewName"
+                    style="@style/CardView.Title"/>
+
+                <TextView
+                    android:id="@+id/textViewWeight"
+                    android:layout_marginTop="@dimen/spacing_small"
+                    android:layout_marginBottom="@dimen/spacing_small"
+                    style="@style/CardView.Subtitle"/>
+
+                <TextView
+                    android:id="@+id/textViewProgress"
+                    style="@style/CardView.Subtitle"/>
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/button_bar"
+            android:gravity="center|start"
+            style="@style/DialogButtonBar"
+            android:layout_marginBottom="@dimen/spacing_small">
+
+            <Button
+                android:id="@+id/button_decrease"
+                style="@style/DialogButton"
+                android:text="@string/decrease_string"/>
+
+            <Button
+                android:id="@+id/button_increase"
+                style="@style/DialogButton"
+                android:text="@string/increase_string"/>
+        </LinearLayout>
+    </LinearLayout>
+</android.support.v7.widget.CardView>

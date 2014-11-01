@@ -15,7 +15,7 @@ import se.johan.wendler.sql.SqlHandler;
 import se.johan.wendler.util.WendlerConstants;
 import se.johan.wendler.util.WendlerMath;
 import se.johan.wendler.util.WendlerizedLog;
-import se.johan.wendler.view.InitPercentView;
+import se.johan.wendler.ui.view.InitPercentView;
 
 /**
  * Edit fragment where the percentages can be changed.
@@ -54,7 +54,7 @@ public class EditPercentageFragment extends EditFragment implements
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.edit_percentage_layout, container, false);
+        View view = inflater.inflate(R.layout.fragment_init_percentage, container, false);
 
         mWeekOneView = (InitPercentView) view.findViewById(R.id.init_one);
         mWeekTwoView = (InitPercentView) view.findViewById(R.id.init_two);

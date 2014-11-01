@@ -3,32 +3,30 @@ package se.johan.wendler.fragment;
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.view.animation.AnimationUtils;
+import android.view.animation.Interpolator;
 
-import com.mobeta.android.dslv.DragSortController;
+import com.melnykov.fab.FloatingActionButton;
 import com.mobeta.android.dslv.DragSortListView;
 import com.mobeta.android.dslv.SimpleFloatViewManager;
+import com.williammora.snackbar.Snackbar;
 
 import java.sql.SQLException;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 
 import se.johan.wendler.R;
-import se.johan.wendler.R.layout;
-import se.johan.wendler.adapter.AdditionalExerciseAdapter;
-import se.johan.wendler.dialog.AdditionalExerciseDialog;
-import se.johan.wendler.fragment.base.WorkoutFragment;
+import se.johan.wendler.ui.adapter.AdditionalExerciseAdapter;
 import se.johan.wendler.model.AdditionalExercise;
 import se.johan.wendler.model.TapToUndoItem;
 import se.johan.wendler.model.Workout;
 import se.johan.wendler.sql.SqlHandler;
+import se.johan.wendler.ui.dialog.AdditionalExerciseDialog;
+import se.johan.wendler.fragment.base.WorkoutFragment;
 import se.johan.wendler.util.CardsOptionHandler;
 import se.johan.wendler.util.WendlerizedLog;
-import se.johan.wendler.view.UndoBarController;
 
 /**
  * WorkoutFragment for additional exercises.
@@ -36,20 +34,17 @@ import se.johan.wendler.view.UndoBarController;
 public class WorkoutAdditionalFragment extends WorkoutFragment implements
         View.OnClickListener,
         DragSortListView.DropListener, DragSortListView.RemoveListener,
-        AdditionalExerciseDialog.onConfirmClickedListener,
-        UndoBarController.UndoListener {
+        AdditionalExerciseDialog.onConfirmClickedListener {
 
     public static final String TAG = WorkoutAdditionalFragment.class.getName();
 
     private static final String EXTRA_EXERCISE_ITEM = "exerciseItem";
     private static final String EXTRA_WORKOUT_NAME = "workoutName";
 
-    private static ArrayList<AdditionalExercise> sAdditionalExercises
-            = new ArrayList<AdditionalExercise>();
-    private View mFooterView;
+    private static ArrayList<AdditionalExercise>
+            sAdditionalExercises = new ArrayList<AdditionalExercise>();
     private AdditionalExerciseAdapter mAdapter;
     private DragSortListView mListView;
-    private UndoBarController mUndoController;
 
     public WorkoutAdditionalFragment() {
     }
@@ -76,7 +71,7 @@ public class WorkoutAdditionalFragment extends WorkoutFragment implements
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.drag_list_view_view, container, false);
+        View view = inflater.inflate(R.layout.list_drag, container, false);
 
         sAdditionalExercises = getArguments().getParcelableArrayList(EXTRA_EXERCISE_ITEM);
 
@@ -85,25 +80,17 @@ public class WorkoutAdditionalFragment extends WorkoutFragment implements
                 getActivity(),
                 sAdditionalExercises,
                 mCardHandler,
-                true);
+                AdditionalExerciseAdapter.TYPE_WORKOUT);
 
-        setupFooter(inflater);
-        mListView.addFooterView(mFooterView);
+        FloatingActionButton floatingActionButton =
+                (FloatingActionButton) view.findViewById(R.id.button_floating_action);
+        floatingActionButton.setOnClickListener(this);
+
         mListView.setAdapter(mAdapter);
         mListView.setDragEnabled(true);
         mListView.setDropListener(this);
         buildController();
-        mUndoController = new UndoBarController(view.findViewById(R.id.undobar), this);
         return view;
-    }
-
-    /**
-     * Called to save the current instance state.
-     */
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        mUndoController.onSaveInstanceState(outState);
     }
 
     /**
@@ -147,7 +134,7 @@ public class WorkoutAdditionalFragment extends WorkoutFragment implements
             handler.open();
             isNew = handler.extraExerciseIsNew(
                     getArguments().getString(EXTRA_WORKOUT_NAME), exercise.getExerciseId())
-                    && pos  == -1;
+                    && pos == -1;
         } catch (SQLException e) {
             WendlerizedLog.e("Failed to add new exercise", e);
         } finally {
@@ -161,20 +148,6 @@ public class WorkoutAdditionalFragment extends WorkoutFragment implements
         }
 
         mAdapter.notifyDataSetChanged();
-        updateFooterTitle();
-    }
-
-    /**
-     * Called when a deletion is undone.
-     */
-    @Override
-    public void onUndo(Parcelable token) {
-        TapToUndoItem item = (TapToUndoItem) token;
-        if (item != null) {
-            sAdditionalExercises.add(item.getPosition(), (AdditionalExercise) item.getObject());
-            mAdapter.notifyDataSetChanged();
-            updateFooterTitle();
-        }
     }
 
     /**
@@ -186,13 +159,6 @@ public class WorkoutAdditionalFragment extends WorkoutFragment implements
                                 SqlHandler handler,
                                 boolean delayedDeload) {
         return handler.storeAdditionalExercise(workout.getWorkoutId(), sAdditionalExercises);
-    }
-
-    /**
-     * Return the additional exercises.
-     */
-    public ArrayList<AdditionalExercise> getAdditionalExercises() {
-        return sAdditionalExercises;
     }
 
     /**
@@ -214,42 +180,84 @@ public class WorkoutAdditionalFragment extends WorkoutFragment implements
             return;
         }
         AdditionalExercise exercise = sAdditionalExercises.get(which);
+        TapToUndoItem item = new TapToUndoItem(exercise, which);
         sAdditionalExercises.remove(which);
-        String text = String.format(getString(R.string.tap_to_undo), exercise.getName());
-        mUndoController.showUndoBar(true, text, new TapToUndoItem(exercise, which));
+
+        createSnackBar(exercise, item);
         mAdapter.notifyDataSetChanged();
-        updateFooterTitle();
+    }
+
+    /**
+     * Create a snack bar where the user can undo the deletion.
+     */
+    private void createSnackBar(AdditionalExercise exercise, TapToUndoItem item) {
+        Snackbar.with(getActivity())
+                .text(getSnackBarText(exercise))
+                .actionLabel(getString(R.string.undo))
+                .actionListener(getActionListener(item))
+                .eventListener(getEventListener())
+                .show(getActivity());
+    }
+
+    /**
+     * Returns the EventListener for displaying and hiding the snack bar
+     */
+    private Snackbar.EventListener getEventListener() {
+        final View view = getActivity().findViewById(R.id.button_floating_action);
+        return new Snackbar.EventListener() {
+            @Override
+            public void onShow(int height) {
+                view.animate()
+                        .translationY(view.getTranslationY() - (height * 2))
+                        .setInterpolator(getInterpolator())
+                        .start();
+            }
+
+            @Override
+            public void onDismiss(int height) {
+                view.animate().translationY(view.getTranslationY() + (height * 2)).start();
+            }
+        };
+    }
+
+    /**
+     * Load the interpolator used for animating the FAB up.
+     */
+    private Interpolator getInterpolator() {
+        return AnimationUtils.loadInterpolator(
+                getActivity(), android.R.interpolator.decelerate_quad);
+    }
+
+    /**
+     * Returns an ActionListener for undoing the deletion.
+     */
+    private Snackbar.ActionClickListener getActionListener(final TapToUndoItem item) {
+        return new Snackbar.ActionClickListener() {
+            @Override
+            public void onActionClicked() {
+                sAdditionalExercises.add(item.getPosition(), (AdditionalExercise) item.getObject());
+                mAdapter.notifyDataSetChanged();
+            }
+        };
+    }
+
+    /**
+     * Returns the text for the snack bar.
+     */
+    private String getSnackBarText(AdditionalExercise exercise) {
+        return String.format(getString(R.string.snack_bar_deleted), exercise.getName());
     }
 
     /**
      * Build the controller for the ListView.
      */
     private void buildController() {
-        DragSortController controller = new DragSortController(mListView);
-        controller.setDragHandleId(R.id.drag_handle);
         SimpleFloatViewManager simpleFloatViewManager = new SimpleFloatViewManager(mListView);
         simpleFloatViewManager.setBackgroundColor(Color.TRANSPARENT);
         mListView.setFloatViewManager(simpleFloatViewManager);
         mListView.setRemoveListener(this);
     }
 
-    /**
-     * Initialize the footer.
-     */
-    private void setupFooter(LayoutInflater inflater) {
-        mFooterView = inflater.inflate(layout.additional_exercise_footer, null, false);
-        mFooterView.setOnClickListener(this);
-        updateFooterTitle();
-    }
-
-    /**
-     * Update the title of the footer.
-     */
-    private void updateFooterTitle() {
-        String res = getResources().getString(R.string.add_additional_exercise);
-        String text = MessageFormat.format(res, sAdditionalExercises.size());
-        ((TextView) mFooterView.findViewById(R.id.textView)).setText(text);
-    }
 
     /**
      * Return the next available exercise id.

@@ -3,11 +3,9 @@ package se.johan.wendler.activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.view.Gravity;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -17,26 +15,25 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import se.johan.wendler.R;
+import se.johan.wendler.ui.adapter.DrawerAdapter;
+import se.johan.wendler.model.ListItemType;
+import se.johan.wendler.model.WendlerListItem;
+import se.johan.wendler.sql.SqlHandler;
 import se.johan.wendler.activity.base.BaseActivity;
-import se.johan.wendler.adapter.DrawerAdapter;
-import se.johan.wendler.dialog.ChangelogDialog;
+import se.johan.wendler.ui.dialog.ChangelogDialog;
 import se.johan.wendler.fragment.DrawerAdditionalWorkoutsFragment;
 import se.johan.wendler.fragment.DrawerBackupManagerFragment;
 import se.johan.wendler.fragment.DrawerEditFragment;
 import se.johan.wendler.fragment.DrawerOldWorkoutsFragment;
 import se.johan.wendler.fragment.DrawerWorkoutNavigationFragment;
 import se.johan.wendler.fragment.base.DrawerFragment;
-import se.johan.wendler.model.ListItemType;
-import se.johan.wendler.model.WendlerListItem;
-import se.johan.wendler.sql.SqlHandler;
+import se.johan.wendler.ui.view.MyDrawerLayout;
 import se.johan.wendler.util.Constants;
 import se.johan.wendler.util.MathHelper;
 import se.johan.wendler.util.PreferenceUtil;
 import se.johan.wendler.util.Util;
 import se.johan.wendler.util.WendlerConstants;
 import se.johan.wendler.util.WendlerizedLog;
-import se.johan.wendler.view.MyDrawerLayout;
-import se.johan.wendler.view.MyDrawerLayout.OnHideListener;
 
 /**
  * Activity handling the main view in the app, including the drawer
@@ -53,7 +50,6 @@ public class MainActivity extends BaseActivity {
     private ArrayList<WendlerListItem> mListItems;
     private MyDrawerLayout mDrawerLayout;
     private ListView mDrawerList;
-    private boolean mDrawerIsLocked = false;
     private boolean mIsDrawerOpen = false;
     private DrawerAdapter mAdapter;
     private int mSavedSelection = 0;
@@ -64,9 +60,7 @@ public class MainActivity extends BaseActivity {
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.main_activity_view);
-
+        super.onCreate(savedInstanceState, R.layout.activity_main);
         mListItems = generateListItems();
 
         mDrawerLayout = (MyDrawerLayout) findViewById(R.id.drawer_layout);
@@ -76,18 +70,7 @@ public class MainActivity extends BaseActivity {
         mAdapter = new DrawerAdapter(this, mListItems);
         mDrawerList.setAdapter(mAdapter);
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
-
-        if (getResources().getBoolean(R.bool.drawer_locked_open)) {
-            mDrawerLayout.setScrimColor(getResources().getColor(R.color.drawer_no_shadow));
-            mDrawerIsLocked = true;
-            mDrawerLayout.setOnHideListener(mOnHideListener);
-        }
-
-        if (!mDrawerIsLocked && getActionBar() != null) {
-            mDrawerLayout.setDrawerListener(mDrawerToggle);
-            getActionBar().setDisplayHomeAsUpEnabled(true);
-            getActionBar().setHomeButtonEnabled(true);
-        }
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
 
         int savedPosition = 0;
         if (savedInstanceState != null) {
@@ -101,6 +84,21 @@ public class MainActivity extends BaseActivity {
         purgeExtraExercisesIfNeeded();
         updateCycleNameIfNeeded();
         migrateFromOldRoundToValues();
+    }
+
+    @Override
+    protected int getNavigationResource() {
+        return 0;
+    }
+
+    @Override
+    protected String getToolbarTitle() {
+        return null;
+    }
+
+    @Override
+    protected int getToolbarHelpMessage() {
+        return 0;
     }
 
     /**
@@ -122,26 +120,14 @@ public class MainActivity extends BaseActivity {
     }
 
     /**
-     * Called to set the title of the ActionBar.
-     */
-    @Override
-    public void setTitle(CharSequence title) {
-        if (getActionBar() != null) {
-            getActionBar().setTitle(title);
-        }
-    }
-
-    /**
      * Called when the Activity is resumed.
      */
     @Override
     protected void onResume() {
         super.onResume();
-        if (mIsDrawerOpen && !mDrawerIsLocked) {
-            WendlerizedLog.d("Drawer was previously open, open it again!");
+        if (mIsDrawerOpen) {
             mDrawerLayout.openDrawer(GravityCompat.START);
-        } else if (!mDrawerIsLocked) {
-            WendlerizedLog.d("Drawer was previously closed, make sure it's closed!");
+        } else {
             mDrawerLayout.closeDrawer(GravityCompat.START);
         }
     }
@@ -186,12 +172,6 @@ public class MainActivity extends BaseActivity {
         super.onPostCreate(savedInstanceState);
         // Sync the toggle state after onRestoreInstanceState has occurred.
         mDrawerToggle.syncState();
-        if (mDrawerIsLocked) {
-            mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_OPEN);
-            mDrawerLayout.openDrawer(Gravity.START);
-        } else {
-            mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-        }
     }
 
     /**
@@ -201,7 +181,7 @@ public class MainActivity extends BaseActivity {
         return new ActionBarDrawerToggle(
                 this,
                 mDrawerLayout,
-                R.drawable.ic_drawer,
+                (android.support.v7.widget.Toolbar) findViewById(R.id.tool_bar),
                 R.string.title_open,
                 R.string.title_close) {
 
@@ -227,8 +207,8 @@ public class MainActivity extends BaseActivity {
                     .beginTransaction()
                     .replace(R.id.content_frame, fragment, fragment.getFragmentTag())
                     .commit();
-
-            setTitle(mListItems.get(position).getTitle());
+            updateTitle(mListItems.get(position).getTitle());
+            updateHelpMessage(fragment.getMessageText());
         }
     }
 
@@ -249,16 +229,6 @@ public class MainActivity extends BaseActivity {
                 return DrawerBackupManagerFragment.newInstance();
         }
     }
-
-    /**
-     * Listener for pressing back in our drawer.
-     */
-    private final OnHideListener mOnHideListener = new OnHideListener() {
-        @Override
-        public void onBackPressed() {
-            MainActivity.this.finish();
-        }
-    };
 
     /**
      * When updating the extra exercises in a release the database needed to be cleared,
@@ -286,6 +256,7 @@ public class MainActivity extends BaseActivity {
      * Migrate from the old round to values.
      */
     private void migrateFromOldRoundToValues() {
+
         String roundToValue = PreferenceUtil.getString(
                 this,
                 PreferenceUtil.KEY_ROUND_TO,
@@ -361,13 +332,13 @@ public class MainActivity extends BaseActivity {
                 ListItemType.SMALL,
                 getString(R.string.action_item_settings),
                 null,
-                R.drawable.ic_action_settings));
+                R.drawable.ic_settings_black_24dp));
 
         items.add(new WendlerListItem(
                 ListItemType.SMALL,
                 getString(R.string.action_item_about),
                 null,
-                R.drawable.ic_action_about_drawer));
+                R.drawable.ic_info_outline_black_24dp));
 
         return items;
     }
@@ -379,9 +350,7 @@ public class MainActivity extends BaseActivity {
 
         @Override
         public void onItemClick(AdapterView parent, View view, final int position, long id) {
-            if (!mDrawerIsLocked) {
-                mDrawerLayout.closeDrawer(mDrawerList);
-            }
+            mDrawerLayout.closeDrawer(mDrawerList);
 
             // Don't update the selected item until the FragmentTransaction is completed
             switch (mListItems.get(position).getType()) {

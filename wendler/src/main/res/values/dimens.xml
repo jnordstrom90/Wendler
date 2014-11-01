@@ -1,16 +1,39 @@
 <resources>
     <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="activity_horizontal_margin">16dp</dimen>
-    <dimen name="activity_vertical_margin">16dp</dimen>
-    <dimen name="item_height">67dp</dimen>
-    <dimen name="item_height_small">50dp</dimen>
     <dimen name="drawer_size">240dp</dimen>
-    <dimen name="drawer_content_padding">0dp</dimen>
 
     <dimen name="text_size_init_weight">18sp</dimen>
     <dimen name="drag_grip_ridge_size">4dp</dimen>
     <dimen name="drag_grip_ridge_gap">2dp</dimen>
     <dimen name="init_increment_margin">5dp</dimen>
     <dimen name="card_background_default_radius">1dip</dimen>
+
+    <dimen name="spacing_small">8dp</dimen>
     <dimen name="spacing_medium">16dp</dimen>
+    <dimen name="spacing_large">24dp</dimen>
+
+    <dimen name="content_minimum_click_area">48dp</dimen>
+    <dimen name="button_height">36dp</dimen>
+    <dimen name="button_min_width">88dp</dimen>
+    <dimen name="button_text_size">14dp</dimen>
+    <dimen name="card_title_text_size">24dp</dimen>
+    <dimen name="card_subtitle_text_size">16dp</dimen>
+
+    <dimen name="list_single_line_height">48dp</dimen>
+    <dimen name="list_single_line_text_size">16dp</dimen>
+    <dimen name="list_single_line_text_padding">16dp</dimen>
+
+    <dimen name="list_single_line_height_with_image">56dp</dimen>
+    <dimen name="list_single_line_text_size_with_image">16dp</dimen>
+    <dimen name="list_single_line_text_padding_with_image">16dp</dimen>
+
+    <dimen name="list_double_line_height">72dp</dimen>
+    <dimen name="list_double_line_text_size">16dp</dimen>
+    <dimen name="list_double_line_secondary_text_size">14dp</dimen>
+    <dimen name="list_double_line_text_padding">16dp</dimen>
+
+    <dimen name="list_header_text_size">14dp</dimen>
+
+    <dimen name="dialog_title_text_size">20sp</dimen>
+    <dimen name="dialog_message_text_size">14sp</dimen>
 </resources>

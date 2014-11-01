@@ -7,7 +7,7 @@
     </declare-styleable>
 
     <declare-styleable name="InitWeightViewTitle">
-        <attr name="title" format="string"/>
+        <attr name="weightTitle" format="string"/>
     </declare-styleable>
 
     <declare-styleable name="FloatLabelLayout">

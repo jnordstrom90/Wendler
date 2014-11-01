@@ -16,7 +16,7 @@ import java.sql.SQLException;
 import se.johan.wendler.R;
 import se.johan.wendler.activity.base.BaseActivity;
 import se.johan.wendler.animation.ZoomOutPageTransformer;
-import se.johan.wendler.dialog.ConfirmationDialog;
+import se.johan.wendler.ui.dialog.ConfirmationDialog;
 import se.johan.wendler.fragment.InitIncrementFragment;
 import se.johan.wendler.fragment.InitOrderFragment;
 import se.johan.wendler.fragment.InitPercentageFragment;
@@ -28,7 +28,7 @@ import se.johan.wendler.util.PreferenceUtil;
 import se.johan.wendler.util.Util;
 import se.johan.wendler.util.WendlerMath;
 import se.johan.wendler.util.WendlerizedLog;
-import se.johan.wendler.view.SlidingTabLayout;
+import se.johan.wendler.ui.view.SlidingTabLayout;
 
 /**
  * Activity handling the initial setup of the application
@@ -36,6 +36,7 @@ import se.johan.wendler.view.SlidingTabLayout;
 public class StartupActivity extends BaseActivity
         implements ConfirmationDialog.ConfirmationDialogListener, ViewPager.OnPageChangeListener {
 
+    private static final String CURRENT_PAGE = "currentPage";
     private ViewPager mViewPager;
     private static final SparseArray<InitFragment> mFragmentList = new SparseArray<InitFragment>();
 
@@ -44,7 +45,7 @@ public class StartupActivity extends BaseActivity
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState, R.layout.activity_startup);
 
         if (isInitialized()) {
             WendlerizedLog.d("Already initialized! Start the MainActivity");
@@ -58,12 +59,12 @@ public class StartupActivity extends BaseActivity
 
         WendlerizedLog.d("First run, let the user initialize");
 
-        setContentView(R.layout.startup_activity_view);
-
         InitWeightFragment initWeightFragment;
         InitIncrementFragment initIncrementFragment;
         InitOrderFragment initOrderFragment;
         InitPercentageFragment initPercentageFragment;
+
+        int currentPage = 0;
 
         if (savedInstanceState == null) {
             initWeightFragment = InitWeightFragment.newInstance();
@@ -79,6 +80,7 @@ public class StartupActivity extends BaseActivity
                     .getFragment(savedInstanceState, InitOrderFragment.TAG);
             initPercentageFragment = (InitPercentageFragment) getSupportFragmentManager()
                     .getFragment(savedInstanceState, InitPercentageFragment.TAG);
+            currentPage = savedInstanceState.getInt(CURRENT_PAGE, 0);
         }
 
         mFragmentList.put(0, initWeightFragment);
@@ -93,6 +95,7 @@ public class StartupActivity extends BaseActivity
         mViewPager.setPageTransformer(true, new ZoomOutPageTransformer());
         mViewPager.setAdapter(mSectionsPagerAdapter);
         mViewPager.setOffscreenPageLimit(4);
+        updateHelpMessage(mFragmentList.get(currentPage).getHelpingMessageRes());
 
         SlidingTabLayout mSlidingTabLayout = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
         mSlidingTabLayout.setViewPager(mViewPager);
@@ -125,10 +128,10 @@ public class StartupActivity extends BaseActivity
                     outState,
                     InitIncrementFragment.TAG,
                     mFragmentList.get(3));
-
         } catch (IllegalStateException ise) {
             WendlerizedLog.e("Error saving instance", ise);
         }
+        outState.putInt(CURRENT_PAGE, mViewPager.getCurrentItem());
     }
 
     /**
@@ -149,6 +152,21 @@ public class StartupActivity extends BaseActivity
         }
     }
 
+    @Override
+    protected int getNavigationResource() {
+        return 0;
+    }
+
+    @Override
+    protected String getToolbarTitle() {
+        return getString(R.string.wendlerized);
+    }
+
+    @Override
+    protected int getToolbarHelpMessage() {
+        return 0;
+    }
+
     /**
      * Create our options menu.
      */
@@ -165,14 +183,6 @@ public class StartupActivity extends BaseActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_help:
-                ConfirmationDialog.newInstance(
-                        mFragmentList.get(mViewPager.getCurrentItem()).getHelpingMessage(),
-                        getString(R.string.action_item_about),
-                        getString(R.string.btn_ok),
-                        null,
-                        null).show(getSupportFragmentManager(), ConfirmationDialog.TAG);
-                break;
             case R.id.action_done:
                 saveInput();
                 break;
@@ -201,6 +211,7 @@ public class StartupActivity extends BaseActivity
      */
     @Override
     public void onPageSelected(int position) {
+        updateHelpMessage(mFragmentList.get(position).getHelpingMessage());
         Util.hideKeyboard(this);
     }
 

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:gravity="center">
+
+        <com.dd.CircularProgressButton
+            android:id="@+id/btnBackup"
+            style="@style/CircularProgressButtonBackup"/>
+
+        <TextView
+            android:id="@+id/lastBackup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/last_successful_backup"
+            android:visibility="gone"
+            android:gravity="center"
+            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"/>
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+        <com.dd.CircularProgressButton
+            android:id="@+id/btnRestore"
+            style="@style/CircularProgressButtonRestore"
+            android:layout_gravity="center"/>
+    </FrameLayout>
+</LinearLayout>

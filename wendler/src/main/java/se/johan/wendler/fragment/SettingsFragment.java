@@ -19,7 +19,7 @@ import com.doomonafireball.betterpickers.numberpicker.NumberPickerDialogFragment
 
 import se.johan.wendler.R;
 import se.johan.wendler.activity.StartupActivity;
-import se.johan.wendler.dialog.ConfirmationDialog;
+import se.johan.wendler.ui.dialog.ConfirmationDialog;
 import se.johan.wendler.sql.SqlHandler;
 import se.johan.wendler.util.MathHelper;
 import se.johan.wendler.util.PreferenceUtil;

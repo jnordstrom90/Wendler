@@ -341,7 +341,7 @@ public class SqlHandler {
                         getInsertTimeForId(id), getTimeForWorkout(id), getNotesForWorkout(id)));
             } else {
                 list.add(new Workout(name, StringHelper.getTranslatableName(mContext, name),
-                        week, cycle, cycleName, -1));
+                        week, cycle, cycleName, -1, getMainExerciseForWorkout(name, week)));
             }
         }
         return list;
@@ -374,25 +374,31 @@ public class SqlHandler {
     }
 
     /**
-     * Return main exercise for a given workout
+     * Return the main exercise for a given workout.
      */
     public MainExercise getMainExerciseForWorkout(Workout workout) {
+        return getMainExerciseForWorkout(workout.getName(), workout.getWeek());
+    }
+
+    /**
+     * Return main exercise for a given week and name.
+     */
+    public MainExercise getMainExerciseForWorkout(String name, int week) {
         String[] columns =
                 new String[]{KEY_TRAINING_PERCENTAGE, KEY_1RM, KEY_INCREMENT, KEY_NAME};
 
         Cursor cursor = null;
         try {
             cursor = mDatabase.query(DATABASE_TABLE_WENDLER_STATS, columns,
-                    KEY_NAME + "=?", new String[]{workout.getName()}, null, null, null);
+                    KEY_NAME + "=?", new String[]{name}, null, null, null);
             if (cursor != null && cursor.moveToFirst()) {
-                String name = workout.getName();
                 double increment = cursor.getFloat(cursor.getColumnIndex(KEY_INCREMENT));
 
                 int workoutPercentage = cursor.getInt(cursor.getColumnIndex
                         (KEY_TRAINING_PERCENTAGE));
                 double oneRm = cursor.getFloat(cursor.getColumnIndex(KEY_1RM));
 
-                int[] setPercentages = getSetPercentages(workout.getWeek());
+                int[] setPercentages = getSetPercentages(week);
 
                 boolean showWarmUp = PreferenceUtil.getBoolean(
                         mContext, PreferenceUtil.KEY_SHOW_WARM_UP, true);
@@ -410,7 +416,7 @@ public class SqlHandler {
                 }
 
                 sets.addAll(WendlerMath.getWorkoutSets(
-                        mContext, oneRm, setPercentages, workout.getWeek(), -1));
+                        mContext, oneRm, setPercentages, week, -1));
 
                 return new MainExercise(name, oneRm, increment, sets, workoutPercentage);
             }

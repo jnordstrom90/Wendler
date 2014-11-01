@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/load_more"
+        android:id="@+id/textView"
+        android:layout_gravity="center"
+        android:padding="@dimen/spacing_small"
+        android:background="?android:selectableItemBackground"/>
+</android.support.v7.widget.CardView>

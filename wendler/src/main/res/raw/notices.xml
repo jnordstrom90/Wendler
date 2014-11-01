@@ -29,12 +29,6 @@
         <license>Apache Software License 2.0</license>
     </notice>
     <notice>
-        <name>ListViewAnimations</name>
-        <url>https://github.com/nhaarman/ListViewAnimations/</url>
-        <copyright>Copyright 2013 Niek Haarman</copyright>
-        <license>Apache Software License 2.0</license>
-    </notice>
-    <notice>
         <name>ChangeLog Library</name>
         <url>https://github.com/gabrielemariotti/changeloglib/</url>
         <copyright>Copyright 2013 Gabriele Mariotti</copyright>
@@ -64,5 +58,16 @@
         <copyright>Copyright (c) 2014 Danylyk Dmytro</copyright>
         <license>MIT License</license>
     </notice>
-
+    <notice>
+        <name>FloatingActionButton</name>
+        <url>https://github.com/makovkastar/FloatingActionButton</url>
+        <copyright>Copyright (c) 2014 Oleksandr Melnykov</copyright>
+        <license>MIT License</license>
+    </notice>
+    <notice>
+        <name>FloatingActionButton</name>
+        <url>https://github.com/wmora/snackbar</url>
+        <copyright>Copyright (c) 2014 William Mora</copyright>
+        <license>MIT License</license>
+    </notice>
 </notices>
