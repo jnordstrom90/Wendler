@@ -22,7 +22,7 @@
             dslv:slide_shuffle_speed="0.3"
             dslv:track_drag_sort="false"
             dslv:use_default_controller="true"
-            dslv:drag_handle_id="@id/drag_handle"
+            dslv:drag_handle_id="@+id/drag_handle"
             dslv:sort_enabled="true"
             dslv:drag_start_mode="onDown"
             android:clipToPadding="false"

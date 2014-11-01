@@ -7,15 +7,13 @@ android {
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 21
-        versionCode 25
+        versionCode 26
         versionName "1.2"
     }
     buildTypes {
         release {
             runProguard false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
-            minifyEnabled true
-            shrinkResources true
         }
     }
 }
