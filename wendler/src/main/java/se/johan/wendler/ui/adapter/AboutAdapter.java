@@ -12,22 +12,23 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import se.johan.wendler.R;
-import se.johan.wendler.model.WendlerListItem;
+import se.johan.wendler.model.ListItem;
+import se.johan.wendler.util.Utils;
 
 /**
  * The adapter used in the list in the AboutActivity.
  */
 public class AboutAdapter extends BaseAdapter {
 
-    private final ArrayList<WendlerListItem> mItems;
-    private final LayoutInflater mInflater;
+    private final ArrayList<ListItem> mItems;
+    private Context mContext;
 
     /**
      * Constructor for the adapter.
      */
-    public AboutAdapter(Context context, ArrayList<WendlerListItem> items) {
+    public AboutAdapter(Context context, ArrayList<ListItem> items) {
         mItems = items;
-        mInflater = LayoutInflater.from(context);
+        mContext = context;
     }
 
     /**
@@ -63,7 +64,8 @@ public class AboutAdapter extends BaseAdapter {
         ViewHolder holder;
 
         if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.list_item_about, parent, false);
+            convertView = LayoutInflater.from(mContext)
+                    .inflate(R.layout.list_item_about, parent, false);
             holder = new ViewHolder();
             holder.title = (TextView) convertView.findViewById(R.id.textView);
             holder.subtitle = (TextView) convertView.findViewById(R.id.textViewSmall);
@@ -74,15 +76,17 @@ public class AboutAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.title.setText(mItems.get(position).getTitle());
+        holder.title.setText(mItems.get(position).getTitle(mContext));
         if (mItems.get(position).hasSubtitle()) {
-            holder.subtitle.setText(mItems.get(position).getSubtitle());
+            // TODO Make this dynamic in the future
+            holder.subtitle.setText(mItems.get(position).getSubtitle
+                    (mContext, Utils.getCurrentAppVersion(mContext)));
             holder.subtitle.setVisibility(View.VISIBLE);
         } else {
             holder.title.setGravity(Gravity.CENTER_VERTICAL);
             holder.subtitle.setVisibility(View.GONE);
         }
-        holder.icon.setImageResource(mItems.get(position).getIconRes());
+        holder.icon.setImageDrawable(mItems.get(position).getIcon(mContext));
 
         return convertView;
     }

@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import se.johan.wendler.R;
 import se.johan.wendler.util.GenericTextWatcher;
-import se.johan.wendler.util.Util;
+import se.johan.wendler.util.Utils;
 
 /**
  * View for entering and calculating weights.
@@ -75,7 +75,7 @@ public class InitWeightView extends RelativeLayout {
      */
     public boolean isDataOk() {
         return mEditTextOneRm.getText().toString().trim().length() > 0
-                && Util.getDoubleFromEditText(mEditTextOneRm) > 0;
+                && Utils.getDoubleFromEditText(mEditTextOneRm) > 0;
     }
 
     /**
@@ -113,19 +113,19 @@ public class InitWeightView extends RelativeLayout {
      */
     public Bundle getSavedInstance() {
         Bundle bundle = new Bundle();
-        double val = Util.getDoubleFromEditText(mEditTextOneRm);
+        double val = Utils.getDoubleFromEditText(mEditTextOneRm);
 
         if (val > 0) {
             bundle.putDouble(EXTRA_ONE_RM_VALUE, val);
         }
 
-        int intVal = Util.getIntFromEditText(mEditTextReps);
+        int intVal = Utils.getIntFromEditText(mEditTextReps);
 
         if (intVal > 0) {
             bundle.putInt(EXTRA_REPS_VALUE, intVal);
         }
 
-        val = Util.getDoubleFromEditText(mEditTextOneRm);
+        val = Utils.getDoubleFromEditText(mEditTextOneRm);
 
         if (val > 0) {
             bundle.putDouble(EXTRA_WEIGHT_VALUE, val);

@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 import se.johan.wendler.model.AdditionalExercise;
 import se.johan.wendler.model.DeloadItem;
@@ -36,7 +38,7 @@ import se.johan.wendler.util.WendlerizedLog;
 public class SqlHandler {
 
     public static final String DATABASE_NAME = "WendlerizedDb";
-    private static final int DATABASE_VERSION = 6;
+    private static final int DATABASE_VERSION = 8;
 
     /**
      * Stats table *
@@ -90,6 +92,7 @@ public class SqlHandler {
     private static final String KEY_EXTRA_WEIGHT = "extra_weight";
     private static final String KEY_EXTRA_REPS_OR_SETS_COMPLETED = "extra_reps";
     private static final String KEY_EXTRA_EXERCISE_ID = "extra_exercise_id";
+    private static final String KEY_MAIN_EXERCISE_WEIGHT = "main_exercise_weight";
 
     /**
      * List of extra exercises, commented out ones are used but simply here for simplicity
@@ -403,7 +406,8 @@ public class SqlHandler {
                 boolean showWarmUp = PreferenceUtil.getBoolean(
                         mContext, PreferenceUtil.KEY_SHOW_WARM_UP, true);
 
-                ArrayList<ExerciseSet> sets = new ArrayList<ExerciseSet>();
+                ArrayList<ExerciseSet> sets = new ArrayList<>();
+                LinkedHashMap<SetType, List<ExerciseSet>> setGroups = new LinkedHashMap<>();
 
                 if (showWarmUp) {
                     String serialized = PreferenceUtil.getString(
@@ -411,14 +415,18 @@ public class SqlHandler {
                             PreferenceUtil.KEY_WARM_UP_SETS,
                             WendlerConstants.DEFAULT_WARMUP_PERCENTAGES);
 
-                    sets.addAll(WendlerMath.getWarmupSets(
-                            mContext, oneRm, serialized.split(","), -1));
+                    List<ExerciseSet> set = WendlerMath.getWarmupSets(
+                            mContext, oneRm, serialized.split(","), -1);
+
+                    sets.addAll(set);
+                    setGroups.put(SetType.WARM_UP, set);
                 }
+                List<ExerciseSet> set = WendlerMath.getWorkoutSets(
+                        mContext, oneRm, setPercentages, week, -1);
+                sets.addAll(set);
+                setGroups.put(SetType.REGULAR, set);
 
-                sets.addAll(WendlerMath.getWorkoutSets(
-                        mContext, oneRm, setPercentages, week, -1));
-
-                return new MainExercise(name, oneRm, increment, sets, workoutPercentage);
+                return new MainExercise(name, oneRm, increment, sets, setGroups, workoutPercentage);
             }
             return null;
         } finally {
@@ -456,7 +464,7 @@ public class SqlHandler {
     /**
      * Return the extra exercises for a given workout.
      */
-    public ArrayList<AdditionalExercise> getExtraExerciseForWorkout(Workout workout) {
+    public ArrayList<AdditionalExercise> getAdditionalExercisesForWorkout(Workout workout) {
         ArrayList<AdditionalExercise> exercises = new ArrayList<AdditionalExercise>();
 
         Cursor cursor = null;
@@ -481,7 +489,7 @@ public class SqlHandler {
                     int exerciseId = cursor.getInt(cursor.getColumnIndex(KEY_EXTRA_EXERCISE_ID));
 
                     ArrayList<ExerciseSet> exerciseSets = new ArrayList<ExerciseSet>();
-
+                    double mainExerciseWeight = getOneRmForExercise(mainExerciseName);
                     if (!TextUtils.isEmpty(mainExerciseName)) {
                         weight = WendlerMath.calculateWeight(
                                 mContext,
@@ -497,6 +505,7 @@ public class SqlHandler {
                             exerciseSets,
                             mainExerciseName,
                             percentage,
+                            mainExerciseWeight,
                             exerciseId);
                     exercises.add(exercise);
                 } while (cursor.moveToNext());
@@ -650,6 +659,7 @@ public class SqlHandler {
             cv.put(KEY_EXTRA_MAIN_EXERCISE_NAME, exercise.getMainExerciseName());
             cv.put(KEY_EXTRA_PERCENTAGE_OF_MAIN_EXERCISE, exercise.getMainExercisePercentage());
             cv.put(KEY_EXTRA_EXERCISE_ID, exercise.getExerciseId());
+            cv.put(KEY_MAIN_EXERCISE_WEIGHT, exercise.getMainExerciseWeight());
             mDatabase.insert(DATABASE_TABLE_WENDLER_EXTRA, null, cv);
         }
 
@@ -735,6 +745,7 @@ public class SqlHandler {
         cv.put(KEY_EXTRA_PERCENTAGE_OF_MAIN_EXERCISE, exercise.getMainExercisePercentage());
         cv.put(KEY_EXTRA_ORDER_IN_LIST, position);
         cv.put(KEY_EXTRA_EXERCISE_ID, exercise.getExerciseId());
+        cv.put(KEY_MAIN_EXERCISE_WEIGHT, exercise.getMainExerciseWeight());
 
         if (isNew) {
             mDatabase.insert(DATABASE_TABLE_WENDLER_EXTRA_LIST, null, cv);
@@ -1270,24 +1281,27 @@ public class SqlHandler {
                         mContext, PreferenceUtil.KEY_SHOW_WARM_UP, true);
 
                 ArrayList<ExerciseSet> sets = new ArrayList<ExerciseSet>();
-
+                LinkedHashMap<SetType, List<ExerciseSet>> setGroups = new LinkedHashMap<>();
                 if (showWarmUp) {
                     String serialized = PreferenceUtil.getString(
                             mContext,
                             PreferenceUtil.KEY_WARM_UP_SETS,
                             WendlerConstants.DEFAULT_WARMUP_PERCENTAGES);
-
-                    sets.addAll(WendlerMath.getWarmupSets(
+                    List<ExerciseSet> set = WendlerMath.getWarmupSets(
                             mContext,
                             oneRm,
                             serialized.split(","),
-                            repsPerformed));
+                            repsPerformed);
+                    sets.addAll(set);
+                    setGroups.put(SetType.WARM_UP, set);
                 }
+                List<ExerciseSet> set = WendlerMath.getWorkoutSets(
+                        mContext, oneRm, setPercentages, week, repsPerformed);
+                sets.addAll(set);
+                setGroups.put(SetType.REGULAR, set);
 
-                sets.addAll(WendlerMath.getWorkoutSets(
-                        mContext, oneRm, setPercentages, week, repsPerformed));
-
-                mainExercise = new MainExercise(name, oneRm, increment, sets, workoutPercentage);
+                mainExercise = new MainExercise(
+                        name, oneRm, increment, sets, setGroups, workoutPercentage);
             }
 
             if (!isComplete && mainExercise != null && mainExercise.getLastSetProgress() < 0) {
@@ -1335,7 +1349,8 @@ public class SqlHandler {
                             (KEY_EXTRA_PERCENTAGE_OF_MAIN_EXERCISE));
 
                     ArrayList<ExerciseSet> exerciseSets = new ArrayList<ExerciseSet>();
-
+                    double mainExerciseWeight = cursor.getDouble(
+                            cursor.getColumnIndex(KEY_MAIN_EXERCISE_WEIGHT));
                     if (!TextUtils.isEmpty(mainExerciseName)) {
                         weight = WendlerMath.calculateWeight(
                                 mContext,
@@ -1351,13 +1366,14 @@ public class SqlHandler {
                             exerciseSets,
                             mainExerciseName,
                             percentage,
+                            mainExerciseWeight,
                             exerciseId);
                     exercises.add(exercise);
 
                 } while (cursor.moveToNext());
             }
 
-            ArrayList<AdditionalExercise> additionalExercises = getExtraExerciseForWorkout(new
+            ArrayList<AdditionalExercise> additionalExercises = getAdditionalExercisesForWorkout(new
                     Workout(workoutName, StringHelper.getTranslatableName(mContext, workoutName)));
             if (!isStarted && !isComplete && additionalExercises.equals(exercises)) {
                 return additionalExercises;
@@ -1641,6 +1657,21 @@ public class SqlHandler {
             } catch (Exception e) {
                 WendlerizedLog.v("Failed to add column " + KEY_CYCLE_NAME + " in " +
                         DATABASE_TABLE_WENDLER_WORKOUT);
+            }
+
+            try {
+                db.execSQL("ALTER TABLE " + DATABASE_TABLE_WENDLER_EXTRA + " ADD COLUMN " +
+                        KEY_MAIN_EXERCISE_WEIGHT + " TEXT DEFAULT 0");
+            } catch (Exception e) {
+                WendlerizedLog.v("Failed to add column " + KEY_MAIN_EXERCISE_WEIGHT + " in " +
+                        DATABASE_TABLE_WENDLER_EXTRA);
+            }
+            try {
+                db.execSQL("ALTER TABLE " + DATABASE_TABLE_WENDLER_EXTRA_LIST + " ADD COLUMN " +
+                        KEY_MAIN_EXERCISE_WEIGHT + " TEXT DEFAULT 0");
+            } catch (Exception e) {
+                WendlerizedLog.v("Failed to add column " + KEY_MAIN_EXERCISE_WEIGHT + " in " +
+                        DATABASE_TABLE_WENDLER_EXTRA_LIST);
             }
         }
 

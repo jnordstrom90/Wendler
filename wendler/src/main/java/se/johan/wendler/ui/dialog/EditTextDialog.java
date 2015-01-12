@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import se.johan.wendler.R;
 import se.johan.wendler.ui.dialog.base.AnimationDialog;
-import se.johan.wendler.util.Util;
+import se.johan.wendler.util.Utils;
 
 /**
  * Dialog containing an EditText
@@ -80,7 +80,7 @@ public class EditTextDialog extends AnimationDialog implements View.OnClickListe
     @Override
     public void onClick(View view) {
         getListener().getTextFromDialog(mInput.getText().toString().trim());
-        Util.hideKeyboard(getActivity());
+        Utils.hideKeyboard(getActivity());
         getDialog().dismiss();
     }
 

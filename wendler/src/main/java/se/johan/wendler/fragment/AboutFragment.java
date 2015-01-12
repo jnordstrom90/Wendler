@@ -16,11 +16,11 @@ import java.util.ArrayList;
 
 import de.psdev.licensesdialog.LicensesDialogFragment;
 import se.johan.wendler.R;
+import se.johan.wendler.model.ListItem;
+import se.johan.wendler.model.ListItemType;
 import se.johan.wendler.ui.adapter.AboutAdapter;
 import se.johan.wendler.ui.dialog.ChangelogDialog;
-import se.johan.wendler.model.ListItemType;
-import se.johan.wendler.model.WendlerListItem;
-import se.johan.wendler.util.Util;
+import se.johan.wendler.util.Utils;
 
 /**
  * About fragment which displays helpful information.
@@ -48,11 +48,7 @@ public class AboutFragment extends Fragment implements AdapterView.OnItemClickLi
 
         ListView view = (ListView) inflater.inflate(R.layout.list_empty, container, false);
 
-        AboutAdapter adapter = new AboutAdapter(
-                getActivity(),
-                generateListItems());
-
-        view.setAdapter(adapter);
+        view.setAdapter(new AboutAdapter(getActivity(), generateListItems()));
         view.setOnItemClickListener(this);
         return view;
     }
@@ -94,7 +90,7 @@ public class AboutFragment extends Fragment implements AdapterView.OnItemClickLi
                 sendIntent.putExtra(
                         Intent.EXTRA_SUBJECT,
                         getString(R.string.wendlerized) + " " +
-                                Util.getCurrentAppVersion(getActivity()) + " " + "feedback"
+                                Utils.getCurrentAppVersion(getActivity()) + " feedback"
                 );
                 startActivity(
                         Intent.createChooser(sendIntent, getString(R.string.send_email_title)));
@@ -109,28 +105,13 @@ public class AboutFragment extends Fragment implements AdapterView.OnItemClickLi
     /**
      * Generate a list of items to be displayed in the list.
      */
-    private ArrayList<WendlerListItem> generateListItems() {
-        ArrayList<WendlerListItem> items = new ArrayList<WendlerListItem>();
-        String version = Util.getCurrentAppVersion(getActivity());
-        version = String.format(getString(R.string.version), version);
-
-        items.add(new WendlerListItem(
-                ListItemType.REGULAR,
-                getString(R.string.change_log),
-                version,
-                R.drawable.ic_format_list_bulleted_black_24dp));
-
-        items.add(new WendlerListItem(
-                ListItemType.REGULAR,
-                getString(R.string.contact),
-                null,
-                R.drawable.ic_mail_black_24dp));
-
-        items.add(new WendlerListItem(
-                ListItemType.REGULAR,
-                getString(R.string.licences),
-                null,
-                R.drawable.ic_format_align_justify_black_24dp));
+    private ArrayList<ListItem> generateListItems() {
+        ArrayList<ListItem> items = new ArrayList<ListItem>();
+        for (ListItem item : ListItem.values()) {
+            if (item.getItemType().equals(ListItemType.ABOUT)) {
+                items.add(item);
+            }
+        }
         return items;
     }
 }

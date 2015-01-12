@@ -7,21 +7,30 @@
     android:layout_height="match_parent"
     android:background="@android:color/white"
     android:windowMinWidthMajor="@android:dimen/dialog_min_width_major"
-    android:orientation="vertical"
-    android:padding="@dimen/spacing_large">
+    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/title"
-        style="@style/DialogTitle"/>
-
-    <se.johan.wendler.ui.view.CustomChronometer
-        android:id="@+id/chronometer"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:textSize="64sp"
-        android:fontFamily="sans-serif-light"
-        tools:ignore="UnusedAttribute"/>
+        android:orientation="vertical"
+        android:padding="@dimen/spacing_large"
+        android:paddingBottom="@dimen/spacing_medium">
+
+        <TextView
+            android:id="@+id/title"
+            style="@style/DialogTitle"
+            tools:title="Title"/>
+
+        <se.johan.wendler.ui.view.CustomChronometer
+            android:id="@+id/chronometer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textSize="64sp"
+            android:fontFamily="sans-serif-light"
+            tools:ignore="UnusedAttribute"/>
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/button_bar"
@@ -35,6 +44,6 @@
         <Button
             android:id="@+id/btn_start_stop"
             android:text="@string/btn_start"
-            style="@style/DialogButton"/>
+            style="@style/DialogButton.Positive"/>
     </LinearLayout>
 </LinearLayout>

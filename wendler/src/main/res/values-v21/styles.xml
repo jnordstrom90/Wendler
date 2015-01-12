@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="CardView.Overflow">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_alignParentTop">true</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:layout_alignParentEnd">true</item>
+        <item name="android:minHeight">@dimen/content_minimum_click_area</item>
+        <item name="android:minWidth">@dimen/content_minimum_click_area</item>
+        <item name="android:src">@drawable/ic_more_vert_grey600_24dp</item>
+        <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
+    </style>
+
+    <style name="Toolbar_Elevation">
+        <item name="android:elevation">@dimen/toolbar_elevation</item>
+    </style>
+
+    <style name="AppBaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/theme_color</item>
+        <item name="colorAccent">@color/accent_color</item>
+        <item name="colorPrimaryDark">@color/theme_color_dark</item>
+    </style>
+
+    <style name="AppBaseTheme.Transparent">
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+
+</resources>

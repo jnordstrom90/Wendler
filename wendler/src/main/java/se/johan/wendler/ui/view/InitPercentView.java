@@ -10,7 +10,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import se.johan.wendler.R;
-import se.johan.wendler.util.Util;
+import se.johan.wendler.util.Utils;
 
 /**
  * View for setting up percentages.
@@ -127,9 +127,9 @@ public class InitPercentView extends RelativeLayout implements TextWatcher {
      */
     public int[] getPercentages() {
         return new int[]{
-                Util.getIntFromEditText(mEtSetOne),
-                Util.getIntFromEditText(mEtSetTwo),
-                Util.getIntFromEditText(mEtSetThree)};
+                Utils.getIntFromEditText(mEtSetOne),
+                Utils.getIntFromEditText(mEtSetTwo),
+                Utils.getIntFromEditText(mEtSetThree)};
     }
 
 

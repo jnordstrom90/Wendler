@@ -3,28 +3,34 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@android:color/white"
-    android:windowMinWidthMajor="@android:dimen/dialog_min_width_major"
-    android:padding="@dimen/spacing_medium">
-
-    <TextView
-        android:id="@+id/title"
-        style="@style/DialogTitle"/>
-
-    <EditText
-        android:layout_below="@+id/title"
-        android:layout_above="@+id/button_bar"
-        android:id="@+id/editText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="top|start"
-        android:hint="@string/enter_notes"
-        android:minLines="10"/>
+    android:windowMinWidthMajor="@android:dimen/dialog_min_width_major">
 
     <LinearLayout
-        android:layout_alignParentBottom="true"
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/spacing_large"
+        android:paddingBottom="@dimen/spacing_medium">
+
+        <TextView
+            android:id="@+id/title"
+            style="@style/DialogTitle"/>
+
+        <EditText
+            android:id="@+id/editText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="top|start"
+            android:hint="@string/enter_notes"
+            android:minLines="3"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_below="@+id/content"
         android:id="@+id/button_bar"
         style="@style/DialogButtonBar">
 
@@ -35,6 +41,6 @@
 
         <Button
             android:id="@+id/button_save"
-            style="@style/DialogButton"/>
+            style="@style/DialogButton.Positive"/>
     </LinearLayout>
 </RelativeLayout>

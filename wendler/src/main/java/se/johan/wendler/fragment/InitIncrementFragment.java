@@ -13,7 +13,7 @@ import se.johan.wendler.animation.CustomObjectAnimator;
 import se.johan.wendler.sql.SqlHandler;
 import se.johan.wendler.fragment.base.InitFragment;
 import se.johan.wendler.ui.view.FilterEditText;
-import se.johan.wendler.util.Util;
+import se.johan.wendler.util.Utils;
 import se.johan.wendler.util.WendlerConstants;
 
 /**
@@ -65,10 +65,10 @@ public class InitIncrementFragment extends InitFragment {
      */
     @Override
     public void saveData(SqlHandler handler) {
-        double pressIncrementVal = Util.getDoubleFromEditText(mPressIncrement);
-        double deadliftIncrementVal = Util.getDoubleFromEditText(mDeadliftIncrement);
-        double benchIncrementVal = Util.getDoubleFromEditText(mBenchIncrement);
-        double squatIncrementVal = Util.getDoubleFromEditText(mSquatIncrement);
+        double pressIncrementVal = Utils.getDoubleFromEditText(mPressIncrement);
+        double deadliftIncrementVal = Utils.getDoubleFromEditText(mDeadliftIncrement);
+        double benchIncrementVal = Utils.getDoubleFromEditText(mBenchIncrement);
+        double squatIncrementVal = Utils.getDoubleFromEditText(mSquatIncrement);
         handler.insertIncrements(
                 pressIncrementVal,
                 deadliftIncrementVal,

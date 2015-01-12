@@ -23,7 +23,7 @@ import se.johan.wendler.ui.dialog.ConfirmationDialog;
 import se.johan.wendler.sql.SqlHandler;
 import se.johan.wendler.util.MathHelper;
 import se.johan.wendler.util.PreferenceUtil;
-import se.johan.wendler.util.Util;
+import se.johan.wendler.util.Utils;
 import se.johan.wendler.util.WendlerConstants;
 
 /**
@@ -179,13 +179,18 @@ public class SettingsFragment extends PreferenceFragment implements
         }
     }
 
+    @Override
+    public void onDialogDismissed() {
+
+    }
+
     /**
      * Called when the confirmation dialog has been confirmed.
      */
     @Override
     @SuppressLint("NewApi")
     public void onDialogConfirmed(boolean confirmed) {
-        if (confirmed && Util.hasKitKat()) {
+        if (confirmed && Utils.hasKitKat()) {
             ActivityManager manager =
                     (ActivityManager) getActivity().getSystemService(Context.ACTIVITY_SERVICE);
             manager.clearApplicationUserData();

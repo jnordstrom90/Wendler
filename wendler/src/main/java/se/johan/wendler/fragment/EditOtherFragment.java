@@ -13,7 +13,7 @@ import se.johan.wendler.fragment.base.EditFragment;
 import se.johan.wendler.sql.SqlHandler;
 import se.johan.wendler.util.Constants;
 import se.johan.wendler.util.PreferenceUtil;
-import se.johan.wendler.util.Util;
+import se.johan.wendler.util.Utils;
 import se.johan.wendler.util.WendlerConstants;
 import se.johan.wendler.util.WendlerizedLog;
 import se.johan.wendler.ui.view.FilterEditText;
@@ -69,18 +69,18 @@ public class EditOtherFragment extends EditFragment {
 
         if (isIncrementOk()) {
             handler.insertIncrements(
-                    Util.getDoubleFromEditText(mIncrementPress),
-                    Util.getDoubleFromEditText(mIncrementDeadlift),
-                    Util.getDoubleFromEditText(mIncrementBench),
-                    Util.getDoubleFromEditText(mIncrementSquat));
+                    Utils.getDoubleFromEditText(mIncrementPress),
+                    Utils.getDoubleFromEditText(mIncrementDeadlift),
+                    Utils.getDoubleFromEditText(mIncrementBench),
+                    Utils.getDoubleFromEditText(mIncrementSquat));
         }
 
         if (isOneRmOk()) {
             handler.updateOneRm(
-                    Util.getDoubleFromEditText(mOneRmPress),
-                    Util.getDoubleFromEditText(mOneRmDeadlift),
-                    Util.getDoubleFromEditText(mOneRmBench),
-                    Util.getDoubleFromEditText(mOneRmSquat));
+                    Utils.getDoubleFromEditText(mOneRmPress),
+                    Utils.getDoubleFromEditText(mOneRmDeadlift),
+                    Utils.getDoubleFromEditText(mOneRmBench),
+                    Utils.getDoubleFromEditText(mOneRmSquat));
         }
 
 

@@ -1,10 +1,12 @@
 package se.johan.wendler.ui.adapter;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.text.format.Time;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -12,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
@@ -26,7 +29,10 @@ import se.johan.wendler.model.Workout;
 import se.johan.wendler.sql.SqlHandler;
 import se.johan.wendler.activity.MainActivity;
 import se.johan.wendler.activity.WorkoutActivity;
+import se.johan.wendler.ui.view.TextDrawable;
 import se.johan.wendler.util.CardsOptionHandler;
+import se.johan.wendler.util.ColorGenerator;
+import se.johan.wendler.util.Utils;
 import se.johan.wendler.util.WendlerizedLog;
 import se.johan.wendler.util.WorkoutHolder;
 
@@ -92,6 +98,7 @@ public class WorkoutListAdapter extends BaseAdapter {
     public View getView(final int position, View convertView, ViewGroup parent) {
 
         ViewHolder holder;
+        Workout workout = mListOfWorkouts.get(position);
         if (convertView == null) {
             convertView = mInflater.inflate(getResource(), parent, false);
             holder = new ViewHolder();
@@ -101,6 +108,12 @@ public class WorkoutListAdapter extends BaseAdapter {
             holder.goal = (TextView) convertView.findViewById(R.id.textGoal);
             holder.date = (TextView) convertView.findViewById(R.id.textDate);
             holder.overflow = (ImageButton) convertView.findViewById(R.id.overflow_button);
+            holder.imageView = (ImageView) convertView.findViewById(R.id.image_view);
+            if (holder.imageView != null) {
+                String text = workout.getDisplayName().substring(0, 1);
+                int color = ColorGenerator.DEFAULT.getColor(text);
+                holder.textDrawable = TextDrawable.builder().buildRound(text, color);
+            }
 
             convertView.setTag(holder);
         } else {
@@ -108,13 +121,15 @@ public class WorkoutListAdapter extends BaseAdapter {
         }
 
         setCardClickListener(position, convertView);
-        Workout workout = mListOfWorkouts.get(position);
 
         if (workout.getMainExercise() == null) {
             workout.setMainExercise(getMainExercise(workout));
         }
 
         holder.exercise.setText(workout.getDisplayName());
+        if (holder.imageView != null) {
+            holder.imageView.setImageDrawable(holder.textDrawable);
+        }
 
         setWeekCycleText(holder, workout);
         setGoalText(holder, workout);
@@ -171,6 +186,7 @@ public class WorkoutListAdapter extends BaseAdapter {
     /**
      * Called when the overflow menu has been clicked.
      */
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     private void handleOverflowClick(ViewHolder holder, final int position) {
         PopupMenu popup = new PopupMenu(mContext, holder.overflow);
         popup.getMenuInflater().inflate(R.menu.menu_delete, popup.getMenu());
@@ -185,6 +201,9 @@ public class WorkoutListAdapter extends BaseAdapter {
                 return false;
             }
         });
+        if (Utils.hasKitKat()) {
+            holder.overflow.setOnTouchListener(popup.getDragToOpenListener());
+        }
         popup.show();
     }
 
@@ -236,6 +255,7 @@ public class WorkoutListAdapter extends BaseAdapter {
                 text = String.format(quantity, reps, lastSetWeight);
             }
         }
+        WendlerizedLog.d("Set Goal: " + text);
         holder.goal.setText(text);
     }
 
@@ -281,7 +301,7 @@ public class WorkoutListAdapter extends BaseAdapter {
 
                     if (workout.getAdditionalExercises() == null
                             || workout.getAdditionalExercises().isEmpty()) {
-                        workout.setAdditionalExercises(handler.getExtraExerciseForWorkout(workout));
+                        workout.setAdditionalExercises(handler.getAdditionalExercisesForWorkout(workout));
                     }
 
                     Intent intent = new Intent(mContext, WorkoutActivity.class);
@@ -323,5 +343,7 @@ public class WorkoutListAdapter extends BaseAdapter {
         TextView goal;
         TextView date;
         ImageButton overflow;
+        TextDrawable textDrawable;
+        ImageView imageView;
     }
 }

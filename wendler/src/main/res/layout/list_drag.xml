@@ -2,14 +2,9 @@
 
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:dslv="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
         <com.mobeta.android.dslv.DragSortListView
             android:id="@+id/list_drag"
@@ -33,14 +28,19 @@
             android:clipToPadding="false"
             android:scrollbarStyle="outsideOverlay"/>
 
-        <com.melnykov.fab.FloatingActionButton
-            android:id="@+id/button_floating_action"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_margin="@dimen/spacing_medium"
-            android:src="@drawable/ic_add_white_36dp"
-            fab:fab_colorNormal="@color/accent_color"
-            fab:fab_colorPressed="@color/theme_pink_pressed"/>
-    </FrameLayout>
+    <com.getbase.floatingactionbutton.FloatingActionButton
+        xmlns:fab="http://schemas.android.com/apk/res-auto"
+        android:visibility="gone"
+        android:id="@+id/action_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="@dimen/spacing_medium"
+        fab:fab_colorNormal="@color/accent_color"
+        fab:fab_title="@string/action_enter_reps"
+        fab:fab_colorPressed="@color/accent_color_pressed"
+        fab:fab_icon="@drawable/ic_add_white_36dp"/>
+
 </RelativeLayout>

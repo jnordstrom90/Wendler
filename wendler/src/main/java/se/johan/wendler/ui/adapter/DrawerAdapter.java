@@ -1,6 +1,7 @@
 package se.johan.wendler.ui.adapter;
 
 import android.content.Context;
+import android.graphics.PorterDuff;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,23 +12,23 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import se.johan.wendler.R;
-import se.johan.wendler.model.WendlerListItem;
+import se.johan.wendler.model.ListItem;
 
 /**
  * Adapter for the items in the NavigationDrawer.
  */
 public class DrawerAdapter extends BaseAdapter {
 
-    private final LayoutInflater mInflater;
-    private final ArrayList<WendlerListItem> mListItems;
+    private Context mContext;
+    private final ArrayList<ListItem> mListItems;
     private int mSelectedIndex = -1;
 
     /**
      * Constructor for the adapter.
      */
-    public DrawerAdapter(Context context, ArrayList<WendlerListItem> listItems) {
+    public DrawerAdapter(Context context, ArrayList<ListItem> listItems) {
         mListItems = listItems;
-        mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mContext = context;
     }
 
     /**
@@ -62,34 +63,20 @@ public class DrawerAdapter extends BaseAdapter {
         ViewHolder holder;
         if (convertView == null) {
             holder = new ViewHolder();
-            convertView = mInflater.inflate(R.layout.item_drawer, parent, false);
+            convertView = LayoutInflater.from(mContext)
+                    .inflate(R.layout.drawer_item, parent, false);
             holder.text = (TextView) convertView.findViewById(R.id.text);
-            holder.smallText = (TextView) convertView.findViewById(R.id.textViewSmall);
-            holder.selector = convertView.findViewById(R.id.selection);
             holder.icon = (ImageView) convertView.findViewById(R.id.icon);
-            holder.bigLayout = convertView.findViewById(R.id.bigLayout);
-            holder.smallLayout = convertView.findViewById(R.id.smallLayout);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        switch (mListItems.get(position).getType()) {
-            case REGULAR:
-                holder.smallLayout.setVisibility(View.GONE);
-                holder.text.setText(mListItems.get(position).getTitle());
-                int visibility = mSelectedIndex == position ? View.VISIBLE : View.INVISIBLE;
-                holder.selector.setVisibility(visibility);
-                holder.bigLayout.setVisibility(View.VISIBLE);
-                break;
-            case SMALL:
-                holder.smallText.setText(mListItems.get(position).getTitle());
-                holder.bigLayout.setVisibility(View.GONE);
-                holder.icon.setImageResource(mListItems.get(position).getIconRes());
-                holder.icon.setVisibility(View.VISIBLE);
-                holder.smallLayout.setVisibility(View.VISIBLE);
-                break;
-        }
+        holder.text.setText(mListItems.get(position).getTitle(mContext));
+        holder.icon.setImageDrawable(mListItems.get(position).getIcon(mContext));
+
+        holder.text.setTextColor(getColor(position));
+        holder.icon.setColorFilter(getColor(position), PorterDuff.Mode.MULTIPLY);
 
         return convertView;
     }
@@ -109,14 +96,19 @@ public class DrawerAdapter extends BaseAdapter {
     }
 
     /**
+     * Returns the color to use for the selected item.
+     */
+    private int getColor(int position) {
+        return position == mSelectedIndex
+                ? mContext.getResources().getColor(R.color.theme_color)
+                : mContext.getResources().getColor(R.color.text_title_color);
+    }
+
+    /**
      * ViewHolder used to increase performance.
      */
     private static class ViewHolder {
         TextView text;
-        View selector;
         ImageView icon;
-        TextView smallText;
-        View bigLayout;
-        View smallLayout;
     }
 }

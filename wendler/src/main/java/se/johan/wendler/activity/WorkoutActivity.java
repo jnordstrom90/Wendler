@@ -1,54 +1,62 @@
 package se.johan.wendler.activity;
 
+import android.annotation.TargetApi;
 import android.app.ActionBar.Tab;
 import android.app.ActionBar.TabListener;
 import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.content.res.Resources;
-import android.graphics.Point;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.support.v7.widget.Toolbar;
 import android.text.format.Time;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 
+import com.astuetz.PagerSlidingTabStrip;
 import com.doomonafireball.betterpickers.calendardatepicker.CalendarDatePickerDialog;
-import com.github.amlcurran.showcaseview.OnShowcaseEventListener;
-import com.github.amlcurran.showcaseview.ShowcaseView;
-import com.github.amlcurran.showcaseview.targets.Target;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
+import com.nispok.snackbar.Snackbar;
+import com.nispok.snackbar.listeners.EventListener;
 
 import java.sql.SQLException;
 
 import se.johan.wendler.R;
-import se.johan.wendler.animation.ZoomOutPageTransformer;
-import se.johan.wendler.model.Workout;
-import se.johan.wendler.sql.SqlHandler;
 import se.johan.wendler.activity.base.BaseActivity;
-import se.johan.wendler.ui.dialog.ConfirmationDialog;
-import se.johan.wendler.ui.dialog.EditTextDialog;
-import se.johan.wendler.ui.dialog.StopwatchDialog;
+import se.johan.wendler.animation.ZoomOutPageTransformer;
 import se.johan.wendler.fragment.WorkoutAdditionalFragment;
 import se.johan.wendler.fragment.WorkoutMainFragment;
 import se.johan.wendler.fragment.base.WorkoutFragment;
-import se.johan.wendler.ui.view.SlidingTabLayout;
+import se.johan.wendler.model.Action;
+import se.johan.wendler.model.Workout;
+import se.johan.wendler.sql.SqlHandler;
+import se.johan.wendler.ui.dialog.ConfirmationDialog;
+import se.johan.wendler.ui.dialog.EditTextDialog;
+import se.johan.wendler.ui.dialog.StopwatchDialog;
 import se.johan.wendler.util.Constants;
-import se.johan.wendler.util.PreferenceUtil;
+import se.johan.wendler.util.Utils;
 import se.johan.wendler.util.WendlerizedLog;
 import se.johan.wendler.util.WorkoutHolder;
 
 /**
  * Activity for handling the workout fragments
  */
-public class WorkoutActivity extends BaseActivity implements TabListener,
-        OnPageChangeListener, EditTextDialog.EditTextListener,
-        StopwatchDialog.StopWatchListener, ConfirmationDialog.ConfirmationDialogListener {
+public class WorkoutActivity extends BaseActivity implements
+        TabListener,
+        OnPageChangeListener,
+        EditTextDialog.EditTextListener,
+        StopwatchDialog.StopWatchListener,
+        ConfirmationDialog.ConfirmationDialogListener,
+        EventListener {
 
     private static final String EXTRA_ELAPSED_TIME = "elapsedTime";
     private static final String EXTRA_TIMER_IS_RUNNING = "timerIsRunning";
@@ -56,7 +64,6 @@ public class WorkoutActivity extends BaseActivity implements TabListener,
 
     private ViewPager mViewPager;
     private Workout mWorkout;
-    private ShowcaseView mShowcaseView;
     private int mCurrentPage;
     private long mTimeElapsed = -1;
     private boolean mTimerIsRunning;
@@ -64,9 +71,15 @@ public class WorkoutActivity extends BaseActivity implements TabListener,
     /**
      * Called when our activity is created.
      */
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState, R.layout.activity_workout);
+
+        overrideElevation(getResources().getDimension(R.dimen.toolbar_elevation));
+        if (Utils.hasLollipop()) {
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        }
 
         if (savedInstanceState != null) {
             mWorkout = savedInstanceState.getParcelable(Constants.BUNDLE_EXERCISE_ITEM);
@@ -81,51 +94,7 @@ public class WorkoutActivity extends BaseActivity implements TabListener,
             mTimeElapsed = item.getElapsedTime();
         }
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-
-        WorkoutMainFragment main =
-                (WorkoutMainFragment) fragmentManager.findFragmentByTag(WorkoutMainFragment.TAG);
-        WorkoutAdditionalFragment extra = (WorkoutAdditionalFragment)
-                fragmentManager.findFragmentByTag(WorkoutAdditionalFragment.TAG);
-
-        android.support.v4.app.FragmentTransaction remove = fragmentManager.beginTransaction();
-
-        if (main == null) {
-            main = WorkoutMainFragment.newInstance(mWorkout.getMainExercise(), mWorkout.getWeek());
-        } else {
-            remove.remove(main);
-        }
-        if (extra == null) {
-            extra = WorkoutAdditionalFragment.newInstance(
-                    mWorkout.getAdditionalExercises(),
-                    mWorkout.getName());
-        } else {
-            remove.remove(extra);
-        }
-        if (!remove.isEmpty()) {
-            remove.commit();
-            fragmentManager.executePendingTransactions();
-        }
-
-        mViewPager = (ViewPager) findViewById(R.id.pager);
-        TwoFragmentAdapter adapter =
-                new TwoFragmentAdapter(fragmentManager, main, extra, getResources());
-
-        if (mViewPager != null) {
-            mViewPager.setAdapter(adapter);
-            mViewPager.setCurrentItem(mCurrentPage);
-            mViewPager.setPageTransformer(true, new ZoomOutPageTransformer());
-            mViewPager.setOnPageChangeListener(this);
-
-            SlidingTabLayout mSlidingTabLayout = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
-            mSlidingTabLayout.setViewPager(mViewPager);
-        } else {
-            fragmentManager.beginTransaction()
-                    .add(R.id.left_pane, main, WorkoutMainFragment.TAG)
-                    .add(R.id.right_pane, extra, WorkoutAdditionalFragment.TAG)
-                    .commit();
-        }
-
+        FragmentManager fragmentManager = initFragmentManagement();
 
         CalendarDatePickerDialog dialog = (CalendarDatePickerDialog)
                 fragmentManager.findFragmentByTag(CalendarDatePickerDialog.class.getName());
@@ -144,6 +113,7 @@ public class WorkoutActivity extends BaseActivity implements TabListener,
                 mWorkout.getMainExercise().getWeight());
         updateHelpMessage(subtitle);
 
+        initActionButton();
     }
 
     /**
@@ -152,10 +122,11 @@ public class WorkoutActivity extends BaseActivity implements TabListener,
     @Override
     protected void onPause() {
         super.onPause();
+        int pos = mViewPager != null ? mViewPager.getCurrentItem() : mCurrentPage;
         WorkoutHolder.getInstance().putWorkout(
                 new WorkoutHolder.WorkoutItem(
                         mWorkout,
-                        mCurrentPage,
+                        pos,
                         mTimerIsRunning,
                         mTimeElapsed));
     }
@@ -186,18 +157,8 @@ public class WorkoutActivity extends BaseActivity implements TabListener,
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 checkWorkoutForDeload(false);
                 return true;
-            case R.id.action_notes:
-                EditTextDialog.newInstance(
-                        getString(R.string.my_notes),
-                        mWorkout.getNotes())
-                        .show(getSupportFragmentManager(), EditTextDialog.TAG);
-                return true;
             case R.id.action_done:
-                if (!shouldShowShowcaseView()) {
-                    checkWorkoutForDeload(true);
-                } else {
-                    showShowcaseView();
-                }
+                checkWorkoutForDeload(true);
                 return true;
             case R.id.action_timer:
                 StopwatchDialog.newInstance(
@@ -242,34 +203,14 @@ public class WorkoutActivity extends BaseActivity implements TabListener,
     }
 
     /**
-     * Show the ShowcaseView for the user informing him/her about not entering any repetitions.
-     */
-    private void showShowcaseView() {
-        Target target = new Target() {
-            @Override
-            public Point getPoint() {
-                Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
-                return new Point(toolbar.getRight(), (toolbar.getHeight() / 2));
-            }
-        };
-        mShowcaseView = new ShowcaseView.Builder(this, true)
-                .setTarget(target)
-                .setContentTitle(R.string.showcase_workout_finish_title)
-                .setContentText(R.string.showcase_workout_finish_detail)
-                .setShowcaseEventListener(mShowcaseListener)
-                .hideOnTouchOutside()
-                .setStyle(R.style.CustomShowcaseTheme)
-                .build();
-        mShowcaseView.show();
-    }
-
-    /**
      * Called before our option menu is created.
      */
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         menu.findItem(R.id.action_calendar).setVisible(
                 mWorkout != null && mWorkout.isComplete());
+        menu.findItem(R.id.action_done).setVisible(
+                mWorkout != null && mWorkout.getMainExercise().getLastSetProgress() > -1);
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -387,17 +328,45 @@ public class WorkoutActivity extends BaseActivity implements TabListener,
     }
 
     /**
-     * Return if we should display the ShowcaseView in case the user hasn't entered any repetitions.
+     * Called when snack bar is shown.
      */
-    private boolean shouldShowShowcaseView() {
-        WorkoutMainFragment main =
-                (WorkoutMainFragment) getSupportFragmentManager()
-                        .findFragmentByTag(WorkoutMainFragment.TAG);
-        return !main.hasSetReps()
-                && !PreferenceUtil.getBoolean(
-                this, PreferenceUtil.KEY_HAS_SEEN_SHOWCASE_FINISH_WORKOUTS, false)
-                && mShowcaseView == null
-                && mWorkout.getWeek() != 4;
+    @Override
+    public void onShow(Snackbar snackbar) {
+        final View view = findViewById(R.id.multiple_actions);
+        view.animate()
+                .translationY(-snackbar.getHeight())
+                .setInterpolator(new DecelerateInterpolator(1.5f))
+                .setDuration(300)
+                .start();
+    }
+
+    /**
+     * Called when snack bar is in place.
+     */
+    @Override
+    public void onShown(Snackbar snackbar) {
+
+    }
+
+    /**
+     * Called when the snack bar is dismissed.
+     */
+    @Override
+    public void onDismiss(Snackbar snackbar) {
+        final View view = findViewById(R.id.multiple_actions);
+        view.animate()
+                .setInterpolator(new AccelerateInterpolator(1.5f))
+                .translationY(view.getTranslationY() + snackbar.getHeight())
+                .setDuration(300)
+                .start();
+    }
+
+    /**
+     * Called when snack bar is gone.
+     */
+    @Override
+    public void onDismissed(Snackbar snackbar) {
+
     }
 
     /**
@@ -468,27 +437,98 @@ public class WorkoutActivity extends BaseActivity implements TabListener,
     };
 
     /**
-     * Listener for our ShowcaseView.
+     * Initialize the Floating Action Button.
      */
-    private final OnShowcaseEventListener mShowcaseListener = new OnShowcaseEventListener() {
-        @Override
-        public void onShowcaseViewHide(ShowcaseView showcaseView) {
-            PreferenceUtil.putBoolean(
-                    WorkoutActivity.this,
-                    PreferenceUtil.KEY_HAS_SEEN_SHOWCASE_FINISH_WORKOUTS,
-                    true);
+    private void initActionButton() {
+        final FloatingActionsMenu menu = (FloatingActionsMenu) findViewById(R.id.multiple_actions);
+
+        findViewById(R.id.action_notes).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditTextDialog.newInstance(
+                        getString(R.string.my_notes),
+                        mWorkout.getNotes())
+                        .show(getSupportFragmentManager(), EditTextDialog.TAG);
+                menu.collapse();
+            }
+        });
+
+        findViewById(R.id.action_add_additional).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment fragment = getSupportFragmentManager().
+                        findFragmentByTag(WorkoutAdditionalFragment.TAG);
+                if (fragment instanceof WorkoutAdditionalFragment) {
+                    ((WorkoutAdditionalFragment) fragment).onActionTaken(Action.ADD_EXERCISE);
+                }
+                menu.collapse();
+            }
+        });
+
+        findViewById(R.id.action_enter_reps).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment fragment = getSupportFragmentManager().
+                        findFragmentByTag(WorkoutMainFragment.TAG);
+                if (fragment instanceof WorkoutMainFragment) {
+                    ((WorkoutMainFragment) fragment).onActionTaken(Action.SET_REPS);
+                }
+                menu.collapse();
+            }
+        });
+    }
+
+    /**
+     * Initialize the fragment handling.
+     */
+    private FragmentManager initFragmentManagement() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+
+        WorkoutMainFragment main =
+                (WorkoutMainFragment) fragmentManager.findFragmentByTag(WorkoutMainFragment.TAG);
+        WorkoutAdditionalFragment extra = (WorkoutAdditionalFragment)
+                fragmentManager.findFragmentByTag(WorkoutAdditionalFragment.TAG);
+
+        android.support.v4.app.FragmentTransaction remove = fragmentManager.beginTransaction();
+
+        if (main == null) {
+            main = WorkoutMainFragment.newInstance(
+                    mWorkout.getMainExercise(), mWorkout.getWeek(), mWorkout.isComplete());
+        } else {
+            remove.remove(main);
+        }
+        if (extra == null) {
+            extra = WorkoutAdditionalFragment.newInstance(
+                    mWorkout.getAdditionalExercises(),
+                    mWorkout.getName());
+        } else {
+            remove.remove(extra);
+        }
+        if (!remove.isEmpty()) {
+            remove.commit();
+            fragmentManager.executePendingTransactions();
         }
 
-        @Override
-        public void onShowcaseViewDidHide(ShowcaseView showcaseView) {
-            // Not used here
-        }
+        mViewPager = (ViewPager) findViewById(R.id.pager);
+        TwoFragmentAdapter adapter =
+                new TwoFragmentAdapter(fragmentManager, main, extra, getResources());
 
-        @Override
-        public void onShowcaseViewShow(ShowcaseView showcaseView) {
-            // Not used here
+        if (mViewPager != null) {
+            mViewPager.setAdapter(adapter);
+            mViewPager.setCurrentItem(mCurrentPage);
+            mViewPager.setPageTransformer(true, new ZoomOutPageTransformer());
+            mViewPager.setOnPageChangeListener(this);
+
+            PagerSlidingTabStrip mSlidingTabLayout = (PagerSlidingTabStrip) findViewById(R.id.sliding_tabs);
+            mSlidingTabLayout.setViewPager(mViewPager);
+        } else {
+            fragmentManager.beginTransaction()
+                    .add(R.id.left_pane, main, WorkoutMainFragment.TAG)
+                    .add(R.id.right_pane, extra, WorkoutAdditionalFragment.TAG)
+                    .commit();
         }
-    };
+        return fragmentManager;
+    }
 
     /**
      * Custom TwoFragmentAdapter

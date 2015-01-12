@@ -1,11 +1,14 @@
 package se.johan.wendler.activity;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -15,23 +18,23 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import se.johan.wendler.R;
-import se.johan.wendler.ui.adapter.DrawerAdapter;
-import se.johan.wendler.model.ListItemType;
-import se.johan.wendler.model.WendlerListItem;
-import se.johan.wendler.sql.SqlHandler;
 import se.johan.wendler.activity.base.BaseActivity;
-import se.johan.wendler.ui.dialog.ChangelogDialog;
 import se.johan.wendler.fragment.DrawerAdditionalWorkoutsFragment;
 import se.johan.wendler.fragment.DrawerBackupManagerFragment;
 import se.johan.wendler.fragment.DrawerEditFragment;
 import se.johan.wendler.fragment.DrawerOldWorkoutsFragment;
 import se.johan.wendler.fragment.DrawerWorkoutNavigationFragment;
 import se.johan.wendler.fragment.base.DrawerFragment;
+import se.johan.wendler.model.ListItem;
+import se.johan.wendler.model.ListItemType;
+import se.johan.wendler.sql.SqlHandler;
+import se.johan.wendler.ui.adapter.DrawerAdapter;
+import se.johan.wendler.ui.dialog.ChangelogDialog;
 import se.johan.wendler.ui.view.MyDrawerLayout;
 import se.johan.wendler.util.Constants;
 import se.johan.wendler.util.MathHelper;
 import se.johan.wendler.util.PreferenceUtil;
-import se.johan.wendler.util.Util;
+import se.johan.wendler.util.Utils;
 import se.johan.wendler.util.WendlerConstants;
 import se.johan.wendler.util.WendlerizedLog;
 
@@ -47,7 +50,7 @@ public class MainActivity extends BaseActivity {
     private static final String EXTRA_SAVED_EDIT_PAGE = "savedEditPage";
     private static final String EXTRA_IS_DRAWER_OPEN = "isDrawerOpen";
 
-    private ArrayList<WendlerListItem> mListItems;
+    private ArrayList<ListItem> mListItems;
     private MyDrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private boolean mIsDrawerOpen = false;
@@ -58,6 +61,7 @@ public class MainActivity extends BaseActivity {
     /**
      * Called when the activity is created.
      */
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState, R.layout.activity_main);
@@ -68,9 +72,15 @@ public class MainActivity extends BaseActivity {
         mDrawerToggle = getActionBarDrawerToggle();
 
         mAdapter = new DrawerAdapter(this, mListItems);
+        mDrawerList.addHeaderView(LayoutInflater.from(this).inflate(R.layout.drawer_header, null));
         mDrawerList.setAdapter(mAdapter);
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+        if (Utils.hasLollipop()) {
+            mDrawerLayout.setStatusBarBackgroundColor(
+                    getResources().getColor(R.color.theme_color_dark));
+        }
 
         int savedPosition = 0;
         if (savedInstanceState != null) {
@@ -207,7 +217,7 @@ public class MainActivity extends BaseActivity {
                     .beginTransaction()
                     .replace(R.id.content_frame, fragment, fragment.getFragmentTag())
                     .commit();
-            updateTitle(mListItems.get(position).getTitle());
+            updateTitle(mListItems.get(position).getTitle(this));
             updateHelpMessage(fragment.getMessageText());
         }
     }
@@ -302,7 +312,7 @@ public class MainActivity extends BaseActivity {
      */
     private void showChangelogIfNeeded() {
 
-        String currentVersion = Util.getCurrentAppVersion(this);
+        String currentVersion = Utils.getCurrentAppVersion(this);
 
         String savedVersion = PreferenceUtil.getString(
                 this,
@@ -319,26 +329,16 @@ public class MainActivity extends BaseActivity {
     /**
      * Generate items for the drawer.
      */
-    private ArrayList<WendlerListItem> generateListItems() {
+    private ArrayList<ListItem> generateListItems() {
 
-        ArrayList<WendlerListItem> items = new ArrayList<WendlerListItem>();
+        ArrayList<ListItem> items = new ArrayList<ListItem>();
 
-        String[] titles = getResources().getStringArray(R.array.drawer);
-        for (String title : titles) {
-            items.add(new WendlerListItem(ListItemType.REGULAR, title, null, -1));
+        for (ListItem item : ListItem.values()) {
+            if (item.getItemType().equals(ListItemType.DRAWER)
+                    || item.getItemType().equals(ListItemType.DRAWER_EXTRA)) {
+                items.add(item);
+            }
         }
-
-        items.add(new WendlerListItem(
-                ListItemType.SMALL,
-                getString(R.string.action_item_settings),
-                null,
-                R.drawable.ic_settings_black_24dp));
-
-        items.add(new WendlerListItem(
-                ListItemType.SMALL,
-                getString(R.string.action_item_about),
-                null,
-                R.drawable.ic_info_outline_black_24dp));
 
         return items;
     }
@@ -349,27 +349,29 @@ public class MainActivity extends BaseActivity {
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
 
         @Override
-        public void onItemClick(AdapterView parent, View view, final int position, long id) {
-            mDrawerLayout.closeDrawer(mDrawerList);
-
+        public void onItemClick(AdapterView parent, View view, int position, long id) {
+            if (position == mDrawerList.getHeaderViewsCount() - 1) {
+                return;
+            }
+            mDrawerLayout.closeDrawer(GravityCompat.START);
+            final int calculatedPosition = position - mDrawerList.getHeaderViewsCount();
             // Don't update the selected item until the FragmentTransaction is completed
-            switch (mListItems.get(position).getType()) {
-                case REGULAR:
+            switch (mListItems.get(calculatedPosition).getItemType()) {
+                case DRAWER:
                     mDrawerLayout.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            selectItem(position, 0);
+                            selectItem(calculatedPosition, 0);
                         }
-                    }, 200);
+                    }, 300);
 
-                    mSavedSelection = position;
+                    mSavedSelection = calculatedPosition;
                     break;
-
-                case SMALL:
-                    if (mListItems.get(position).getTitle()
+                case DRAWER_EXTRA:
+                    if (mListItems.get(calculatedPosition).getTitle(MainActivity.this)
                             .equals(getString(R.string.action_item_settings))) {
                         launchActivity(SettingsActivity.class);
-                    } else if (mListItems.get(position).getTitle()
+                    } else if (mListItems.get(calculatedPosition).getTitle(MainActivity.this)
                             .equals(getString(R.string.action_item_about))) {
                         launchActivity(AboutActivity.class);
                     }

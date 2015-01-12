@@ -1,8 +1,10 @@
 package se.johan.wendler.ui.adapter;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Paint;
+import android.os.Build;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -19,6 +21,7 @@ import java.util.ArrayList;
 import se.johan.wendler.R;
 import se.johan.wendler.model.AdditionalExercise;
 import se.johan.wendler.util.CardsOptionHandler;
+import se.johan.wendler.util.Utils;
 
 /**
  * Adapter for additional exercises displayed in a list.
@@ -192,6 +195,7 @@ public class AdditionalExerciseAdapter extends BaseAdapter {
     /**
      * Display the popup menu of additional exercises.
      */
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     private void displayPopupMenu(View v, final int position, final AdditionalExercise exercise) {
         PopupMenu popup = new PopupMenu(v.getContext(), v);
         popup.getMenuInflater()
@@ -215,6 +219,9 @@ public class AdditionalExerciseAdapter extends BaseAdapter {
                 return false;
             }
         });
+        if (Utils.hasKitKat()) {
+            v.setOnTouchListener(popup.getDragToOpenListener());
+        }
         popup.show();
     }
 

@@ -87,7 +87,7 @@ public class WorkoutNavigationListFragment extends Fragment
 
             if (workout.getAdditionalExercises() == null
                     || workout.getAdditionalExercises().isEmpty()) {
-                workout.setAdditionalExercises(handler.getExtraExerciseForWorkout(workout));
+                workout.setAdditionalExercises(handler.getAdditionalExercisesForWorkout(workout));
             }
 
             Intent intent = new Intent(getActivity(), WorkoutActivity.class);

@@ -139,7 +139,7 @@ public class ExerciseSet implements Parcelable {
 
     @Override
     public boolean equals(Object o) {
-        if (o != null && o instanceof ExerciseSet) {
+        if (o instanceof ExerciseSet) {
             ExerciseSet other = (ExerciseSet) o;
             return other.getType().equals(mSetType)
                     && other.getWeight() == mWeight

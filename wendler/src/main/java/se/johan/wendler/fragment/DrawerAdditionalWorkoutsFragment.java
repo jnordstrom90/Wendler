@@ -9,11 +9,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.astuetz.PagerSlidingTabStrip;
+
 import se.johan.wendler.R;
 import se.johan.wendler.animation.ZoomOutPageTransformer;
 import se.johan.wendler.fragment.base.DrawerFragment;
 import se.johan.wendler.util.Constants;
-import se.johan.wendler.ui.view.SlidingTabLayout;
 
 /**
  * Parent fragment for adding permanent additional exercises to a workout.
@@ -57,7 +58,8 @@ public class DrawerAdditionalWorkoutsFragment extends DrawerFragment {
         viewpAger.setPageTransformer(true, new ZoomOutPageTransformer());
         viewpAger.setAdapter(adapter);
 
-        SlidingTabLayout slidingTabLayout = (SlidingTabLayout) view.findViewById(R.id.sliding_tabs);
+        PagerSlidingTabStrip slidingTabLayout =
+                (PagerSlidingTabStrip) view.findViewById(R.id.sliding_tabs);
         slidingTabLayout.setViewPager(viewpAger);
         return view;
     }

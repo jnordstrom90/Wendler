@@ -1,18 +1,23 @@
 package se.johan.wendler.ui.adapter;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.List;
+
 import se.johan.wendler.R;
+import se.johan.wendler.model.Action;
 import se.johan.wendler.model.ExerciseSet;
 import se.johan.wendler.model.MainExercise;
 import se.johan.wendler.model.SetType;
+import se.johan.wendler.ui.view.TextDrawable;
+import se.johan.wendler.util.ColorGenerator;
 
 /**
  * Adapter used in the list for displaying the main exercise during a workout.
@@ -20,15 +25,18 @@ import se.johan.wendler.model.SetType;
 public class MainExerciseAdapter extends BaseAdapter {
     private final MainExercise mMainExercise;
     private final LayoutInflater mInflater;
-    private final Resources mRes;
+    private final Context mContext;
+    private final Action.ActionListener mActionListener;
 
     /**
      * Constructor for the adapter.
      */
-    public MainExerciseAdapter(Context context, MainExercise exercise) {
+    public MainExerciseAdapter(
+            Context context, MainExercise exercise, Action.ActionListener actionListener) {
         mMainExercise = exercise;
-        mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        mRes = context.getResources();
+        mInflater = LayoutInflater.from(context);
+        mContext = context;
+        mActionListener = actionListener;
     }
 
     /**
@@ -36,7 +44,7 @@ public class MainExerciseAdapter extends BaseAdapter {
      */
     @Override
     public int getCount() {
-        return mMainExercise.getExerciseSets().size();
+        return mMainExercise.getSetGroups().size();
     }
 
     /**
@@ -56,69 +64,177 @@ public class MainExerciseAdapter extends BaseAdapter {
     }
 
     /**
+     * Return false to make the list items not clickable.
+     */
+    @Override
+    public boolean isEnabled(int position) {
+        return false;
+    }
+
+    /**
      * Return the view for a given position.
      */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        ViewHolder holder;
+        List<ExerciseSet> sets = getSetsByIndex(position);
+        SetType setType = getTypeByIndex(position);
+
+        final ViewHolder holder;
         if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.list_text_view, parent, false);
+            convertView = mInflater.inflate(R.layout.card_main_exercise, parent, false);
             holder = new ViewHolder();
-            holder.textView = (TextView) convertView.findViewById(R.id.textView);
+            holder.title = (TextView) convertView.findViewById(R.id.title);
+            holder.setOne = (TextView) convertView.findViewById(R.id.set_one);
+            holder.setTwo = (TextView) convertView.findViewById(R.id.set_two);
+            holder.setThree = (TextView) convertView.findViewById(R.id.set_three);
+            holder.imageView = (ImageView) convertView.findViewById(R.id.image_view);
+            String text = getSetTypeString(setType, true);
+            int color = ColorGenerator.DEFAULT.getColor(text);
+            holder.textDrawable = TextDrawable.builder().buildRound(text, color);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
+        holder.imageView.setImageDrawable(holder.textDrawable);
 
-        String text = null;
-        String plusSet = "";
-        ExerciseSet set = mMainExercise.getExerciseSet(position);
-        switch (set.getType()) {
-            case WARM_UP:
-                text = String.format(mRes.getString(R.string.warm_up),
-                        String.valueOf(set.getWeight()),
-                        String.valueOf(set.getGoal()));
-                break;
-            case PLUS_SET:
-                plusSet = "+";
-            case REGULAR:
-                text = String.format(
-                        mRes.getStringArray(R.array.sets)[position - getPosition()],
-                        String.valueOf(set.getWeight()),
-                        String.valueOf(set.getGoal() + plusSet));
-                break;
-        }
+        // TODO MAKE sets dynamic
 
-        holder.textView.setText(text);
+        final ExerciseSet setOne = sets.get(0);
+        final ExerciseSet setTwo = sets.get(1);
+        final ExerciseSet setThree = sets.get(2);
 
-        if (set.isWon() || set.isComplete()) {
-            holder.textView.setPaintFlags(
-                    holder.textView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        String plusSet = setThree.getType().equals(SetType.PLUS_SET) ? "+" : "";
+
+        holder.setOne.setText(
+                String.format(mContext.getString(R.string.exercise_set_one),
+                        String.valueOf(setOne.getWeight()),
+                        String.valueOf(setOne.getGoal())));
+
+        holder.setTwo.setText(
+                String.format(mContext.getString(R.string.exercise_set_two),
+                        String.valueOf(setTwo.getWeight()),
+                        String.valueOf(setTwo.getGoal())));
+
+        holder.setThree.setText(
+                String.format(mContext.getString(R.string.exercise_set_three),
+                        String.valueOf(setThree.getWeight()),
+                        String.valueOf(setThree.getGoal())) + plusSet);
+
+        setOnClick(holder.setOne, setOne);
+        setOnClick(holder.setTwo, setTwo);
+        setOnClick(holder.setThree, setThree);
+
+        holder.title.setText(getSetTypeString(setType, false));
+
+        if (allSetsComplete(sets)) {
+            holder.title.setCompoundDrawablesWithIntrinsicBounds(
+                    null,
+                    null,
+                    mContext.getResources().getDrawable(R.drawable.ic_check_black_24dp),
+                    null);
         } else {
-            holder.textView.setPaintFlags(
-                    holder.textView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+            holder.title.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
         }
+
+        setPaint(holder.setOne, setOne);
+        setPaint(holder.setTwo, setTwo);
+        setPaint(holder.setThree, setThree);
+
         return convertView;
     }
 
     /**
-     * Return the position of the first set of regular exercises.
+     * Returns true if all sets are complete.
      */
-    private int getPosition() {
-        int pos = 0;
-        for (ExerciseSet set : mMainExercise.getExerciseSets()) {
-            if (set.getType().equals(SetType.WARM_UP)) {
-                pos++;
+    private boolean allSetsComplete(List<ExerciseSet> sets) {
+        for (ExerciseSet set : sets) {
+            if (!set.isComplete() && !set.isWon()) {
+                return false;
             }
         }
-        return pos;
+        return true;
+    }
+
+    /**
+     * Set on click listeners for text views.
+     */
+    private void setOnClick(final TextView textView, final ExerciseSet set) {
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (set.getType().equals(SetType.PLUS_SET)) {
+                    mActionListener.onActionTaken(Action.SET_REPS);
+                    setPaint(textView, set);
+                } else {
+                    toggleCompletion(textView, set);
+                }
+            }
+        });
+    }
+
+    /**
+     * Toggles the completion of the set.
+     */
+    private void toggleCompletion(TextView text, ExerciseSet set) {
+        set.toggleCompletion();
+        setPaint(text, set);
+    }
+
+    private void setPaint(TextView text, ExerciseSet set) {
+        if (set.isWon() || set.isComplete()) {
+            text.setPaintFlags(
+                    text.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        } else {
+            text.setPaintFlags(
+                    text.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+        }
+        notifyDataSetChanged();
+    }
+
+    /**
+     * Returns the exercise sets based on an index.
+     */
+    @SuppressWarnings("unchecked")
+    private List<ExerciseSet> getSetsByIndex(int index) {
+        return (List<ExerciseSet>) mMainExercise.getSetGroups().values().toArray()[index];
+    }
+
+    /**
+     * Returns the SetType based on an index.
+     */
+    @SuppressWarnings("unchecked")
+    private SetType getTypeByIndex(int index) {
+        return (SetType) mMainExercise.getSetGroups().keySet().toArray()[index];
+    }
+
+    /**
+     * Returns the set type string based on set type and if it's displayed as a short.
+     */
+    private String getSetTypeString(SetType type, boolean shortType) {
+        switch (type) {
+            case WARM_UP:
+                return shortType
+                        ? mContext.getString(R.string.set_type_warmup_short)
+                        : mContext.getString(R.string.set_type_warmup);
+            case PLUS_SET:
+            case REGULAR:
+            default:
+                return shortType
+                        ? mContext.getString(R.string.set_type_main_short)
+                        : mContext.getString(R.string.set_type_main);
+        }
     }
 
     /**
      * ViewHolder to increase performance.
      */
     private static class ViewHolder {
-        public TextView textView;
+        public TextView title;
+        public TextView setOne;
+        public TextView setTwo;
+        public TextView setThree;
+        public ImageView imageView;
+        public TextDrawable textDrawable;
     }
 }

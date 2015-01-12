@@ -11,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.astuetz.PagerSlidingTabStrip;
+
 import java.sql.SQLException;
 
 import se.johan.wendler.R;
@@ -20,7 +22,6 @@ import se.johan.wendler.animation.ZoomOutPageTransformer;
 import se.johan.wendler.fragment.base.DrawerFragment;
 import se.johan.wendler.sql.SqlHandler;
 import se.johan.wendler.util.WendlerizedLog;
-import se.johan.wendler.ui.view.SlidingTabLayout;
 
 /**
  * Navigation fragment
@@ -74,8 +75,8 @@ public class DrawerWorkoutNavigationFragment extends DrawerFragment {
         mViewPager.setAdapter(mAdapter);
         mViewPager.setCurrentItem(getCurrentSelection());
 
-        SlidingTabLayout mSlidingTabLayout =
-                (SlidingTabLayout) view.findViewById(R.id.sliding_tabs);
+        PagerSlidingTabStrip mSlidingTabLayout =
+                (PagerSlidingTabStrip) view.findViewById(R.id.sliding_tabs);
         mSlidingTabLayout.setViewPager(mViewPager);
 
         return view;

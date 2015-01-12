@@ -4,6 +4,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 import se.johan.wendler.model.base.Exercise;
 
@@ -15,6 +17,7 @@ public class MainExercise extends Exercise implements Parcelable {
     private double mIncrement;
     private double mWeight;
     private int mWorkoutPercentage;
+    private LinkedHashMap<SetType, List<ExerciseSet>> mSetGroups;
 
     /**
      * Constructor.
@@ -23,12 +26,14 @@ public class MainExercise extends Exercise implements Parcelable {
                         double weight,
                         double increment,
                         ArrayList<ExerciseSet> exerciseSets,
+                        LinkedHashMap<SetType, List<ExerciseSet>> setGroups,
                         int workoutPercentage) {
         mName = name;
         mWeight = weight;
         mIncrement = increment;
         mExerciseSets = exerciseSets;
         mWorkoutPercentage = workoutPercentage;
+        mSetGroups = setGroups;
     }
 
     /**
@@ -83,6 +88,13 @@ public class MainExercise extends Exercise implements Parcelable {
     public double getLastSetWeight() {
         int size = mExerciseSets.size();
         return mExerciseSets.get(size - 1).getWeight();
+    }
+
+    /**
+     * Returns the set groups.
+     */
+    public LinkedHashMap<SetType, List<ExerciseSet>> getSetGroups() {
+        return mSetGroups;
     }
 
     /**

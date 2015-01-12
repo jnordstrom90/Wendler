@@ -5,10 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <se.johan.wendler.ui.view.SlidingTabLayout
-        android:id="@+id/sliding_tabs"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+    <include layout="@layout/pager_sliding_tabs"/>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/pager"

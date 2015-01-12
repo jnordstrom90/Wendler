@@ -1,6 +1,7 @@
 package com.doomonafireball.betterpickers.numberpicker;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.os.Bundle;
@@ -48,17 +49,17 @@ public class NumberPickerDialogFragment extends DialogFragment {
     /**
      * Create an instance of the Picker (used internally)
      *
-     * @param reference an (optional) user-defined reference, helpful when tracking multiple Pickers
-     * @param themeResId the style resource ID for theming
-     * @param minNumber (optional) the minimum possible number
-     * @param maxNumber (optional) the maximum possible number
+     * @param reference           an (optional) user-defined reference, helpful when tracking multiple Pickers
+     * @param themeResId          the style resource ID for theming
+     * @param minNumber           (optional) the minimum possible number
+     * @param maxNumber           (optional) the maximum possible number
      * @param plusMinusVisibility (optional) View.VISIBLE, View.INVISIBLE, or View.GONE
-     * @param decimalVisibility (optional) View.VISIBLE, View.INVISIBLE, or View.GONE
-     * @param labelText (optional) text to add as a label
+     * @param decimalVisibility   (optional) View.VISIBLE, View.INVISIBLE, or View.GONE
+     * @param labelText           (optional) text to add as a label
      * @return a Picker!
      */
     public static NumberPickerDialogFragment newInstance(int reference, int themeResId, Integer minNumber,
-            Integer maxNumber, Integer plusMinusVisibility, Integer decimalVisibility, String labelText) {
+                                                         Integer maxNumber, Integer plusMinusVisibility, Integer decimalVisibility, String labelText) {
         final NumberPickerDialogFragment frag = new NumberPickerDialogFragment();
         Bundle args = new Bundle();
         args.putInt(REFERENCE_KEY, reference);
@@ -134,7 +135,7 @@ public class NumberPickerDialogFragment extends DialogFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+                             Bundle savedInstanceState) {
 
         View v = inflater.inflate(R.layout.number_picker_dialog, null);
         mSet = (Button) v.findViewById(R.id.set_button);
@@ -189,7 +190,6 @@ public class NumberPickerDialogFragment extends DialogFragment {
 
         mDividerOne = v.findViewById(R.id.divider_1);
         mDividerOne.setBackgroundColor(mDividerColor);
-        mSet.setTextColor(mTextColor);
         mCancel.setTextColor(mTextColor);
         mPicker.setTheme(mTheme);
         getDialog().getWindow().setBackgroundDrawableResource(mDialogBackgroundResId);
@@ -207,12 +207,31 @@ public class NumberPickerDialogFragment extends DialogFragment {
         return v;
     }
 
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        super.onDismiss(dialog);
+        for (NumberPickerDialogHandler handler : mNumberPickerDialogHandlers) {
+            handler.onDialogDismissed();
+        }
+        final Activity activity = getActivity();
+        final Fragment fragment = getTargetFragment();
+        if (activity instanceof NumberPickerDialogHandler) {
+            final NumberPickerDialogHandler act = (NumberPickerDialogHandler) activity;
+            act.onDialogDismissed();
+        } else if (fragment instanceof NumberPickerDialogHandler) {
+            final NumberPickerDialogHandler frag = (NumberPickerDialogHandler) fragment;
+            frag.onDialogDismissed();
+        }
+    }
+
     /**
      * This interface allows objects to register for the Picker's set action.
      */
     public interface NumberPickerDialogHandler {
 
         void onDialogNumberSet(int reference, int number, double decimal, boolean isNegative, double fullNumber);
+
+        void onDialogDismissed();
     }
 
     /**

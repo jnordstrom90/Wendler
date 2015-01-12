@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.astuetz.PagerSlidingTabStrip;
+
 import java.sql.SQLException;
 
 import se.johan.wendler.R;
@@ -16,9 +18,8 @@ import se.johan.wendler.animation.ZoomOutPageTransformer;
 import se.johan.wendler.fragment.base.DrawerFragment;
 import se.johan.wendler.fragment.base.EditFragment;
 import se.johan.wendler.sql.SqlHandler;
-import se.johan.wendler.util.Util;
+import se.johan.wendler.util.Utils;
 import se.johan.wendler.util.WendlerizedLog;
-import se.johan.wendler.ui.view.SlidingTabLayout;
 
 /**
  * Parent fragment used for editable fragments in the drawer.
@@ -72,7 +73,8 @@ public class DrawerEditFragment extends DrawerFragment {
         mViewPager.setPageTransformer(true, new ZoomOutPageTransformer());
         mViewPager.setAdapter(mAdapter);
 
-        SlidingTabLayout slidingTabLayout = (SlidingTabLayout) view.findViewById(R.id.sliding_tabs);
+        PagerSlidingTabStrip slidingTabLayout =
+                (PagerSlidingTabStrip) view.findViewById(R.id.sliding_tabs);
         slidingTabLayout.setViewPager(mViewPager);
 
         int pos = 0;
@@ -104,7 +106,7 @@ public class DrawerEditFragment extends DrawerFragment {
             handler.close();
         }
 
-        Util.hideKeyboard(getActivity());
+        Utils.hideKeyboard(getActivity());
     }
 
     /**

@@ -1,31 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <include layout="@layout/toolbar_with_help"/>
+    xmlns:fab="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
-        android:orientation="horizontal"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:baselineAligned="false">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <FrameLayout
-            android:id="@+id/left_pane"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            tools:ignore="InconsistentLayout"/>
+        <include layout="@layout/toolbar_with_help"/>
 
-        <FrameLayout
-            android:id="@+id/right_pane"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            tools:ignore="InconsistentLayout"/>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false">
+
+            <FrameLayout
+                android:id="@+id/left_pane"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                tools:ignore="InconsistentLayout"/>
+
+            <FrameLayout
+                android:id="@+id/right_pane"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                tools:ignore="InconsistentLayout"/>
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+
+    <com.getbase.floatingactionbutton.FloatingActionsMenu
+        android:id="@+id/multiple_actions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        fab:fab_addButtonColorNormal="@color/accent_color"
+        fab:fab_addButtonColorPressed="@color/accent_color_pressed"
+        fab:fab_addButtonPlusIconColor="@color/white"
+        fab:fab_labelStyle="@style/menu_labels_style"
+        android:layout_marginRight="@dimen/spacing_medium"
+        android:layout_marginEnd="@dimen/spacing_medium"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true">
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/action_notes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            fab:fab_colorNormal="@color/accent_color"
+            fab:fab_title="@string/action_item_notes"
+            fab:fab_icon="@drawable/ic_assignment_white_24dp"
+            fab:fab_colorPressed="@color/accent_color_pressed"
+            fab:fab_size="mini"/>
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/action_add_additional"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            fab:fab_colorNormal="@color/accent_color"
+            fab:fab_icon="@drawable/ic_add_white_36dp"
+            fab:fab_title="@string/add_exercise"
+            fab:fab_colorPressed="@color/accent_color_pressed"
+            fab:fab_size="mini"/>
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/action_enter_reps"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            fab:fab_colorNormal="@color/accent_color"
+            fab:fab_title="@string/action_enter_reps"
+            fab:fab_colorPressed="@color/accent_color_pressed"
+            fab:fab_icon="@drawable/ic_mode_edit_white_36dp"
+            fab:fab_size="mini"/>
+
+    </com.getbase.floatingactionbutton.FloatingActionsMenu>
+</RelativeLayout>

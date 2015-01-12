@@ -1,5 +1,7 @@
 package se.johan.wendler.activity.base;
 
+import android.annotation.TargetApi;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
@@ -7,6 +9,7 @@ import android.widget.TextView;
 
 import se.johan.wendler.R;
 import se.johan.wendler.util.AnalyticsHelper;
+import se.johan.wendler.util.Utils;
 
 /**
  * Custom Activity which has animations and Google Analytics support.
@@ -89,6 +92,14 @@ public abstract class BaseActivity extends ActionBarActivity {
      * Return the subtitle to be used by the child activity.
      */
     protected abstract int getToolbarHelpMessage();
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    protected void overrideElevation(float elevation) {
+        if (Utils.hasLollipop()) {
+            findViewById(R.id.tool_bar).setElevation(elevation);
+            findViewById(R.id.help_message_text).setElevation(elevation);
+        }
+    }
 
     /**
      * Initialize the Toolbar.

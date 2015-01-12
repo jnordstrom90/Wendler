@@ -1,22 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
     android:padding="@dimen/spacing_medium"
-    android:background="?attr/selectableItemBackground">
+    android:background="?attr/selectableItemBackground"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <TextView
-        style="@style/CardView.Title"
-        android:id="@+id/textExercise"
-        android:drawablePadding="@dimen/spacing_small"/>
+    <ImageView
+        android:layout_width="@dimen/list_single_line_height_with_image"
+        android:layout_height="@dimen/list_single_line_height_with_image"
+        android:id="@+id/image_view"
+        tools:src="@drawable/ic_emoticon_white_36dp"
+        android:layout_centerInParent="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"/>
 
-    <TextView
-        style="@style/CardView.Subtitle"
-        android:id="@+id/textWeekCycle"/>
+    <LinearLayout
+        android:layout_marginStart="@dimen/spacing_medium"
+        android:layout_marginLeft="@dimen/spacing_medium"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_toRightOf="@id/image_view"
+        android:layout_toEndOf="@id/image_view"
+        android:layout_centerInParent="true">
 
-    <TextView
-        style="@style/CardView.Subtitle"
-        android:id="@+id/textGoal"/>
-</LinearLayout>
+        <TextView
+            style="@style/CardView.Title"
+            android:id="@+id/textExercise"
+            android:drawablePadding="@dimen/spacing_small"
+            tools:text="Title"/>
+
+        <TextView
+            style="@style/CardView.Subtitle"
+            android:id="@+id/textWeekCycle"
+            tools:text="Cycle"/>
+
+        <TextView
+            style="@style/CardView.Subtitle"
+            android:id="@+id/textGoal"
+            tools:text="Goal"/>
+    </LinearLayout>
+</RelativeLayout>

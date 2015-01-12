@@ -1,7 +1,5 @@
 package com.doomonafireball.betterpickers.datepicker;
 
-import com.doomonafireball.betterpickers.R;
-
 import android.app.Activity;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
@@ -12,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+import com.doomonafireball.betterpickers.R;
 
 import java.util.Vector;
 
@@ -163,7 +163,8 @@ public class DatePickerDialogFragment extends DialogFragment {
         mDividerTwo = v.findViewById(R.id.divider_2);
         mDividerOne.setBackgroundColor(mDividerColor);
         mDividerTwo.setBackgroundColor(mDividerColor);
-        mSet.setTextColor(mTextColor);
+        mSet.setTextColor(
+                getResources().getColorStateList(R.color.number_picker_dialog_button_color));
         mSet.setBackgroundResource(mButtonBackgroundResId);
         mCancel.setTextColor(mTextColor);
         mCancel.setBackgroundResource(mButtonBackgroundResId);

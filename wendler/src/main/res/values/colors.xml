@@ -4,10 +4,11 @@
     <color name="black_transparent">#BB000000</color>
     <color name="bg_handle_pressed">#a0a0a0</color>
     <color name="drawer_no_shadow">#00000000</color>
-    <color name="theme_color">#99CC00</color>
-    <color name="theme_color_dark">#66CC00</color>
-    <color name="accent_color">#e91e63</color>
-    <color name="theme_pink_pressed">#ec407a</color>
+    <color name="theme_color">#4CAf50</color>
+    <color name="theme_color_dark">#388E3C</color>
+    <color name="accent_color">#E040FB</color>
+    <color name="accent_color_pressed">#EF40FB</color>
     <color name="text_title_color">@color/primary_material_dark</color>
     <color name="text_subtitle_color">@color/secondary_text_default_material_light</color>
+    <color name="black_semi_transparent">#B2000000</color>
 </resources>

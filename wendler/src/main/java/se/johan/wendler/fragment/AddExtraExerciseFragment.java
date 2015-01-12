@@ -1,6 +1,5 @@
 package se.johan.wendler.fragment;
 
-
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -9,24 +8,26 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
-import android.view.animation.Interpolator;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
+import android.widget.AbsListView;
 
-import com.melnykov.fab.FloatingActionButton;
 import com.mobeta.android.dslv.DragSortController;
 import com.mobeta.android.dslv.DragSortListView;
 import com.mobeta.android.dslv.SimpleFloatViewManager;
-import com.williammora.snackbar.Snackbar;
+import com.nispok.snackbar.Snackbar;
+import com.nispok.snackbar.listeners.ActionClickListener;
+import com.nispok.snackbar.listeners.EventListener;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 
 import se.johan.wendler.R;
-import se.johan.wendler.ui.adapter.AdditionalExerciseAdapter;
 import se.johan.wendler.model.AdditionalExercise;
 import se.johan.wendler.model.TapToUndoItem;
 import se.johan.wendler.model.Workout;
 import se.johan.wendler.sql.SqlHandler;
+import se.johan.wendler.ui.adapter.AdditionalExerciseAdapter;
 import se.johan.wendler.ui.dialog.AdditionalExerciseDialog;
 import se.johan.wendler.util.CardsOptionHandler;
 import se.johan.wendler.util.StringHelper;
@@ -47,6 +48,8 @@ public class AddExtraExerciseFragment extends Fragment implements
     private ArrayList<AdditionalExercise> mExercises;
 
     private AdditionalExerciseAdapter mAdapter;
+
+    private View mFloatingActionButton;
 
     public AddExtraExerciseFragment() {
     }
@@ -81,7 +84,7 @@ public class AddExtraExerciseFragment extends Fragment implements
                             getArguments().getString(EXTRA_KEY_NAME))
             );
 
-            mExercises = sqlHandler.getExtraExerciseForWorkout(workout);
+            mExercises = sqlHandler.getAdditionalExercisesForWorkout(workout);
         } catch (SQLException e) {
             WendlerizedLog.e("Failed to get extra mExercises for " +
                     getArguments().getString(EXTRA_KEY_NAME), e);
@@ -99,10 +102,15 @@ public class AddExtraExerciseFragment extends Fragment implements
         dragSortListView.setAdapter(mAdapter);
         dragSortListView.setDragEnabled(true);
         dragSortListView.setDropListener(this);
+        View footer = new View(getActivity());
+        footer.setLayoutParams(new AbsListView.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                getResources().getDimensionPixelSize(R.dimen.list_double_line_height)));
+        dragSortListView.addFooterView(footer, null, false);
         buildController(dragSortListView);
-        FloatingActionButton floatingActionButton =
-                (FloatingActionButton) view.findViewById(R.id.button_floating_action);
-        floatingActionButton.setOnClickListener(this);
+        mFloatingActionButton = view.findViewById(R.id.action_button);
+        mFloatingActionButton.setVisibility(View.VISIBLE);
+        mFloatingActionButton.setOnClickListener(this);
 
         return view;
     }
@@ -253,39 +261,46 @@ public class AddExtraExerciseFragment extends Fragment implements
     /**
      * Returns the EventListener for displaying and hiding the snack bar
      */
-    private Snackbar.EventListener getEventListener() {
-        final View view = getActivity().findViewById(R.id.button_floating_action);
-        return new Snackbar.EventListener() {
+    private EventListener getEventListener() {
+        return new EventListener() {
             @Override
-            public void onShow(int height) {
-                view.animate()
-                        .translationY(view.getTranslationY() - (height * 2))
-                        .setInterpolator(getInterpolator())
+            public void onShow(Snackbar snackbar) {
+                mFloatingActionButton.animate()
+                        .translationY(-snackbar.getHeight())
+                        .setInterpolator(new DecelerateInterpolator(1.5f))
+                        .setDuration(300)
                         .start();
             }
 
             @Override
-            public void onDismiss(int height) {
-                view.animate().translationY(view.getTranslationY() + (height * 2)).start();
+            public void onShown(Snackbar snackbar) {
+
+            }
+
+            @Override
+            public void onDismiss(Snackbar snackbar) {
+                mFloatingActionButton.animate()
+                        .setInterpolator(new AccelerateInterpolator(1.5f))
+                        .translationY(
+                                mFloatingActionButton.getTranslationY() + snackbar.getHeight())
+                        .setDuration(300)
+                        .start();
+            }
+
+            @Override
+            public void onDismissed(Snackbar snackbar) {
+
             }
         };
     }
 
     /**
-     * Load the interpolator used for animating the FAB up.
-     */
-    private Interpolator getInterpolator() {
-        return AnimationUtils.loadInterpolator(
-                getActivity(), android.R.interpolator.decelerate_quad);
-    }
-
-    /**
      * Returns an ActionListener for undoing the deletion.
      */
-    private Snackbar.ActionClickListener getActionListener(final TapToUndoItem item) {
-        return new Snackbar.ActionClickListener() {
+    private ActionClickListener getActionListener(final TapToUndoItem item) {
+        return new ActionClickListener() {
             @Override
-            public void onActionClicked() {
+            public void onActionClicked(Snackbar snackbar) {
                 onUndo(item);
             }
         };
@@ -349,6 +364,4 @@ public class AddExtraExerciseFragment extends Fragment implements
             launchAddDialog(exercise, exercise.getExerciseId());
         }
     };
-
-
 }

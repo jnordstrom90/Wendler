@@ -14,6 +14,7 @@ public class AdditionalExercise extends Exercise implements Parcelable {
 
     private String mMainExerciseName;
     private int mMainExercisePercentage;
+    private double mMainExerciseWeight;
     private int mExerciseId;
 
     /**
@@ -23,12 +24,14 @@ public class AdditionalExercise extends Exercise implements Parcelable {
                               ArrayList<ExerciseSet> exerciseSets,
                               String mainExerciseName,
                               int mainExercisePercentage,
+                              double mainExerciseWeight,
                               int exerciseId) {
         mName = name;
         mExerciseSets = exerciseSets;
         mMainExerciseName = mainExerciseName;
         mMainExercisePercentage = mainExercisePercentage;
         mExerciseId = exerciseId;
+        mMainExerciseWeight = mainExerciseWeight;
     }
 
     /**
@@ -68,6 +71,13 @@ public class AdditionalExercise extends Exercise implements Parcelable {
         readFromParcel(in);
     }
 
+    /**
+     * Returns the weight of the main exercise.
+     */
+    public double getMainExerciseWeight() {
+        return mMainExerciseWeight;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -88,6 +98,7 @@ public class AdditionalExercise extends Exercise implements Parcelable {
         dest.writeString(mMainExerciseName);
         dest.writeInt(mMainExercisePercentage);
         dest.writeInt(mExerciseId);
+        dest.writeDouble(mMainExerciseWeight);
     }
 
     /**
@@ -104,11 +115,12 @@ public class AdditionalExercise extends Exercise implements Parcelable {
         mMainExerciseName = in.readString();
         mMainExercisePercentage = in.readInt();
         mExerciseId = in.readInt();
+        mMainExerciseWeight = in.readDouble();
     }
 
     @Override
     public boolean equals(Object o) {
-        if (o != null && o instanceof AdditionalExercise) {
+        if (o instanceof AdditionalExercise) {
             AdditionalExercise other = (AdditionalExercise) o;
             return other.getName().equals(mName)
                     && other.getExerciseSets().equals(getExerciseSets())

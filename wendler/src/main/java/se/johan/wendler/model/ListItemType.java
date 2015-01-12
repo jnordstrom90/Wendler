@@ -1,8 +1,10 @@
 package se.johan.wendler.model;
 
 /**
- * Different types of items used for lists.
+ * Item types for various list items.
  */
 public enum ListItemType {
-    REGULAR, SMALL
+    DRAWER,
+    DRAWER_EXTRA,
+    ABOUT
 }

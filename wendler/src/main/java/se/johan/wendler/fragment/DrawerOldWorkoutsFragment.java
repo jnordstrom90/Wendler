@@ -18,19 +18,20 @@ import android.widget.AdapterView;
 
 import com.mobeta.android.dslv.DragSortListView;
 import com.mobeta.android.dslv.SimpleFloatViewManager;
-import com.williammora.snackbar.Snackbar;
+import com.nispok.snackbar.Snackbar;
+import com.nispok.snackbar.listeners.ActionClickListener;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 
 import se.johan.wendler.R;
-import se.johan.wendler.ui.adapter.WorkoutListAdapter;
-import se.johan.wendler.model.TapToUndoItem;
-import se.johan.wendler.model.Workout;
-import se.johan.wendler.sql.SqlHandler;
 import se.johan.wendler.activity.MainActivity;
 import se.johan.wendler.activity.WorkoutActivity;
 import se.johan.wendler.fragment.base.DrawerFragment;
+import se.johan.wendler.model.TapToUndoItem;
+import se.johan.wendler.model.Workout;
+import se.johan.wendler.sql.SqlHandler;
+import se.johan.wendler.ui.adapter.WorkoutListAdapter;
 import se.johan.wendler.util.CardsOptionHandler;
 import se.johan.wendler.util.Constants;
 import se.johan.wendler.util.WendlerizedLog;
@@ -253,10 +254,10 @@ public class DrawerOldWorkoutsFragment extends DrawerFragment implements
     /**
      * Returns an ActionListener for undoing the deletion.
      */
-    private Snackbar.ActionClickListener getActionListener(final TapToUndoItem item) {
-        return new Snackbar.ActionClickListener() {
+    private ActionClickListener getActionListener(final TapToUndoItem item) {
+        return new ActionClickListener() {
             @Override
-            public void onActionClicked() {
+            public void onActionClicked(Snackbar snackbar) {
                 onUndo(item);
             }
         };

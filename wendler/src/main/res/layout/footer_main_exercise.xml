@@ -2,38 +2,56 @@
 
 <se.johan.wendler.ui.view.MainExerciseFooterView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/spacing_medium">
+    app:cardUseCompatPadding="true">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:orientation="vertical">
+        android:padding="@dimen/spacing_small">
 
-        <TextView
-            android:id="@+id/textView"
+        <ImageView
+            android:id="@+id/image_view"
+            android:layout_width="@dimen/list_single_line_height_with_image"
+            android:layout_height="@dimen/list_single_line_height_with_image"
+            android:layout_gravity="center"
+            tools:src="@drawable/ic_emoticon_white_36dp"
+            tools:background="@color/red"
+            android:layout_margin="@dimen/spacing_medium"/>
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/one_rm_with_number"
-            style="@style/CardView.Title"/>
+            android:orientation="vertical"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/image_view"
+            android:layout_toEndOf="@id/image_view"
+            android:layout_toStartOf="@+id/overflow_button"
+            android:layout_toLeftOf="@+id/overflow_button">
 
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/performed_reps_with_number"
-            style="@style/CardView.Subtitle"/>
-    </LinearLayout>
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/one_rm_with_number"
+                style="@style/CardView.Subtitle"/>
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_alignParentEnd="true"
-        tools:ignore="ContentDescription"/>
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/performed_reps_with_number"
+                style="@style/CardView.Subtitle"/>
+        </LinearLayout>
+
+        <ImageButton
+            android:visibility="gone"
+            android:id="@+id/overflow_button"
+            style="@style/CardView.Overflow"/>
+    </RelativeLayout>
+
+
 </se.johan.wendler.ui.view.MainExerciseFooterView>

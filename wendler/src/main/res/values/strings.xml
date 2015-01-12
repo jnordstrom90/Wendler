@@ -18,6 +18,7 @@
     <string name="action_item_about">About</string>
     <string name="action_item_settings">Settings</string>
     <string name="action_item_notes">Notes</string>
+    <string name="action_enter_reps">Enter reps</string>
     <string name="menu_settings">Settings</string>
     <string name="menu_helps">Help</string>
 
@@ -25,6 +26,7 @@
     <string name="context_edit">Edit</string>
     <string name="context_delete">Delete</string>
     <string name="context_complete">Complete</string>
+    <string name="context_clear_reps">Clear reps</string>
 
     <!-- EditText hints -->
     <string name="hint_weight">Weight</string>
@@ -88,19 +90,23 @@
 
     <!-- Exercise text values -->
     <string name="reps_performed">Reps performed</string>
-    <string name="warm_up">Warm up: %1$s &#x00d7; %2$s</string>
-    <string name="exercise_set_one">Set one: %1$s &#x00d7; %2$s</string>
-    <string name="exercise_set_two">Set two: %1$s &#x00d7; %2$s</string>
-    <string name="exercise_set_three">Set three: %1$s &#x00d7; %2$s</string>
-    <string name="one_rm_with_number">1RM: %1$s</string>
+    <string name="exercise_set_one">Set 1: %1$s &#x00d7; %2$s</string>
+    <string name="exercise_set_two">Set 2: %1$s &#x00d7; %2$s</string>
+    <string name="exercise_set_three">Set 3: %1$s &#x00d7; %2$s</string>
+    <string name="one_rm_with_number">Estimated 1RM: %1$s</string>
     <string name="performed_reps_with_number">Reps: %1$s</string>
     <string name="extra_exercise_weight">Weight: %1$s</string>
     <string name="extra_exercise_percentage">%1$s%% of %2$s</string>
     <string name="extra_exercise_progress">Progress: %1$s/%2$s</string>
     <string name="exercise_goal">Goal: %1$s</string>
 
+    <string name="set_type_warmup_short">W</string>
+    <string name="set_type_warmup">Warm up</string>
+    <string name="set_type_main_short">M</string>
+    <string name="set_type_main">Main</string>
+
     <!-- On/Off state explanation texts -->
-    <string name="weight_base_main">Weight based on a main exercise</string>
+    <string name="weight_base_main">Base weight on main exercise</string>
 
     <!-- Drawer items -->
     <string name="drawer_workouts">Workouts</string>

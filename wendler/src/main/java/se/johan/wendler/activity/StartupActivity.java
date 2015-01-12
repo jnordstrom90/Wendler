@@ -11,6 +11,8 @@ import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.astuetz.PagerSlidingTabStrip;
+
 import java.sql.SQLException;
 
 import se.johan.wendler.R;
@@ -25,10 +27,9 @@ import se.johan.wendler.fragment.base.InitFragment;
 import se.johan.wendler.sql.SqlHandler;
 import se.johan.wendler.util.Constants;
 import se.johan.wendler.util.PreferenceUtil;
-import se.johan.wendler.util.Util;
+import se.johan.wendler.util.Utils;
 import se.johan.wendler.util.WendlerMath;
 import se.johan.wendler.util.WendlerizedLog;
-import se.johan.wendler.ui.view.SlidingTabLayout;
 
 /**
  * Activity handling the initial setup of the application
@@ -97,7 +98,8 @@ public class StartupActivity extends BaseActivity
         mViewPager.setOffscreenPageLimit(4);
         updateHelpMessage(mFragmentList.get(currentPage).getHelpingMessageRes());
 
-        SlidingTabLayout mSlidingTabLayout = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
+        PagerSlidingTabStrip mSlidingTabLayout =
+                (PagerSlidingTabStrip) findViewById(R.id.sliding_tabs);
         mSlidingTabLayout.setViewPager(mViewPager);
         mSlidingTabLayout.setOnPageChangeListener(this);
     }
@@ -212,7 +214,7 @@ public class StartupActivity extends BaseActivity
     @Override
     public void onPageSelected(int position) {
         updateHelpMessage(mFragmentList.get(position).getHelpingMessage());
-        Util.hideKeyboard(this);
+        Utils.hideKeyboard(this);
     }
 
     /**
@@ -222,7 +224,7 @@ public class StartupActivity extends BaseActivity
     public void onPageScrollStateChanged(int state) {
         switch (state) {
             case ViewPager.SCROLL_STATE_IDLE:
-                Util.hideKeyboard(this);
+                Utils.hideKeyboard(this);
                 break;
         }
     }

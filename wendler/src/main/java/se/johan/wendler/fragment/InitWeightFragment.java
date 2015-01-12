@@ -201,6 +201,11 @@ public class InitWeightFragment extends InitFragment implements
         );
     }
 
+    @Override
+    public void onDialogDismissed() {
+
+    }
+
     /**
      * Return the training max.
      */

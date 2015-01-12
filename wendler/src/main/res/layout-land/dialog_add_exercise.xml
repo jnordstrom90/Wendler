@@ -5,150 +5,154 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:windowMinWidthMajor="@android:dimen/dialog_min_width_major"
-    android:orientation="vertical"
-    android:padding="@dimen/spacing_large">
+    android:orientation="horizontal"
+    android:baselineAligned="false">
 
-    <TextView
-        android:id="@+id/title"
-        style="@style/DialogTitle"/>
-
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:baselineAligned="false">
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:descendantFocusability="beforeDescendants"
+        android:focusableInTouchMode="true"
+        android:focusable="true"
+        android:layout_margin="@dimen/spacing_large">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:descendantFocusability="beforeDescendants"
-            android:focusableInTouchMode="true"
-            android:focusable="true">
+        <TextView
+            android:id="@+id/title"
+            style="@style/DialogTitle"
+            android:layout_alignParentTop="true"/>
 
-            <se.johan.wendler.ui.view.FloatLabelLayout
-                android:id="@+id/name_layout"
+        <se.johan.wendler.ui.view.FloatLabelLayout
+            android:id="@+id/name_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/title"
+            android:layout_centerHorizontal="true"
+            app:floatLabelTextAppearance="@style/TextAppearance.Wendlerized.FloatLabel">
+
+            <AutoCompleteTextView
+                android:id="@+id/tv_name_auto_complete"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                app:floatLabelTextAppearance="@style/TextAppearance.Wendlerized.FloatLabel">
+                android:ems="10"
+                android:hint="@string/hint_exercise_name"
+                android:singleLine="true"
+                android:completionThreshold="2"/>
+        </se.johan.wendler.ui.view.FloatLabelLayout>
 
-                <AutoCompleteTextView
-                    android:id="@+id/tv_name_auto_complete"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:hint="@string/hint_exercise_name"
-                    android:singleLine="true"
-                    android:completionThreshold="2"/>
-            </se.johan.wendler.ui.view.FloatLabelLayout>
+        <se.johan.wendler.ui.view.FloatLabelLayout
+            android:id="@+id/rep_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/name_layout"
+            android:layout_centerHorizontal="true"
+            app:floatLabelTextAppearance="@style/TextAppearance.Wendlerized.FloatLabel">
 
-            <se.johan.wendler.ui.view.FloatLabelLayout
-                android:id="@+id/rep_layout"
+            <se.johan.wendler.ui.view.FilterEditText
+                android:id="@+id/et_set_rep_amount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/name_layout"
-                android:layout_centerHorizontal="true"
-                app:floatLabelTextAppearance="@style/TextAppearance.Wendlerized.FloatLabel">
+                android:ems="10"
+                android:hint="@string/hint_reps_or_sets"
+                android:inputType="numberSigned"
+                app:min="1"/>
+        </se.johan.wendler.ui.view.FloatLabelLayout>
 
-                <se.johan.wendler.ui.view.FilterEditText
-                    android:id="@+id/et_set_rep_amount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:hint="@string/hint_reps_or_sets"
-                    android:inputType="numberSigned"
-                    app:min="1"/>
-            </se.johan.wendler.ui.view.FloatLabelLayout>
+        <se.johan.wendler.ui.view.FloatLabelLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rep_layout"
+            android:layout_centerHorizontal="true"
+            app:floatLabelTextAppearance="@style/TextAppearance.Wendlerized.FloatLabel">
 
-            <se.johan.wendler.ui.view.FloatLabelLayout
+            <se.johan.wendler.ui.view.FilterEditText
+                android:id="@+id/et_weight_amount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/rep_layout"
-                android:layout_centerHorizontal="true"
-                app:floatLabelTextAppearance="@style/TextAppearance.Wendlerized.FloatLabel">
+                android:ems="10"
+                android:hint="@string/hint_weight"
+                android:inputType="numberDecimal"
+                app:min="1"/>
+        </se.johan.wendler.ui.view.FloatLabelLayout>
+    </RelativeLayout>
 
-                <se.johan.wendler.ui.view.FilterEditText
-                    android:id="@+id/et_weight_amount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:hint="@string/hint_weight"
-                    android:inputType="numberDecimal"
-                    app:min="1"/>
-            </se.johan.wendler.ui.view.FloatLabelLayout>
-        </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
+        <LinearLayout
+            android:id="@+id/layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:orientation="vertical"
+            android:layout_marginTop="64dp"
+            android:layout_marginEnd="@dimen/spacing_large"
+            android:layout_marginRight="@dimen/spacing_large">
 
-            <LinearLayout
-                android:id="@+id/layout"
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:orientation="vertical">
+                android:gravity="center"
+                android:text="@string/weight_base_main"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="@string/weight_base_main"/>
-
-                <android.support.v7.widget.SwitchCompat
-                    android:id="@+id/switch1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:checked="false"/>
-            </LinearLayout>
-
-            <Spinner
-                android:layout_below="@+id/layout"
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/switch1"
+                android:layout_marginTop="@dimen/spacing_small"
+                android:layout_marginBottom="@dimen/spacing_small"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/spinner"
-                android:layout_centerHorizontal="true"
-                android:spinnerMode="dropdown"
-                android:entries="@array/exercises"
-                android:visibility="gone"/>
+                android:layout_gravity="center"
+                android:checked="false"/>
+        </LinearLayout>
 
-            <se.johan.wendler.ui.view.FloatLabelLayout
+        <Spinner
+            android:layout_below="@+id/layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/spinner"
+            android:layout_centerHorizontal="true"
+            android:spinnerMode="dropdown"
+            android:entries="@array/exercises"/>
+
+        <se.johan.wendler.ui.view.FloatLabelLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/spinner"
+            android:layout_centerHorizontal="true"
+            app:floatLabelTextAppearance="@style/TextAppearance.Wendlerized.FloatLabel"
+            android:layout_marginStart="@dimen/spacing_large"
+            android:layout_marginEnd="@dimen/spacing_large"
+            android:layout_marginLeft="@dimen/spacing_large"
+            android:layout_marginRight="@dimen/spacing_large">
+
+        <se.johan.wendler.ui.view.FilterEditText
+                android:id="@+id/et_percentage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/spinner"
-                android:layout_centerHorizontal="true"
-                app:floatLabelTextAppearance="@style/TextAppearance.Wendlerized.FloatLabel">
+                android:ems="10"
+                android:hint="@string/hint_percentage"
+                android:inputType="numberSigned"
+                app:min="1"
+                app:max="100"
+                android:gravity="center_horizontal"/>
+        </se.johan.wendler.ui.view.FloatLabelLayout>
 
-                <se.johan.wendler.ui.view.FilterEditText
-                    android:id="@+id/et_percentage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:hint="@string/hint_percentage"
-                    android:inputType="numberSigned"
-                    app:min="1"
-                    app:max="100"
-                    android:visibility="gone"/>
-            </se.johan.wendler.ui.view.FloatLabelLayout>
-        </RelativeLayout>
-    </LinearLayout>
+        <LinearLayout
+            android:id="@+id/button_bar"
+            android:gravity="center|end"
+            android:layout_alignParentBottom="true"
+            style="@style/DialogButtonBar">
 
-    <LinearLayout
-        android:id="@+id/button_bar"
-        android:gravity="center|end"
-        style="@style/DialogButtonBar">
+            <Button
+                android:id="@+id/button_cancel"
+                style="@style/DialogButton"
+                android:text="@string/btn_cancel"/>
 
-        <Button
-            android:id="@+id/button_cancel"
-            style="@style/DialogButton"
-            android:text="@string/btn_cancel"/>
-
-        <Button
-            android:id="@+id/button_save"
-            style="@style/DialogButton"/>
-    </LinearLayout>
+            <Button
+                android:id="@+id/button_save"
+                style="@style/DialogButton.Positive"/>
+        </LinearLayout>
+    </RelativeLayout>
 </LinearLayout>

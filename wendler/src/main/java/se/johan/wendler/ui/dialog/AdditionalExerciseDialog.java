@@ -34,7 +34,8 @@ import se.johan.wendler.model.SetType;
 import se.johan.wendler.sql.SqlHandler;
 import se.johan.wendler.ui.dialog.base.AnimationDialog;
 import se.johan.wendler.ui.view.FilterEditText;
-import se.johan.wendler.util.Util;
+import se.johan.wendler.ui.view.FloatLabelLayout;
+import se.johan.wendler.util.Utils;
 import se.johan.wendler.util.WendlerMath;
 import se.johan.wendler.util.WendlerizedLog;
 
@@ -56,7 +57,8 @@ public class AdditionalExerciseDialog extends AnimationDialog implements
     private EditText mGoalEditText, mWeightEditText, mPercentageEditText;
     private SwitchCompat mMainExerciseSwitch;
     private Spinner mMainExerciseSpinner;
-    private boolean forced = false;
+    private FloatLabelLayout mPercentageLabelLayout;
+    private boolean mForced = false;
 
     public AdditionalExerciseDialog() {
     }
@@ -144,6 +146,9 @@ public class AdditionalExerciseDialog extends AnimationDialog implements
      * Init our views
      */
     private void setupViews(View view, AdditionalExercise exercise) {
+
+        mPercentageLabelLayout = (FloatLabelLayout) view.findViewById(R.id.percentage_label_layout);
+
         mPercentageEditText = (FilterEditText) view.findViewById(R.id.et_percentage);
         mPercentageEditText.addTextChangedListener(percentageWatcher);
 
@@ -165,7 +170,8 @@ public class AdditionalExerciseDialog extends AnimationDialog implements
         mWeightEditText.addTextChangedListener(weightWatcher);
 
         mGoalEditText = (FilterEditText) view.findViewById(R.id.et_set_rep_amount);
-
+        mMainExerciseSpinner.setEnabled(false);
+        mPercentageEditText.setEnabled(false);
         if (exercise != null) {
             setupFromExercise(exercise);
         }
@@ -185,11 +191,19 @@ public class AdditionalExerciseDialog extends AnimationDialog implements
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        updateVisibility(isChecked ? View.VISIBLE : View.GONE);
+        mMainExerciseSpinner.setEnabled(isChecked);
+        mPercentageEditText.setEnabled(isChecked);
         if (!isChecked) {
             mPercentageEditText.setText("");
             mMainExerciseSpinner.setSelection(0);
             mWeightEditText.setSelection(mWeightEditText.getText().length());
+
+            if (mPercentageEditText.hasFocus()) {
+                mPercentageEditText.clearFocus();
+            }
+            if (mPercentageLabelLayout != null) {
+                mPercentageLabelLayout.hideLabel(true);
+            }
         }
     }
 
@@ -200,7 +214,7 @@ public class AdditionalExerciseDialog extends AnimationDialog implements
     public void onClick(View v) {
         if (allDataIsOk()) {
             getListener().onConfirmClicked(generateAdditionalExercise());
-            Util.hideKeyboard(getActivity());
+            Utils.hideKeyboard(getActivity());
             getDialog().dismiss();
         }
     }
@@ -208,9 +222,9 @@ public class AdditionalExerciseDialog extends AnimationDialog implements
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         if ((mPercentageEditText.getText().length() > 0)) {
-            forced = true;
+            mForced = true;
             setWeightFromPercentage(getNameOfPosition(position),
-                    Util.getIntFromEditText(mPercentageEditText));
+                    Utils.getIntFromEditText(mPercentageEditText));
         }
     }
 
@@ -267,14 +281,6 @@ public class AdditionalExerciseDialog extends AnimationDialog implements
         }
 
         mMainExerciseSwitch.setChecked(checked);
-    }
-
-    /**
-     * Update the visibility dependant on if you're using a weight based of a main exercise.
-     */
-    private void updateVisibility(int visibility) {
-        mMainExerciseSpinner.setVisibility(visibility);
-        mPercentageEditText.setVisibility(visibility);
     }
 
     /**
@@ -354,15 +360,25 @@ public class AdditionalExerciseDialog extends AnimationDialog implements
 
         String name = mAutoCompleteNameTextView.getText().toString();
         double weight = mWeightEditText.getText().length() < 1 ?
-                0 : Util.getDoubleFromEditText(mWeightEditText);
-        int goal = Util.getIntFromEditText(mGoalEditText);
+                0 : Utils.getDoubleFromEditText(mWeightEditText);
+        int goal = Utils.getIntFromEditText(mGoalEditText);
 
         String mainName = "";
         int mainPercentage = 0;
+        double mainExerciseWeight = 0;
         if (mMainExerciseSwitch.isChecked()
                 && mPercentageEditText.getText().toString().trim().length() > 0) {
             mainName = getNameOfPosition(mMainExerciseSpinner.getSelectedItemPosition());
-            mainPercentage = Util.getIntFromEditText(mPercentageEditText);
+            mainPercentage = Utils.getIntFromEditText(mPercentageEditText);
+            SqlHandler handler = new SqlHandler(getActivity());
+            try {
+                handler.open();
+                mainExerciseWeight = handler.getOneRmForExercise(mainName);
+            } catch (SQLException e) {
+               WendlerizedLog.e("Failed to fetch one rm for " + mainName, e);
+            } finally {
+                handler.close();
+            }
         }
 
         progress = progress < 0 ? 0 : progress;
@@ -371,7 +387,7 @@ public class AdditionalExerciseDialog extends AnimationDialog implements
         ArrayList<ExerciseSet> sets = new ArrayList<ExerciseSet>();
         sets.add(set);
 
-        return new AdditionalExercise(name, sets, mainName, mainPercentage, id);
+        return new AdditionalExercise(name, sets, mainName, mainPercentage, mainExerciseWeight, id);
     }
 
     /**
@@ -385,10 +401,10 @@ public class AdditionalExerciseDialog extends AnimationDialog implements
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
             if (mPercentageEditText.getText().length() > 0) {
-                forced = true;
+                mForced = true;
                 setWeightFromPercentage(
                         getNameOfPosition(mMainExerciseSpinner.getSelectedItemPosition()),
-                        Util.getIntFromEditText(mPercentageEditText));
+                        Utils.getIntFromEditText(mPercentageEditText));
             }
         }
 
@@ -407,10 +423,10 @@ public class AdditionalExerciseDialog extends AnimationDialog implements
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            if (!forced) {
+            if (!mForced) {
                 mMainExerciseSwitch.setChecked(false);
             }
-            forced = false;
+            mForced = false;
         }
 
         @Override

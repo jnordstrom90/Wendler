@@ -11,9 +11,11 @@
     <dimen name="spacing_small">8dp</dimen>
     <dimen name="spacing_medium">16dp</dimen>
     <dimen name="spacing_large">24dp</dimen>
+    <dimen name="spacing_xlarge">48dp</dimen>
 
     <dimen name="content_minimum_click_area">48dp</dimen>
-    <dimen name="button_height">36dp</dimen>
+    <dimen name="button_height">48dp</dimen>
+    <dimen name="button_bar_height">48dp</dimen>
     <dimen name="button_min_width">88dp</dimen>
     <dimen name="button_text_size">14dp</dimen>
     <dimen name="card_title_text_size">24dp</dimen>
@@ -32,8 +34,13 @@
     <dimen name="list_double_line_secondary_text_size">14dp</dimen>
     <dimen name="list_double_line_text_padding">16dp</dimen>
 
+    <dimen name="list_triple_line_height">88dp</dimen>
+
     <dimen name="list_header_text_size">14dp</dimen>
 
     <dimen name="dialog_title_text_size">20sp</dimen>
-    <dimen name="dialog_message_text_size">14sp</dimen>
+    <dimen name="dialog_message_text_size">18sp</dimen>
+
+    <dimen name="edit_text_text_size">16dp</dimen>
+    <dimen name="toolbar_elevation">0dp</dimen>
 </resources>

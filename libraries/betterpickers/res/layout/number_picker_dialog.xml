@@ -35,8 +35,6 @@
             android:minHeight="@dimen/button_height"
             android:minWidth="88dp"
             android:textAllCaps="true"
-            android:textColor="#ff212121"
-            android:textStyle="bold"
             android:textSize="14dp"
             android:text="@string/picker_cancel"/>
         <Button
@@ -47,9 +45,8 @@
             android:gravity="center"
             android:minHeight="@dimen/button_height"
             android:minWidth="88dp"
+            android:textColor="@color/number_picker_dialog_button_color"
             android:textAllCaps="true"
-            android:textColor="#ff212121"
-            android:textStyle="bold"
             android:textSize="14dp"
             android:text="@string/done_label"/>
     </LinearLayout>

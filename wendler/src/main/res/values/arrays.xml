@@ -16,12 +16,6 @@
         <item>@string/drawer_backup</item>
     </string-array>
 
-    <string-array name="sets">
-        <item>@string/exercise_set_one</item>
-        <item>@string/exercise_set_two</item>
-        <item>@string/exercise_set_three</item>
-    </string-array>
-
     <string-array name="additional_exercises">
         <item>Dips</item>
         <item>Chins</item>
