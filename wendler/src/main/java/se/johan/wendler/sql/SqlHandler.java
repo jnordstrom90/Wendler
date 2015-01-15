@@ -1376,8 +1376,7 @@ public class SqlHandler {
 
             ArrayList<AdditionalExercise> additionalExercises = getAdditionalExercisesForWorkout(new
                     Workout(workoutName, StringHelper.getTranslatableName(mContext, workoutName)));
-            if (!isStarted && !isComplete) {
-                WendlerizedLog.d("Additional workouts aren't started so return default");
+            if (!isStarted && !isComplete && additionalExercises.equals(exercises)) {
                 return additionalExercises;
             }
 
