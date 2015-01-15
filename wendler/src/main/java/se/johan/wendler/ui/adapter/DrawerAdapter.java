@@ -67,17 +67,20 @@ public class DrawerAdapter extends BaseAdapter {
                     .inflate(R.layout.drawer_item, parent, false);
             holder.text = (TextView) convertView.findViewById(R.id.text);
             holder.icon = (ImageView) convertView.findViewById(R.id.icon);
+            holder.divider = convertView.findViewById(R.id.divider);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.text.setText(mListItems.get(position).getTitle(mContext));
-        holder.icon.setImageDrawable(mListItems.get(position).getIcon(mContext));
+        ListItem item = mListItems.get(position);
 
-        holder.text.setTextColor(getColor(position));
-        holder.icon.setColorFilter(getColor(position), PorterDuff.Mode.MULTIPLY);
+        holder.text.setText(item.getTitle(mContext));
+        holder.icon.setImageDrawable(item.getIcon(mContext));
 
+        holder.text.setTextColor(getTextColor(position));
+        holder.icon.setColorFilter(getIconColor(position), PorterDuff.Mode.MULTIPLY);
+        holder.divider.setVisibility(item.hasDivider() ? View.VISIBLE : View.GONE);
         return convertView;
     }
 
@@ -98,10 +101,19 @@ public class DrawerAdapter extends BaseAdapter {
     /**
      * Returns the color to use for the selected item.
      */
-    private int getColor(int position) {
+    private int getTextColor(int position) {
         return position == mSelectedIndex
                 ? mContext.getResources().getColor(R.color.theme_color)
                 : mContext.getResources().getColor(R.color.text_title_color);
+    }
+
+    /**
+     * Returns the color to use for the selected item.
+     */
+    private int getIconColor(int position) {
+        return position == mSelectedIndex
+                ? mContext.getResources().getColor(R.color.theme_color)
+                : mContext.getResources().getColor(R.color.text_subtitle_color);
     }
 
     /**
@@ -110,5 +122,6 @@ public class DrawerAdapter extends BaseAdapter {
     private static class ViewHolder {
         TextView text;
         ImageView icon;
+        View divider;
     }
 }

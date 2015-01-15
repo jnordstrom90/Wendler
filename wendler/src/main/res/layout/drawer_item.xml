@@ -13,7 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
   -->
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -21,7 +21,15 @@
     android:orientation="horizontal"
     tools:ignore="UseCompoundDrawables">
 
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/text_subtitle_color"
+        android:layout_alignParentTop="true"/>
+
     <ImageView
+        android:layout_centerVertical="true"
         android:id="@+id/icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -32,9 +40,12 @@
         tools:src="@drawable/ic_mail_black_24dp"/>
 
     <TextView
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/icon"
+        android:layout_toEndOf="@id/icon"
         android:id="@+id/text"
         android:layout_marginLeft="@dimen/spacing_small"
         android:layout_marginStart="@dimen/spacing_small"
         style="@style/List_SingleLine_TextStyle"
         tools:text="This is a text"/>
-</LinearLayout>
+</RelativeLayout>

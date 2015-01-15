@@ -1,6 +1,7 @@
 package se.johan.wendler.ui.adapter;
 
 import android.content.Context;
+import android.graphics.PorterDuff;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -87,9 +88,13 @@ public class AboutAdapter extends BaseAdapter {
             holder.subtitle.setVisibility(View.GONE);
         }
         holder.icon.setImageDrawable(mItems.get(position).getIcon(mContext));
+        holder.icon.setColorFilter(
+                mContext.getResources().getColor(R.color.text_subtitle_color),
+                PorterDuff.Mode.MULTIPLY);
 
         return convertView;
     }
+
 
     /**
      * Static class to increase performance

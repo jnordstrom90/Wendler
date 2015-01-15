@@ -38,7 +38,8 @@ public enum ListItem {
             R.string.action_item_settings,
             -1,
             R.drawable.ic_settings_white_24dp,
-            ListItemType.DRAWER_EXTRA),
+            ListItemType.DRAWER_EXTRA,
+            true),
     ABOUT(
             R.string.action_item_about,
             -1,
@@ -64,6 +65,19 @@ public enum ListItem {
     private int mSubtitleRes;
     private int mIconRes;
     private ListItemType mItemType;
+    private boolean mHasDivider;
+
+    /**
+     * Constructor
+     */
+    private ListItem(
+            int titleRes, int subtitleRes, int iconRes, ListItemType itemType, boolean hasDivider) {
+        mTitleRes = titleRes;
+        mIconRes = iconRes;
+        mSubtitleRes = subtitleRes;
+        mItemType = itemType;
+        mHasDivider = hasDivider;
+    }
 
     /**
      * Constructor
@@ -108,5 +122,12 @@ public enum ListItem {
      */
     public ListItemType getItemType() {
         return mItemType;
+    }
+
+    /**
+     * Returns true if the view should display a top divider.
+     */
+    public boolean hasDivider() {
+        return mHasDivider;
     }
 }

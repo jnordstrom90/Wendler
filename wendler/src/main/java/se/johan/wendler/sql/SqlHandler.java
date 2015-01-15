@@ -343,6 +343,7 @@ public class SqlHandler {
                         , getExtraExerciseForWorkout(name, id, isWorkoutComplete),
                         getInsertTimeForId(id), getTimeForWorkout(id), getNotesForWorkout(id)));
             } else {
+                WendlerizedLog.d("Add: " + name + " Week: " + week + " Cycle: " + cycle);
                 list.add(new Workout(name, StringHelper.getTranslatableName(mContext, name),
                         week, cycle, cycleName, -1, getMainExerciseForWorkout(name, week)));
             }

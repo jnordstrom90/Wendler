@@ -3,7 +3,6 @@ package se.johan.wendler.ui.view;
 import android.content.Context;
 import android.support.v4.widget.DrawerLayout;
 import android.util.AttributeSet;
-import android.view.KeyEvent;
 import android.view.MotionEvent;
 
 /**
@@ -12,8 +11,6 @@ import android.view.MotionEvent;
  */
 @SuppressWarnings("UnusedDeclaration")
 public class MyDrawerLayout extends DrawerLayout {
-
-    private OnHideListener mOnHideListener;
 
     /**
      * Constructor.
@@ -37,25 +34,6 @@ public class MyDrawerLayout extends DrawerLayout {
     }
 
     /**
-     * Set the listener for the DrawerLayout.
-     */
-    public void setOnHideListener(OnHideListener hideListener) {
-        mOnHideListener = hideListener;
-    }
-
-    /**
-     * Called when a key is pressed.
-     */
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK && mOnHideListener != null) {
-            mOnHideListener.onBackPressed();
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
-    }
-
-    /**
      * Called to intercept touch events. Override to catch a NullPointer
      */
     @Override
@@ -65,16 +43,5 @@ public class MyDrawerLayout extends DrawerLayout {
         } catch (NullPointerException ignored) {
             return true;
         }
-    }
-
-    /**
-     * Interface for catching the back key when the DrawerLayout is locked open.
-     */
-    public interface OnHideListener {
-
-        /**
-         * Called when the back key is pressed.
-         */
-        public void onBackPressed();
     }
 }

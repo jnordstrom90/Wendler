@@ -3,7 +3,6 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="item_height">55dp</dimen>
-    <dimen name="drawer_size">200dp</dimen>
     <dimen name="drawer_content_padding">200dp</dimen>
 
     <dimen name="text_size_init_weight">18sp</dimen>
