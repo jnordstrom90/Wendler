@@ -16,4 +16,8 @@ public abstract class DrawerFragment extends Fragment {
      * Returns the help text for the displayed fragment.
      */
     public abstract int getMessageText();
+
+    public boolean needsDefaultElevation() {
+        return false;
+    }
 }

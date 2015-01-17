@@ -232,6 +232,11 @@ public class MainActivity extends BaseActivity {
                     .commit();
             updateTitle(mListItems.get(position).getTitle(this));
             updateHelpMessage(fragment.getMessageText());
+            if (fragment.needsDefaultElevation()) {
+                overrideElevation(getResources().getDimension(R.dimen.toolbar_elevation));
+            } else {
+                overrideElevation(0);
+            }
         }
     }
 

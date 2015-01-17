@@ -54,14 +54,20 @@
     </notice>
     <notice>
         <name>FloatingActionButton</name>
-        <url>https://github.com/makovkastar/FloatingActionButton</url>
-        <copyright>Copyright (c) 2014 Oleksandr Melnykov</copyright>
+        <url>https://github.com/futuresimple/android-floating-action-button</url>
+        <copyright>Copyright (C) 2014 Jerzy Chalupski</copyright>
+        <license>Apache Software License 2.0</license>
+    </notice>
+    <notice>
+        <name>Snackbar</name>
+        <url>https://github.com/nispok/snackbar</url>
+        <copyright>Copyright (c) 2014 William Mora</copyright>
         <license>MIT License</license>
     </notice>
     <notice>
-        <name>FloatingActionButton</name>
-        <url>https://github.com/wmora/snackbar</url>
-        <copyright>Copyright (c) 2014 William Mora</copyright>
-        <license>MIT License</license>
+        <name>PagerSlidingTabStrip</name>
+        <url>https://github.com/jpardogo/PagerSlidingTabStripr</url>
+        <copyright>Copyright 2013 Andreas Stuetza</copyright>
+        <license>Apache Software License 2.0</license>
     </notice>
 </notices>

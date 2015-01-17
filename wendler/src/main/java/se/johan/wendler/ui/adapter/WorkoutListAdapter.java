@@ -255,7 +255,7 @@ public class WorkoutListAdapter extends BaseAdapter {
                 text = String.format(quantity, reps, lastSetWeight);
             }
         }
-        WendlerizedLog.d("Set Goal: " + text);
+
         holder.goal.setText(text);
     }
 

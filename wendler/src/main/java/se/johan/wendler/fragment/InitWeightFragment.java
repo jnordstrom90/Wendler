@@ -62,7 +62,7 @@ public class InitWeightFragment extends InitFragment implements
 
         View view = inflater.inflate(R.layout.fragment_init_weight, container, false);
 
-        mInitPress = (InitWeightView) view.findViewById(id.init_press);
+        mInitPress = (InitWeightView) view.findViewById(R.id.init_press);
         mInitDeadlift = (InitWeightView) view.findViewById(id.init_deadlift);
         mInitBench = (InitWeightView) view.findViewById(id.init_bench);
         mInitSquat = (InitWeightView) view.findViewById(id.init_squat);

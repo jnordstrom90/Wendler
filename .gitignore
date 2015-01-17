@@ -67,3 +67,8 @@ gen/
 *.ipr
 *~
 *.swp
+wendler/src/main/res/drawable/Thumbs.db
+wendler/src/main/res/drawable-xxhdpi/Thumbs.db
+wendler/src/main/res/drawable-xxxhdpi/Thumbs.db
+wendler/src/main/res/drawable-xhdpi/Thumbs.db
+wendler/src/main/res/drawable-hdpi/Thumbs.db

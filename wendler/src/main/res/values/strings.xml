@@ -221,4 +221,6 @@
     <string name="help_additional_exercises">Additional exercises which show up on the given workout</string>
     <string name="help_main_workouts">Your workouts for the current cycle</string>
     <string name="help_workouts">Awesomesauce</string>
+    <string name="no_additional_exercises_hint">No additional exercises, you should add some!</string>
+    <string name="no_workouts_hint">No workouts performed yet</string>
 </resources>

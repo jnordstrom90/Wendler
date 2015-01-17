@@ -46,9 +46,7 @@ public class InitWeightView extends RelativeLayout {
      */
     private void init(Context context, AttributeSet attrs) {
 
-        LayoutInflater inflater =
-                (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        inflater.inflate(R.layout.view_init_weight, this, true);
+        LayoutInflater.from(context).inflate(R.layout.view_init_weight, this, true);
 
         TypedArray attr = context.obtainStyledAttributes(attrs, R.styleable.InitWeightViewTitle);
         String title = attr.getString(R.styleable.InitWeightViewTitle_weightTitle);

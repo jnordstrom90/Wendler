@@ -9,7 +9,7 @@ import android.os.Parcelable;
 public class ExerciseSet implements Parcelable {
 
     private final SetType mSetType;
-    private final double mWeight;
+    private double mWeight = 0.0;
     private final int mGoal;
     private int mProgress;
     private boolean mIsComplete;

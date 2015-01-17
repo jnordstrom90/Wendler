@@ -1,5 +1,5 @@
 <resources>
-
+    <dimen name="drawer_size">304dp</dimen>
     <dimen name="drawer_header_image_height">176dp</dimen>
     <dimen name="text_size_init_weight">18sp</dimen>
     <dimen name="drag_grip_ridge_size">4dp</dimen>

@@ -28,6 +28,16 @@
             android:clipToPadding="false"
             android:scrollbarStyle="outsideOverlay"/>
 
+    <se.johan.wendler.ui.view.NoItemsView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/no_items_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone"
+        android:layout_margin="@dimen/spacing_medium"
+        app:infoText="@string/no_additional_exercises_hint"/>
+
     <com.getbase.floatingactionbutton.FloatingActionButton
         xmlns:fab="http://schemas.android.com/apk/res-auto"
         android:visibility="gone"
@@ -37,7 +47,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:layout_margin="@dimen/spacing_medium"
+        android:padding="@dimen/spacing_medium"
         fab:fab_colorNormal="@color/accent_color"
         fab:fab_title="@string/action_enter_reps"
         fab:fab_colorPressed="@color/accent_color_pressed"

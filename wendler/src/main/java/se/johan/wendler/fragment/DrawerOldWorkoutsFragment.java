@@ -53,6 +53,8 @@ public class DrawerOldWorkoutsFragment extends DrawerFragment implements
     private int mLimit = 10;
     private View mFooterView;
     private WorkoutListAdapter mAdapter;
+    private DragSortListView mDragSortListView;
+    private View mNoItemsView;
 
     /**
      * Return the tag of the fragment.
@@ -65,6 +67,11 @@ public class DrawerOldWorkoutsFragment extends DrawerFragment implements
     @Override
     public int getMessageText() {
         return R.string.help_old_workouts;
+    }
+
+    @Override
+    public boolean needsDefaultElevation() {
+        return true;
     }
 
     public DrawerOldWorkoutsFragment() {
@@ -122,7 +129,7 @@ public class DrawerOldWorkoutsFragment extends DrawerFragment implements
             sqlHandler.close();
         }
 
-        final DragSortListView listView = (DragSortListView) view.findViewById(R.id.list_drag);
+        mDragSortListView = (DragSortListView) view.findViewById(R.id.list_drag);
 
         mAdapter = new WorkoutListAdapter(
                 getActivity(),
@@ -133,12 +140,16 @@ public class DrawerOldWorkoutsFragment extends DrawerFragment implements
         if (count > mLimit) {
             mFooterView = inflater.inflate(R.layout.footer_load_more, null);
             mFooterView.setOnClickListener(this);
-            listView.addFooterView(mFooterView);
+            mDragSortListView.addFooterView(mFooterView);
         }
 
-        listView.setAdapter(mAdapter);
-        listView.setOnItemClickListener(this);
-        buildController(listView);
+        mDragSortListView.setAdapter(mAdapter);
+        mDragSortListView.setOnItemClickListener(this);
+        buildController();
+
+        mNoItemsView = view.findViewById(R.id.no_items_view);
+
+        setVisibilityOfViews(sWorkouts.isEmpty());
 
         return view;
     }
@@ -201,10 +212,9 @@ public class DrawerOldWorkoutsFragment extends DrawerFragment implements
         Workout workout = sWorkouts.get(position);
         sWorkouts.remove(position);
 
-        String text = String.format(getString(R.string.snack_bar_deleted), workout.getName());
         createSnackBar(workout, new TapToUndoItem(workout, position));
         mAdapter.notifyDataSetChanged();
-
+        setVisibilityOfViews(sWorkouts.isEmpty());
         SqlHandler sql = new SqlHandler(getActivity());
         try {
             sql.open();
@@ -293,11 +303,20 @@ public class DrawerOldWorkoutsFragment extends DrawerFragment implements
     /**
      * Build the controller for the DragSortListView.
      */
-    private void buildController(DragSortListView listView) {
-        SimpleFloatViewManager simpleFloatViewManager = new SimpleFloatViewManager(listView);
+    private void buildController() {
+        SimpleFloatViewManager
+                simpleFloatViewManager = new SimpleFloatViewManager(mDragSortListView);
         simpleFloatViewManager.setBackgroundColor(Color.TRANSPARENT);
-        listView.setFloatViewManager(simpleFloatViewManager);
-        listView.setRemoveListener(this);
+        mDragSortListView.setFloatViewManager(simpleFloatViewManager);
+        mDragSortListView.setRemoveListener(this);
+    }
+
+    /**
+     * Set the visibility of certain items.
+     */
+    private void setVisibilityOfViews(boolean emptyList) {
+        mDragSortListView.setVisibility(emptyList ? View.GONE : View.VISIBLE);
+        mNoItemsView.setVisibility(emptyList ? View.VISIBLE : View.GONE);
     }
 
     /**

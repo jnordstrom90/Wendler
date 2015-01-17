@@ -50,6 +50,8 @@ public class AddExtraExerciseFragment extends Fragment implements
     private AdditionalExerciseAdapter mAdapter;
 
     private View mFloatingActionButton;
+    private View mNoItemsView;
+    private DragSortListView mDragSortListView;
 
     public AddExtraExerciseFragment() {
     }
@@ -97,21 +99,22 @@ public class AddExtraExerciseFragment extends Fragment implements
                 mExercises,
                 mOptionsHandler,
                 AdditionalExerciseAdapter.TYPE_ADD_WORKOUT);
-
-        DragSortListView dragSortListView = (DragSortListView) view.findViewById(R.id.list_drag);
-        dragSortListView.setAdapter(mAdapter);
-        dragSortListView.setDragEnabled(true);
-        dragSortListView.setDropListener(this);
+        mNoItemsView = view.findViewById(R.id.no_items_view);
+        mDragSortListView = (DragSortListView) view.findViewById(R.id.list_drag);
+        mDragSortListView.setAdapter(mAdapter);
+        mDragSortListView.setDragEnabled(true);
+        mDragSortListView.setDropListener(this);
         View footer = new View(getActivity());
         footer.setLayoutParams(new AbsListView.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 getResources().getDimensionPixelSize(R.dimen.list_double_line_height)));
-        dragSortListView.addFooterView(footer, null, false);
-        buildController(dragSortListView);
+        mDragSortListView.addFooterView(footer, null, false);
+        buildController(mDragSortListView);
         mFloatingActionButton = view.findViewById(R.id.action_button);
         mFloatingActionButton.setVisibility(View.VISIBLE);
         mFloatingActionButton.setOnClickListener(this);
 
+        setVisibilityOfViews(mExercises.isEmpty());
         return view;
     }
 
@@ -184,18 +187,19 @@ public class AddExtraExerciseFragment extends Fragment implements
         }
 
         mAdapter.notifyDataSetChanged();
+        setVisibilityOfViews(mExercises.isEmpty());
     }
 
     /**
      * Build the controller for the ListView.
      */
-    private void buildController(DragSortListView dragSortListView) {
-        DragSortController controller = new DragSortController(dragSortListView);
+    private void buildController(DragSortListView mDragSortListView) {
+        DragSortController controller = new DragSortController(mDragSortListView);
         controller.setDragHandleId(R.id.drag_handle);
-        SimpleFloatViewManager simpleFloatViewManager = new SimpleFloatViewManager(dragSortListView);
+        SimpleFloatViewManager simpleFloatViewManager = new SimpleFloatViewManager(mDragSortListView);
         simpleFloatViewManager.setBackgroundColor(Color.TRANSPARENT);
-        dragSortListView.setFloatViewManager(simpleFloatViewManager);
-        dragSortListView.setRemoveListener(this);
+        mDragSortListView.setFloatViewManager(simpleFloatViewManager);
+        mDragSortListView.setRemoveListener(this);
     }
 
     /**
@@ -234,6 +238,7 @@ public class AddExtraExerciseFragment extends Fragment implements
         TapToUndoItem item = new TapToUndoItem(exercise, which);
         createSnackBar(exercise, item);
         mAdapter.notifyDataSetChanged();
+        setVisibilityOfViews(mExercises.isEmpty());
 
         SqlHandler sqlHandler = new SqlHandler(getActivity());
         try {
@@ -347,6 +352,14 @@ public class AddExtraExerciseFragment extends Fragment implements
             }
         }
         return -1;
+    }
+
+    /**
+     * Set the visibility of certain items.
+     */
+    private void setVisibilityOfViews(boolean emptyList) {
+        mDragSortListView.setVisibility(emptyList ? View.GONE : View.VISIBLE);
+        mNoItemsView.setVisibility(emptyList ? View.VISIBLE : View.GONE);
     }
 
     /**

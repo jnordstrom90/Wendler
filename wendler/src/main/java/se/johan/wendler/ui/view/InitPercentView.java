@@ -50,9 +50,7 @@ public class InitPercentView extends RelativeLayout implements TextWatcher {
      * Initialize the layout.
      */
     private void initLayout(Context context, AttributeSet attrs) {
-        LayoutInflater inflater =
-                (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        inflater.inflate(R.layout.view_init_percentage, this, true);
+        LayoutInflater.from(context).inflate(R.layout.view_init_percentage, this, true);
 
         TypedArray attr = context.obtainStyledAttributes(attrs, R.styleable.InitWeightViewTitle);
         String title = attr.getString(R.styleable.InitWeightViewTitle_weightTitle);
