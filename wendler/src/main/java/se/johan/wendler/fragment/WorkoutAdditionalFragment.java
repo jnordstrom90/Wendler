@@ -135,7 +135,8 @@ public class WorkoutAdditionalFragment extends WorkoutFragment implements
                                 Workout workout,
                                 SqlHandler handler,
                                 boolean delayedDeload) {
-        boolean isStarted = mIsModified || sAdditionalExercises.get(0).isStarted();
+        boolean isStarted = mIsModified || (
+                !sAdditionalExercises.isEmpty() && sAdditionalExercises.get(0).isStarted());
         return handler.storeAdditionalExercise(
                 workout.getWorkoutId(), sAdditionalExercises, isStarted);
     }
