@@ -16,6 +16,7 @@ public class AdditionalExercise extends Exercise implements Parcelable {
     private int mMainExercisePercentage;
     private double mMainExerciseWeight;
     private int mExerciseId;
+    private boolean mIsStarted;
 
     /**
      * Constructor for the additional exercise
@@ -25,15 +26,20 @@ public class AdditionalExercise extends Exercise implements Parcelable {
                               String mainExerciseName,
                               int mainExercisePercentage,
                               double mainExerciseWeight,
-                              int exerciseId) {
+                              int exerciseId,
+                              boolean isStarted) {
         mName = name;
         mExerciseSets = exerciseSets;
         mMainExerciseName = mainExerciseName;
         mMainExercisePercentage = mainExercisePercentage;
         mExerciseId = exerciseId;
         mMainExerciseWeight = mainExerciseWeight;
+        mIsStarted = isStarted;
     }
 
+    public boolean isStarted() {
+        return mIsStarted;
+    }
     /**
      * Always get the first set now since only straight sets are supported.
      */
@@ -99,6 +105,7 @@ public class AdditionalExercise extends Exercise implements Parcelable {
         dest.writeInt(mMainExercisePercentage);
         dest.writeInt(mExerciseId);
         dest.writeDouble(mMainExerciseWeight);
+        dest.writeInt(mIsStarted ? 1 : 0);
     }
 
     /**
@@ -116,6 +123,7 @@ public class AdditionalExercise extends Exercise implements Parcelable {
         mMainExercisePercentage = in.readInt();
         mExerciseId = in.readInt();
         mMainExerciseWeight = in.readDouble();
+        mIsStarted = in.readInt() == 1;
     }
 
     @Override

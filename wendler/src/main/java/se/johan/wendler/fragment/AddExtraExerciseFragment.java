@@ -16,6 +16,7 @@ import com.mobeta.android.dslv.DragSortController;
 import com.mobeta.android.dslv.DragSortListView;
 import com.mobeta.android.dslv.SimpleFloatViewManager;
 import com.nispok.snackbar.Snackbar;
+import com.nispok.snackbar.SnackbarManager;
 import com.nispok.snackbar.listeners.ActionClickListener;
 import com.nispok.snackbar.listeners.EventListener;
 
@@ -255,12 +256,13 @@ public class AddExtraExerciseFragment extends Fragment implements
      * Create a snack bar where the user can undo the deletion.
      */
     private void createSnackBar(AdditionalExercise exercise, TapToUndoItem item) {
-        Snackbar.with(getActivity())
+        SnackbarManager.dismiss();
+        Snackbar bar = Snackbar.with(getActivity())
                 .text(getSnackBarText(exercise))
                 .actionLabel(getString(R.string.undo))
                 .actionListener(getActionListener(item))
-                .eventListener(getEventListener())
-                .show(getActivity());
+                .eventListener(getEventListener());
+        SnackbarManager.show(bar);
     }
 
     /**

@@ -38,7 +38,7 @@ import se.johan.wendler.util.WendlerizedLog;
 public class SqlHandler {
 
     public static final String DATABASE_NAME = "WendlerizedDb";
-    private static final int DATABASE_VERSION = 8;
+    private static final int DATABASE_VERSION = 9;
 
     /**
      * Stats table *
@@ -93,7 +93,7 @@ public class SqlHandler {
     private static final String KEY_EXTRA_REPS_OR_SETS_COMPLETED = "extra_reps";
     private static final String KEY_EXTRA_EXERCISE_ID = "extra_exercise_id";
     private static final String KEY_MAIN_EXERCISE_WEIGHT = "main_exercise_weight";
-
+    private static final String KEY_IS_STARTED = "is_started" ;
     /**
      * List of extra exercises, commented out ones are used but simply here for simplicity
      */
@@ -507,7 +507,8 @@ public class SqlHandler {
                             mainExerciseName,
                             percentage,
                             mainExerciseWeight,
-                            exerciseId);
+                            exerciseId,
+                            false);
                     exercises.add(exercise);
                 } while (cursor.moveToNext());
             }
@@ -645,7 +646,8 @@ public class SqlHandler {
     /**
      * Store the additional workouts for a workout.
      */
-    public boolean storeAdditionalExercise(int workoutId, ArrayList<AdditionalExercise> exercises) {
+    public boolean storeAdditionalExercise(
+            int workoutId, ArrayList<AdditionalExercise> exercises, boolean isStarted) {
         mDatabase.delete(
                 DATABASE_TABLE_WENDLER_EXTRA, KEY_WORKOUT_ID + "=?",
                 new String[]{String.valueOf(workoutId)});
@@ -661,6 +663,7 @@ public class SqlHandler {
             cv.put(KEY_EXTRA_PERCENTAGE_OF_MAIN_EXERCISE, exercise.getMainExercisePercentage());
             cv.put(KEY_EXTRA_EXERCISE_ID, exercise.getExerciseId());
             cv.put(KEY_MAIN_EXERCISE_WEIGHT, exercise.getMainExerciseWeight());
+            cv.put(KEY_IS_STARTED, isStarted ? 1 : 0);
             mDatabase.insert(DATABASE_TABLE_WENDLER_EXTRA, null, cv);
         }
 
@@ -901,7 +904,7 @@ public class SqlHandler {
      */
     public void storeWorkout(Workout workout) {
         storeMainExercise(workout, workout.isComplete());
-        storeAdditionalExercise(workout.getWorkoutId(), workout.getAdditionalExercises());
+        storeAdditionalExercise(workout.getWorkoutId(), workout.getAdditionalExercises(), true);
 
         if (isWorkoutLatest(workout)) {
             updateWorkoutStats(workout, true);
@@ -1340,6 +1343,7 @@ public class SqlHandler {
                     double weight = cursor.getDouble(cursor.getColumnIndex(KEY_EXTRA_WEIGHT));
                     int repsPerformed = cursor.getInt(cursor.getColumnIndex
                             (KEY_EXTRA_REPS_OR_SETS_COMPLETED));
+                    isStarted = cursor.getInt(cursor.getColumnIndex(KEY_IS_STARTED))  == 1;
                     if (!isStarted && repsPerformed > 0) {
                         isStarted = true;
                     }
@@ -1368,20 +1372,23 @@ public class SqlHandler {
                             mainExerciseName,
                             percentage,
                             mainExerciseWeight,
-                            exerciseId);
+                            exerciseId,
+                            isStarted);
                     exercises.add(exercise);
 
                 } while (cursor.moveToNext());
             }
 
-            ArrayList<AdditionalExercise> additionalExercises = getAdditionalExercisesForWorkout(new
-                    Workout(workoutName, StringHelper.getTranslatableName(mContext, workoutName)));
-            if (!isStarted && !isComplete) {
-                WendlerizedLog.d("Additional workouts aren't started so return default");
-                return additionalExercises;
-            }
+            ArrayList<AdditionalExercise> original = getAdditionalExercisesForWorkout(
+                    new Workout(
+                            workoutName,
+                            StringHelper.getTranslatableName(mContext, workoutName)));
 
-            return exercises;
+            if (isComplete || isStarted) {
+                return exercises;
+            } else {
+                return original;
+            }
         } finally {
             if (cursor != null) {
                 cursor.close();
@@ -1674,6 +1681,14 @@ public class SqlHandler {
             } catch (Exception e) {
                 WendlerizedLog.v("Failed to add column " + KEY_MAIN_EXERCISE_WEIGHT + " in " +
                         DATABASE_TABLE_WENDLER_EXTRA_LIST);
+            }
+
+            try {
+                db.execSQL("ALTER TABLE " + DATABASE_TABLE_WENDLER_EXTRA + " ADD COLUMN " +
+                        KEY_IS_STARTED + " TEXT DEFAULT 0");
+            } catch (Exception e) {
+                WendlerizedLog.v("Failed to add column " + DATABASE_TABLE_WENDLER_EXTRA + " in " +
+                        KEY_IS_STARTED);
             }
         }
 

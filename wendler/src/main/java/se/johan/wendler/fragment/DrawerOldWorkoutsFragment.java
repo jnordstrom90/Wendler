@@ -19,6 +19,7 @@ import android.widget.AdapterView;
 import com.mobeta.android.dslv.DragSortListView;
 import com.mobeta.android.dslv.SimpleFloatViewManager;
 import com.nispok.snackbar.Snackbar;
+import com.nispok.snackbar.SnackbarManager;
 import com.nispok.snackbar.listeners.ActionClickListener;
 
 import java.sql.SQLException;
@@ -245,11 +246,12 @@ public class DrawerOldWorkoutsFragment extends DrawerFragment implements
      * Create a snack bar where the user can undo the deletion.
      */
     private void createSnackBar(Workout workout, TapToUndoItem item) {
-        Snackbar.with(getActivity())
+        SnackbarManager.dismiss();
+        Snackbar bar = Snackbar.with(getActivity())
                 .text(getSnackBarText(workout))
                 .actionLabel(getString(R.string.undo))
-                .actionListener(getActionListener(item))
-                .show(getActivity());
+                .actionListener(getActionListener(item));
+        SnackbarManager.show(bar);
     }
 
 

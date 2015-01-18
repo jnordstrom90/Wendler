@@ -387,7 +387,8 @@ public class AdditionalExerciseDialog extends AnimationDialog implements
         ArrayList<ExerciseSet> sets = new ArrayList<ExerciseSet>();
         sets.add(set);
 
-        return new AdditionalExercise(name, sets, mainName, mainPercentage, mainExerciseWeight, id);
+        return new AdditionalExercise
+                (name, sets, mainName, mainPercentage, mainExerciseWeight, id, false);
     }
 
     /**

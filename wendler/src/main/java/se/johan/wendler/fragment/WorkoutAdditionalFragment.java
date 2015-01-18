@@ -10,10 +10,10 @@ import android.view.ViewGroup;
 import com.mobeta.android.dslv.DragSortListView;
 import com.mobeta.android.dslv.SimpleFloatViewManager;
 import com.nispok.snackbar.Snackbar;
+import com.nispok.snackbar.SnackbarManager;
 import com.nispok.snackbar.listeners.ActionClickListener;
 import com.nispok.snackbar.listeners.EventListener;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 import se.johan.wendler.R;
@@ -26,7 +26,6 @@ import se.johan.wendler.sql.SqlHandler;
 import se.johan.wendler.ui.adapter.AdditionalExerciseAdapter;
 import se.johan.wendler.ui.dialog.AdditionalExerciseDialog;
 import se.johan.wendler.util.CardsOptionHandler;
-import se.johan.wendler.util.WendlerizedLog;
 
 /**
  * WorkoutFragment for additional exercises.
@@ -46,6 +45,7 @@ public class WorkoutAdditionalFragment extends WorkoutFragment implements
             sAdditionalExercises = new ArrayList<AdditionalExercise>();
     private AdditionalExerciseAdapter mAdapter;
     private DragSortListView mListView;
+    private boolean mIsModified;
 
     public WorkoutAdditionalFragment() {
     }
@@ -99,6 +99,7 @@ public class WorkoutAdditionalFragment extends WorkoutFragment implements
         sAdditionalExercises.remove(exercise);
         sAdditionalExercises.add(to, exercise);
         mAdapter.notifyDataSetChanged();
+        mIsModified = true;
     }
 
     /**
@@ -117,25 +118,12 @@ public class WorkoutAdditionalFragment extends WorkoutFragment implements
 
         int pos = getPosForAdditionalExercise(exercise.getExerciseId());
 
-        SqlHandler handler = new SqlHandler(getActivity());
-        boolean isNew = true;
-        try {
-            handler.open();
-            isNew = handler.extraExerciseIsNew(
-                    getArguments().getString(EXTRA_WORKOUT_NAME), exercise.getExerciseId())
-                    && pos == -1;
-        } catch (SQLException e) {
-            WendlerizedLog.e("Failed to add new exercise", e);
-        } finally {
-            handler.close();
-        }
-
-        if (isNew) {
+        if (pos < 0) {
             sAdditionalExercises.add(exercise);
-        } else if (pos > -1) {
+        } else {
             sAdditionalExercises.set(pos, exercise);
         }
-
+        mIsModified = true;
         mAdapter.notifyDataSetChanged();
     }
 
@@ -147,7 +135,9 @@ public class WorkoutAdditionalFragment extends WorkoutFragment implements
                                 Workout workout,
                                 SqlHandler handler,
                                 boolean delayedDeload) {
-        return handler.storeAdditionalExercise(workout.getWorkoutId(), sAdditionalExercises);
+        boolean isStarted = mIsModified || sAdditionalExercises.get(0).isStarted();
+        return handler.storeAdditionalExercise(
+                workout.getWorkoutId(), sAdditionalExercises, isStarted);
     }
 
     /**
@@ -180,6 +170,7 @@ public class WorkoutAdditionalFragment extends WorkoutFragment implements
         if (which >= sAdditionalExercises.size()) {
             return;
         }
+        mIsModified = true;
         AdditionalExercise exercise = sAdditionalExercises.get(which);
         TapToUndoItem item = new TapToUndoItem(exercise, which);
         sAdditionalExercises.remove(which);
@@ -192,12 +183,13 @@ public class WorkoutAdditionalFragment extends WorkoutFragment implements
      * Create a snack bar where the user can undo the deletion.
      */
     private void createSnackBar(AdditionalExercise exercise, TapToUndoItem item) {
-        Snackbar.with(getActivity())
+        SnackbarManager.dismiss();
+        Snackbar bar = Snackbar.with(getActivity())
                 .text(getSnackBarText(exercise))
                 .actionLabel(getString(R.string.undo))
                 .actionListener(getActionListener(item))
-                .eventListener(getEventListener())
-                .show(getActivity());
+                .eventListener(getEventListener());
+        SnackbarManager.show(bar);
     }
 
     /**
