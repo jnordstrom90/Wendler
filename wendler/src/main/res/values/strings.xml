@@ -215,7 +215,7 @@
     <string name="main_exercise_goal">Goal: %1$s+ on %2$s</string>
     <string name="decrease_string">decrease</string>
     <string name="increase_string">increase</string>
-    <string name="help_backup_and_restore">Keep your workouts safe or restore your them from a save file</string>
+    <string name="help_backup_and_restore">Keep your workouts safe or restore them from your save file</string>
     <string name="help_old_workouts">View and manage your completed workouts</string>
     <string name="help_edit">Edit the order, your percentages or current stats</string>
     <string name="help_additional_exercises">Additional exercises which show up on the given workout</string>

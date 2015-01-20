@@ -59,7 +59,7 @@ public class StartupActivity extends BaseActivity
         }
 
         WendlerizedLog.d("First run, let the user initialize");
-
+        overrideElevation(getResources().getDimension(R.dimen.toolbar_elevation));
         InitWeightFragment initWeightFragment;
         InitIncrementFragment initIncrementFragment;
         InitOrderFragment initOrderFragment;

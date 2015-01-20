@@ -38,7 +38,7 @@ import se.johan.wendler.util.WendlerizedLog;
 public class SqlHandler {
 
     public static final String DATABASE_NAME = "WendlerizedDb";
-    private static final int DATABASE_VERSION = 9;
+    private static final int DATABASE_VERSION = 11;
 
     /**
      * Stats table *
@@ -1612,6 +1612,8 @@ public class SqlHandler {
                     KEY_EXTRA_WEIGHT + " TEXT NOT NULL, " +
                     KEY_EXTRA_PERCENTAGE_OF_MAIN_EXERCISE + " TEXT, " +
                     KEY_EXTRA_MAIN_EXERCISE_NAME + " TEXT, " +
+                    KEY_MAIN_EXERCISE_WEIGHT + " TEXT, " +
+                    KEY_IS_STARTED + " TEXT, " +
                     KEY_EXTRA_REPS_OR_SETS_COMPLETED + " TEXT NOT NULL);");
 
             /**
@@ -1626,8 +1628,9 @@ public class SqlHandler {
                     KEY_EXTRA_WEIGHT + " TEXT, " +
                     KEY_EXTRA_PERCENTAGE_OF_MAIN_EXERCISE + " TEXT, " +
                     KEY_EXTRA_MAIN_EXERCISE_NAME + " TEXT, " +
-                    KEY_INCREMENT + "TEXT, " +
-                    KEY_IS_BBB + "INTEGER, " +
+                    KEY_INCREMENT + " TEXT, " +
+                    KEY_MAIN_EXERCISE_WEIGHT + " TEXT, " +
+                    KEY_IS_BBB + " INTEGER, " +
                     KEY_EXTRA_ORDER_IN_LIST + " TEXT NOT NULL);");
         }
 
@@ -1689,6 +1692,30 @@ public class SqlHandler {
             } catch (Exception e) {
                 WendlerizedLog.v("Failed to add column " + DATABASE_TABLE_WENDLER_EXTRA + " in " +
                         KEY_IS_STARTED);
+            }
+
+            try {
+                db.execSQL("ALTER TABLE " + DATABASE_TABLE_WENDLER_EXTRA_LIST + " ADD COLUMN " +
+                        KEY_INCREMENT + " TEXT DEFAULT 0");
+            } catch (Exception e) {
+                WendlerizedLog.v("Failed to add column " + DATABASE_TABLE_WENDLER_EXTRA_LIST
+                        + " in " + KEY_INCREMENT);
+            }
+
+            try {
+                db.execSQL("ALTER TABLE " + DATABASE_TABLE_WENDLER_EXTRA_LIST + " ADD COLUMN " +
+                        KEY_IS_BBB + " INTEGER DEFAULT 0");
+            } catch (Exception e) {
+                WendlerizedLog.v("Failed to add column " + DATABASE_TABLE_WENDLER_EXTRA_LIST
+                        + " in " + KEY_IS_BBB);
+            }
+
+            try {
+                db.execSQL("ALTER TABLE " + DATABASE_TABLE_WENDLER_EXTRA + " ADD COLUMN " +
+                        KEY_IS_STARTED + " INTEGER DEFAULT 0");
+            } catch (Exception e) {
+                WendlerizedLog.v("Failed to add column " + DATABASE_TABLE_WENDLER_EXTRA
+                        + " in " + KEY_IS_STARTED);
             }
         }
 
