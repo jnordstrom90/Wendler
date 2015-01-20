@@ -71,13 +71,9 @@ public class WorkoutMainFragment extends WorkoutFragment implements
         return view;
     }
 
-    /**
-     * Called when the activity is created.
-     */
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
+    public void onStart() {
+        super.onStart();
         mMainExercise = getArguments().getParcelable(EXTRA_EXERCISE_ITEM);
 
         mAdapter = new MainExerciseAdapter(getActivity(), mMainExercise, this);

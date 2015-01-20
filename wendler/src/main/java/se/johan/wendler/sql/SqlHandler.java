@@ -15,13 +15,13 @@ import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 import se.johan.wendler.model.AdditionalExercise;
 import se.johan.wendler.model.DeloadItem;
 import se.johan.wendler.model.ExerciseSet;
 import se.johan.wendler.model.MainExercise;
+import se.johan.wendler.model.SetGroup;
 import se.johan.wendler.model.SetType;
 import se.johan.wendler.model.Workout;
 import se.johan.wendler.util.Constants;
@@ -407,8 +407,7 @@ public class SqlHandler {
                 boolean showWarmUp = PreferenceUtil.getBoolean(
                         mContext, PreferenceUtil.KEY_SHOW_WARM_UP, true);
 
-                ArrayList<ExerciseSet> sets = new ArrayList<>();
-                LinkedHashMap<SetType, List<ExerciseSet>> setGroups = new LinkedHashMap<>();
+                List<SetGroup> setGroups = new ArrayList<>();
 
                 if (showWarmUp) {
                     String serialized = PreferenceUtil.getString(
@@ -418,14 +417,15 @@ public class SqlHandler {
 
                     List<ExerciseSet> set = WendlerMath.getWarmupSets(
                             mContext, oneRm, serialized.split(","), -1);
-
+                    ArrayList<ExerciseSet> sets = new ArrayList<>();
                     sets.addAll(set);
-                    setGroups.put(SetType.WARM_UP, set);
+                    setGroups.add(new SetGroup(SetType.WARM_UP, set));
                 }
                 List<ExerciseSet> set = WendlerMath.getWorkoutSets(
                         mContext, oneRm, setPercentages, week, -1);
+                ArrayList<ExerciseSet> sets = new ArrayList<>();
                 sets.addAll(set);
-                setGroups.put(SetType.REGULAR, set);
+                setGroups.add(new SetGroup(SetType.REGULAR, set));
 
                 return new MainExercise(name, oneRm, increment, sets, setGroups, workoutPercentage);
             }
@@ -1284,8 +1284,7 @@ public class SqlHandler {
                 boolean showWarmUp = PreferenceUtil.getBoolean(
                         mContext, PreferenceUtil.KEY_SHOW_WARM_UP, true);
 
-                ArrayList<ExerciseSet> sets = new ArrayList<ExerciseSet>();
-                LinkedHashMap<SetType, List<ExerciseSet>> setGroups = new LinkedHashMap<>();
+                List<SetGroup> setGroups = new ArrayList<>();
                 if (showWarmUp) {
                     String serialized = PreferenceUtil.getString(
                             mContext,
@@ -1296,13 +1295,15 @@ public class SqlHandler {
                             oneRm,
                             serialized.split(","),
                             repsPerformed);
+                    ArrayList<ExerciseSet> sets = new ArrayList<>();
                     sets.addAll(set);
-                    setGroups.put(SetType.WARM_UP, set);
+                    setGroups.add(new SetGroup(SetType.WARM_UP, sets));
                 }
                 List<ExerciseSet> set = WendlerMath.getWorkoutSets(
                         mContext, oneRm, setPercentages, week, repsPerformed);
+                ArrayList<ExerciseSet> sets = new ArrayList<>();
                 sets.addAll(set);
-                setGroups.put(SetType.REGULAR, set);
+                setGroups.add(new SetGroup(SetType.REGULAR, sets));
 
                 mainExercise = new MainExercise(
                         name, oneRm, increment, sets, setGroups, workoutPercentage);

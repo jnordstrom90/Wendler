@@ -149,9 +149,15 @@ public class AdditionalExerciseAdapter extends BaseAdapter {
         holder.goal.setText(text);
 
         if (goal == exercise.getProgress(0)) {
+            holder.name.setCompoundDrawablesWithIntrinsicBounds(
+                    null,
+                    null,
+                    mContext.getResources().getDrawable(R.drawable.ic_check_black_24dp),
+                    null);
             holder.name.setPaintFlags(holder.name.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         } else if ((holder.name.getPaintFlags() & Paint.STRIKE_THRU_TEXT_FLAG) > 0) {
             holder.name.setPaintFlags(holder.name.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+            holder.name.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
         }
     }
 

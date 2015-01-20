@@ -4,7 +4,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 import se.johan.wendler.model.base.Exercise;
@@ -17,7 +16,7 @@ public class MainExercise extends Exercise implements Parcelable {
     private double mIncrement;
     private double mWeight;
     private int mWorkoutPercentage;
-    private LinkedHashMap<SetType, List<ExerciseSet>> mSetGroups;
+    private List<SetGroup> mSetGroups = new ArrayList<>();
 
     /**
      * Constructor.
@@ -26,7 +25,7 @@ public class MainExercise extends Exercise implements Parcelable {
                         double weight,
                         double increment,
                         ArrayList<ExerciseSet> exerciseSets,
-                        LinkedHashMap<SetType, List<ExerciseSet>> setGroups,
+                        List<SetGroup> setGroups,
                         int workoutPercentage) {
         mName = name;
         mWeight = weight;
@@ -93,7 +92,7 @@ public class MainExercise extends Exercise implements Parcelable {
     /**
      * Returns the set groups.
      */
-    public LinkedHashMap<SetType, List<ExerciseSet>> getSetGroups() {
+    public List<SetGroup> getSetGroups() {
         return mSetGroups;
     }
 
@@ -127,6 +126,12 @@ public class MainExercise extends Exercise implements Parcelable {
             dest.writeByte((byte) (0x01));
             dest.writeList(mExerciseSets);
         }
+        if (mSetGroups == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(mSetGroups);
+        }
     }
 
     /**
@@ -142,6 +147,12 @@ public class MainExercise extends Exercise implements Parcelable {
             in.readList(mExerciseSets, ExerciseSet.class.getClassLoader());
         } else {
             mExerciseSets = null;
+        }
+        if (in.readByte() == 0x01) {
+            mSetGroups = new ArrayList<>();
+            in.readList(mSetGroups, SetGroup.class.getClassLoader());
+        } else {
+            mSetGroups = null;
         }
     }
 

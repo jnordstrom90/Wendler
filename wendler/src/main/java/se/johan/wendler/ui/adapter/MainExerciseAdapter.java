@@ -181,6 +181,9 @@ public class MainExerciseAdapter extends BaseAdapter {
         setPaint(text, set);
     }
 
+    /**
+     * Sets the set paint of the text view depending on if it's complete or not.
+     */
     private void setPaint(TextView text, ExerciseSet set) {
         if (set.isWon() || set.isComplete()) {
             text.setPaintFlags(
@@ -195,17 +198,15 @@ public class MainExerciseAdapter extends BaseAdapter {
     /**
      * Returns the exercise sets based on an index.
      */
-    @SuppressWarnings("unchecked")
     private List<ExerciseSet> getSetsByIndex(int index) {
-        return (List<ExerciseSet>) mMainExercise.getSetGroups().values().toArray()[index];
+        return mMainExercise.getSetGroups().get(index).getSets();
     }
 
     /**
      * Returns the SetType based on an index.
      */
-    @SuppressWarnings("unchecked")
     private SetType getTypeByIndex(int index) {
-        return (SetType) mMainExercise.getSetGroups().keySet().toArray()[index];
+        return mMainExercise.getSetGroups().get(index).getSetType();
     }
 
     /**

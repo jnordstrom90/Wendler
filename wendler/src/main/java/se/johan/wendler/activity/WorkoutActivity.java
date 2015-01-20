@@ -18,7 +18,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 
@@ -43,7 +42,6 @@ import se.johan.wendler.ui.dialog.ConfirmationDialog;
 import se.johan.wendler.ui.dialog.EditTextDialog;
 import se.johan.wendler.ui.dialog.StopwatchDialog;
 import se.johan.wendler.util.Constants;
-import se.johan.wendler.util.Utils;
 import se.johan.wendler.util.WendlerizedLog;
 import se.johan.wendler.util.WorkoutHolder;
 
@@ -77,9 +75,6 @@ public class WorkoutActivity extends BaseActivity implements
         super.onCreate(savedInstanceState, R.layout.activity_workout);
 
         overrideElevation(getResources().getDimension(R.dimen.toolbar_elevation));
-        if (Utils.hasLollipop()) {
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        }
 
         if (savedInstanceState != null) {
             mWorkout = savedInstanceState.getParcelable(Constants.BUNDLE_EXERCISE_ITEM);
