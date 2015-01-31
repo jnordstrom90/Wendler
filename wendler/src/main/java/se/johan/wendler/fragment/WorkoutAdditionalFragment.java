@@ -135,8 +135,7 @@ public class WorkoutAdditionalFragment extends WorkoutFragment implements
                                 Workout workout,
                                 SqlHandler handler,
                                 boolean delayedDeload) {
-        boolean isStarted = mIsModified || (
-                !sAdditionalExercises.isEmpty() && sAdditionalExercises.get(0).isStarted());
+        boolean isStarted = mIsModified || isAnyExerciseStarted();
         return handler.storeAdditionalExercise(
                 workout.getWorkoutId(), sAdditionalExercises, isStarted);
     }
@@ -257,6 +256,18 @@ public class WorkoutAdditionalFragment extends WorkoutFragment implements
             }
         }
         return -1;
+    }
+
+    /**
+     * Returns true if any of the exercises are started.
+     */
+    private boolean isAnyExerciseStarted() {
+        for (AdditionalExercise exercise : sAdditionalExercises) {
+            if (exercise.isStarted()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

@@ -37,9 +37,13 @@ public class AdditionalExercise extends Exercise implements Parcelable {
         mIsStarted = isStarted;
     }
 
+    /**
+     * Returns true if a set is started.
+     */
     public boolean isStarted() {
-        return mIsStarted;
+        return mIsStarted || isAnySetsStarted();
     }
+
     /**
      * Always get the first set now since only straight sets are supported.
      */
@@ -108,6 +112,17 @@ public class AdditionalExercise extends Exercise implements Parcelable {
         dest.writeInt(mIsStarted ? 1 : 0);
     }
 
+    /**
+     * Returns true if an exercise set is started.
+     */
+    private boolean isAnySetsStarted() {
+        for (ExerciseSet set : mExerciseSets) {
+            if (set.getProgress() > 0) {
+                return true;
+            }
+        }
+        return false;
+    }
     /**
      * Used when reading the values from a parcel.
      */
