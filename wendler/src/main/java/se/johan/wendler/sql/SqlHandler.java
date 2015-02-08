@@ -326,7 +326,7 @@ public class SqlHandler {
      * Return a list of workouts for a given week.
      */
     public ArrayList<Workout> getWorkoutsForList(int week) {
-        ArrayList<Workout> list = new ArrayList<Workout>();
+        ArrayList<Workout> list = new ArrayList<>();
 
         String[] names = getExerciseNamesInOrder();
 
@@ -417,8 +417,6 @@ public class SqlHandler {
 
                     List<ExerciseSet> set = WendlerMath.getWarmupSets(
                             mContext, oneRm, serialized.split(","), -1);
-                    ArrayList<ExerciseSet> sets = new ArrayList<>();
-                    sets.addAll(set);
                     setGroups.add(new SetGroup(SetType.WARM_UP, set));
                 }
                 List<ExerciseSet> set = WendlerMath.getWorkoutSets(
@@ -466,7 +464,7 @@ public class SqlHandler {
      * Return the extra exercises for a given workout.
      */
     public ArrayList<AdditionalExercise> getAdditionalExercisesForWorkout(Workout workout) {
-        ArrayList<AdditionalExercise> exercises = new ArrayList<AdditionalExercise>();
+        ArrayList<AdditionalExercise> exercises = new ArrayList<>();
 
         Cursor cursor = null;
 
@@ -489,7 +487,7 @@ public class SqlHandler {
 
                     int exerciseId = cursor.getInt(cursor.getColumnIndex(KEY_EXTRA_EXERCISE_ID));
 
-                    ArrayList<ExerciseSet> exerciseSets = new ArrayList<ExerciseSet>();
+                    ArrayList<ExerciseSet> exerciseSets = new ArrayList<>();
                     double mainExerciseWeight = getOneRmForExercise(mainExerciseName);
                     if (!TextUtils.isEmpty(mainExerciseName)) {
                         weight = WendlerMath.calculateWeight(
@@ -546,7 +544,7 @@ public class SqlHandler {
      */
     public ArrayList<String> getAdditionalExerciseNames() {
         String[] column = new String[]{KEY_EXERCISE_NAME};
-        ArrayList<String> names = new ArrayList<String>();
+        ArrayList<String> names = new ArrayList<>();
         Cursor cursor = null;
         try {
             cursor = mDatabase.query(DATABASE_TABLE_WENDLER_EXTRA_LIST, column, null, null,
@@ -806,7 +804,7 @@ public class SqlHandler {
      * Return a list of old workouts.
      */
     public ArrayList<Workout> getOldWorkouts(int limit) {
-        ArrayList<Workout> workouts = new ArrayList<Workout>();
+        ArrayList<Workout> workouts = new ArrayList<>();
 
         Cursor cursor = null;
         try {
@@ -1327,7 +1325,7 @@ public class SqlHandler {
     private ArrayList<AdditionalExercise> getExtraExerciseForWorkout(
             String workoutName, int workoutId, boolean isComplete) {
 
-        ArrayList<AdditionalExercise> exercises = new ArrayList<AdditionalExercise>();
+        ArrayList<AdditionalExercise> exercises = new ArrayList<>();
         boolean isStarted = false;
         Cursor cursor = null;
         try {
@@ -1354,7 +1352,7 @@ public class SqlHandler {
                     int percentage = cursor.getInt(cursor.getColumnIndex
                             (KEY_EXTRA_PERCENTAGE_OF_MAIN_EXERCISE));
 
-                    ArrayList<ExerciseSet> exerciseSets = new ArrayList<ExerciseSet>();
+                    ArrayList<ExerciseSet> exerciseSets = new ArrayList<>();
                     double mainExerciseWeight = cursor.getDouble(
                             cursor.getColumnIndex(KEY_MAIN_EXERCISE_WEIGHT));
                     if (!TextUtils.isEmpty(mainExerciseName)) {

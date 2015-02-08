@@ -76,7 +76,8 @@ public class WorkoutMainFragment extends WorkoutFragment implements
         super.onStart();
         mMainExercise = getArguments().getParcelable(EXTRA_EXERCISE_ITEM);
 
-        mAdapter = new MainExerciseAdapter(getActivity(), mMainExercise, this);
+        mAdapter = new MainExerciseAdapter(
+                getActivity(), mMainExercise, getArguments().getInt(EXTRA_WEEK), this);
         updateFooter();
     }
 

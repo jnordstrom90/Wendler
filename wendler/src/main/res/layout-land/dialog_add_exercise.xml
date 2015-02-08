@@ -135,7 +135,6 @@
                 android:hint="@string/hint_percentage"
                 android:inputType="numberSigned"
                 app:min="1"
-                app:max="100"
                 android:gravity="center_horizontal"/>
         </se.johan.wendler.ui.view.FloatLabelLayout>
 

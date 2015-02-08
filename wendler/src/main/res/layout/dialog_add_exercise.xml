@@ -133,8 +133,7 @@
                             android:ems="10"
                             android:hint="@string/hint_percentage"
                             android:inputType="numberSigned"
-                            app:min="1"
-                            app:max="100"/>
+                            app:min="1"/>
                     </se.johan.wendler.ui.view.FloatLabelLayout>
                 </LinearLayout>
             </RelativeLayout>

@@ -24,6 +24,7 @@ import se.johan.wendler.util.ColorGenerator;
  */
 public class MainExerciseAdapter extends BaseAdapter {
     private final MainExercise mMainExercise;
+    private final int mWeek;
     private final LayoutInflater mInflater;
     private final Context mContext;
     private final Action.ActionListener mActionListener;
@@ -32,8 +33,12 @@ public class MainExerciseAdapter extends BaseAdapter {
      * Constructor for the adapter.
      */
     public MainExerciseAdapter(
-            Context context, MainExercise exercise, Action.ActionListener actionListener) {
+            Context context,
+            MainExercise exercise,
+            int week,
+            Action.ActionListener actionListener) {
         mMainExercise = exercise;
+        mWeek = week;
         mInflater = LayoutInflater.from(context);
         mContext = context;
         mActionListener = actionListener;
@@ -104,7 +109,8 @@ public class MainExerciseAdapter extends BaseAdapter {
         final ExerciseSet setTwo = sets.get(1);
         final ExerciseSet setThree = sets.get(2);
 
-        String plusSet = setThree.getType().equals(SetType.PLUS_SET) ? "+" : "";
+        String plusSet = setThree.getType().equals(SetType.PLUS_SET) && mWeek != 4
+                ? "+" : "";
 
         holder.setOne.setText(
                 String.format(mContext.getString(R.string.exercise_set_one),

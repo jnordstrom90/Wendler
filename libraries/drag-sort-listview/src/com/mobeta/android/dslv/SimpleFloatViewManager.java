@@ -2,14 +2,13 @@ package com.mobeta.android.dslv;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Point;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.os.Vibrator;
-import android.widget.ListView;
-import android.widget.ImageView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.util.Log;
+import android.widget.ImageView;
+import android.widget.ListView;
 
 /**
  * Simple implementation of the FloatViewManager class. Uses list
@@ -47,8 +46,8 @@ public class SimpleFloatViewManager implements DragSortListView.FloatViewManager
             return null;
         }
 
-        ((Vibrator) mListView.getContext().getSystemService(Context.VIBRATOR_SERVICE)).vibrate(10);
-        
+        ((Vibrator) mListView.getContext().getSystemService(Context.VIBRATOR_SERVICE)).vibrate(20);
+
         v.setPressed(false);
 
         // Create a copy of the drawing cache so that it does not get
