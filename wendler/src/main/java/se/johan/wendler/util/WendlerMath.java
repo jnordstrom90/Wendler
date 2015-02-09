@@ -4,6 +4,7 @@ import android.content.Context;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import se.johan.wendler.R;
 import se.johan.wendler.model.DeloadItem;
@@ -20,6 +21,9 @@ public class WendlerMath {
      * Calculate one rm for a given weight and repetitions.
      */
     public static int calculateOneRm(double weight, int reps) {
+        if(reps <= 0){
+            return -1;
+        }
         double mOneRm = weight * reps * 0.0333 + weight;
         return (int) Math.round(mOneRm);
     }
@@ -280,5 +284,39 @@ public class WendlerMath {
             intArray[i] = Integer.parseInt(stringArray[i]);
         }
         return intArray;
+    }
+
+    public static int getRepsToBeat(Context context, List<ExerciseSet> sets, int highestEstimated1RM) {
+        if(highestEstimated1RM == -1){
+            return -1;
+        }
+
+        ExerciseSet lastSet = sets.get(sets.size()-1);
+
+        double oneRmReps = calculateOneRmReps(lastSet.getWeight(), highestEstimated1RM);
+        int ceilOneRmReps = (int) Math.ceil(oneRmReps);
+
+        if(calculateOneRm(lastSet.getWeight(), ceilOneRmReps) <= highestEstimated1RM){
+            return ceilOneRmReps + 1;
+        }else{
+            return ceilOneRmReps;
+        }
+    }
+
+    public static double calculateOneRmReps(double weight, double oneRm){
+        double constant = 0.0333;
+        double mReps = 1 / ((weight * constant)/(oneRm-weight));
+        return mReps;
+
+        /**
+         * Proof (probably horrible math):
+         * O = (w*r*c) + w
+         * O–w = w*r*c
+         * (o-w)/r = w*c
+         * (o-w)*(1/r) = w*c
+         * 1/r = (w*c)/(o-w)
+         * R = 1/((w*c)/(o-w))
+         * QED
+         */
     }
 }

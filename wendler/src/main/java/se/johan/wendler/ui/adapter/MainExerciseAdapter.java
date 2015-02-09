@@ -79,6 +79,7 @@ public class MainExerciseAdapter extends BaseAdapter {
 
         List<ExerciseSet> sets = getSetsByIndex(position);
         SetType setType = getTypeByIndex(position);
+        boolean shouldShowRepsToBeat = shouldShowRepsToBeat(setType, mMainExercise);
 
         final ViewHolder holder;
         if (convertView == null) {
@@ -88,6 +89,7 @@ public class MainExerciseAdapter extends BaseAdapter {
             holder.setOne = (TextView) convertView.findViewById(R.id.set_one);
             holder.setTwo = (TextView) convertView.findViewById(R.id.set_two);
             holder.setThree = (TextView) convertView.findViewById(R.id.set_three);
+            holder.repsToBeat = (TextView) convertView.findViewById(R.id.reps_to_beat);
             holder.imageView = (ImageView) convertView.findViewById(R.id.image_view);
             String text = getSetTypeString(setType, true);
             int color = ColorGenerator.DEFAULT.getColor(text);
@@ -103,6 +105,7 @@ public class MainExerciseAdapter extends BaseAdapter {
         final ExerciseSet setOne = sets.get(0);
         final ExerciseSet setTwo = sets.get(1);
         final ExerciseSet setThree = sets.get(2);
+        final int repsToBeat = getRepsToBeat();
 
         String plusSet = setThree.getType().equals(SetType.PLUS_SET) ? "+" : "";
 
@@ -120,6 +123,15 @@ public class MainExerciseAdapter extends BaseAdapter {
                 String.format(mContext.getString(R.string.exercise_set_three),
                         String.valueOf(setThree.getWeight()),
                         String.valueOf(setThree.getGoal())) + plusSet);
+
+        if (shouldShowRepsToBeat) {
+            holder.repsToBeat.setText(
+                    String.format(mContext.getString(R.string.reps_to_beat),
+                            String.valueOf(repsToBeat)));
+            holder.repsToBeat.setText(View.VISIBLE);
+        } else {
+            holder.repsToBeat.setVisibility(View.GONE);
+        }
 
         setOnClick(holder.setOne, setOne);
         setOnClick(holder.setTwo, setTwo);
@@ -142,6 +154,13 @@ public class MainExerciseAdapter extends BaseAdapter {
         setPaint(holder.setThree, setThree);
 
         return convertView;
+    }
+
+    /**
+     * Returns true if the 'reps to beat' label should be shown
+     */
+    private boolean shouldShowRepsToBeat(SetType setType, MainExercise mainExercise) {
+        return setType == SetType.REGULAR && mainExercise.getRepsToBeat() != -1;
     }
 
     /**
@@ -210,6 +229,13 @@ public class MainExerciseAdapter extends BaseAdapter {
     }
 
     /**
+     * Returns the reps to beat for a new PR
+     */
+    private int getRepsToBeat() {
+        return mMainExercise.getRepsToBeat();
+    }
+
+    /**
      * Returns the set type string based on set type and if it's displayed as a short.
      */
     private String getSetTypeString(SetType type, boolean shortType) {
@@ -237,5 +263,6 @@ public class MainExerciseAdapter extends BaseAdapter {
         public TextView setThree;
         public ImageView imageView;
         public TextDrawable textDrawable;
+        public TextView repsToBeat;
     }
 }

@@ -93,6 +93,7 @@
     <string name="exercise_set_one">Set 1: %1$s &#x00d7; %2$s</string>
     <string name="exercise_set_two">Set 2: %1$s &#x00d7; %2$s</string>
     <string name="exercise_set_three">Set 3: %1$s &#x00d7; %2$s</string>
+    <string name="reps_to_beat">Reps to beat PR: %1$s</string>
     <string name="one_rm_with_number">Estimated 1RM: %1$s</string>
     <string name="performed_reps_with_number">Reps: %1$s</string>
     <string name="extra_exercise_weight">Weight: %1$s</string>

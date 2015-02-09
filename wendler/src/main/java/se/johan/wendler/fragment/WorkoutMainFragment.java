@@ -122,6 +122,7 @@ public class WorkoutMainFragment extends WorkoutFragment implements
      */
     public void updateProgress(int number) {
         mMainExercise.setLastSetProgress(number);
+        mMainExercise.recalculateEstOneRm();
         updateFooter();
         getActivity().invalidateOptionsMenu();
         mAdapter.notifyDataSetChanged();
