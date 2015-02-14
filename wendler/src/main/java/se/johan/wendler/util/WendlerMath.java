@@ -286,7 +286,7 @@ public class WendlerMath {
         return intArray;
     }
 
-    public static int getRepsToBeat(Context context, List<ExerciseSet> sets, int highestEstimated1RM) {
+    public static int getRepsToBeat(List<ExerciseSet> sets, int highestEstimated1RM) {
         if(highestEstimated1RM == -1){
             return -1;
         }
@@ -296,17 +296,16 @@ public class WendlerMath {
         double oneRmReps = calculateOneRmReps(lastSet.getWeight(), highestEstimated1RM);
         int ceilOneRmReps = (int) Math.ceil(oneRmReps);
 
-        if(calculateOneRm(lastSet.getWeight(), ceilOneRmReps) <= highestEstimated1RM){
+        if (calculateOneRm(lastSet.getWeight(), ceilOneRmReps) <= highestEstimated1RM) {
             return ceilOneRmReps + 1;
-        }else{
+        } else {
             return ceilOneRmReps;
         }
     }
 
     public static double calculateOneRmReps(double weight, double oneRm){
         double constant = 0.0333;
-        double mReps = 1 / ((weight * constant)/(oneRm-weight));
-        return mReps;
+        return 1 / ((weight * constant) / (oneRm - weight));
 
         /**
          * Proof (probably horrible math):

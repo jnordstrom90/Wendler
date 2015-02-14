@@ -134,7 +134,7 @@ public class MainExerciseAdapter extends BaseAdapter {
             holder.repsToBeat.setText(
                     String.format(mContext.getString(R.string.reps_to_beat),
                             String.valueOf(repsToBeat)));
-            holder.repsToBeat.setText(View.VISIBLE);
+            holder.repsToBeat.setVisibility(View.VISIBLE);
         } else {
             holder.repsToBeat.setVisibility(View.GONE);
         }

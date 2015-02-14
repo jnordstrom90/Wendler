@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -430,10 +429,10 @@ public class SqlHandler {
 
                 int highestEstimated1RM = getHighestEstimated1RM(name);
 
-                int repsToBeat = WendlerMath.getRepsToBeat(mContext, set, highestEstimated1RM);
+                int repsToBeat = WendlerMath.getRepsToBeat(set, highestEstimated1RM);
 
-                return new MainExercise(name, oneRm, increment, sets, setGroups, workoutPercentage,
-                        0, repsToBeat);
+                return new MainExercise(
+                        name, oneRm, increment, sets, setGroups, workoutPercentage, 0, repsToBeat);
             }
             return null;
         } finally {
@@ -551,15 +550,13 @@ public class SqlHandler {
      * Get the highest estimated 1rm for a given exercise
      */
     public int getHighestEstimated1RM(String name) {
-    // TODO this is pretty inefficient, maybe add some caching?
+        // TODO this is pretty inefficient, maybe add some caching?
         String[] cols = new String[]{
                 KEY_WORKOUT_LAST_SET,
                 KEY_WORKOUT_REPS,
                 KEY_WORKOUT_EST_ONE_RM};
         String selection = KEY_WORKOUT_EXERCISE + "=?" + " AND " + KEY_WORKOUT_EST_ONE_RM + ">0";
-        String[] selectionargs = new String[]{name};
-        String groupby = null;
-        String having = null;
+        String[] selectionArguments = new String[]{name};
         String orderBy = KEY_WORKOUT_EST_ONE_RM + " DESC";
         String limit = "1";
         int estOneRm = -1;
@@ -568,19 +565,17 @@ public class SqlHandler {
         try {
             WendlerizedLog.v("Trying to get highest 1RM for exercise " + name);
             cursor = mDatabase.query(DATABASE_TABLE_WENDLER_WORKOUT, cols, selection,
-                    selectionargs, groupby, having, orderBy, limit);
+                    selectionArguments, null /** Group by **/, null /** Having **/, orderBy, limit);
             if (cursor != null && cursor.moveToFirst()) {
                 estOneRm = cursor.getInt(cursor.getColumnIndex(KEY_WORKOUT_EST_ONE_RM));
                 WendlerizedLog.v("Found highest 1RM for exercise " + name + ": " + estOneRm);
             } else {
                 WendlerizedLog.v("Could not find highest 1RM for exercise " + name + "!");
             }
-        }catch(Exception e) {
+        } catch (Exception e) {
             WendlerizedLog.v("Error while trying to find highest 1RM for exercise " + name + "!");
-        }
-        finally
-        {
-            if(cursor != null) {
+        } finally {
+            if (cursor != null) {
                 cursor.close();
             }
         }
