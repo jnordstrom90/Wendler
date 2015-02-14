@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog bulletedList="true">
 
-    <changelogversion versionName="1.3" changeDate="Jan 20th, 2015">
-        <changelogtext>More materialy!</changelogtext>
-        <changelogtext>New icon</changelogtext>
-        <changelogtext>Fixed additional exercise problems</changelogtext>
-        <changelogtext>Improved the behavior of the developer</changelogtext>
+    <changelogversion versionName="1.3.1" changeDate="Feb 14th, 2015">
+        <changelogtext>Additional exercises can now go over 9000%</changelogtext>
+        <changelogtext>Added reps to beat feature (Thanks Peter!)</changelogtext>
     </changelogversion>
 
 </changelog>
