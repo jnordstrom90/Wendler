@@ -15,7 +15,9 @@ import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import se.johan.wendler.model.AdditionalExercise;
 import se.johan.wendler.model.DeloadItem;
@@ -38,7 +40,7 @@ import se.johan.wendler.util.WendlerizedLog;
 public class SqlHandler {
 
     public static final String DATABASE_NAME = "WendlerizedDb";
-    private static final int DATABASE_VERSION = 11;
+    private static final int DATABASE_VERSION = 12;
 
     /**
      * Stats table *
@@ -82,6 +84,7 @@ public class SqlHandler {
     private static final String KEY_WORKOUT_NOTES = "notes";
     private static final String KEY_WORKOUT_WON = "workout_won";
     private static final String KEY_WORKOUT_COMPLETED = "workout_completed";
+    private static final String KEY_WORKOUT_EST_ONE_RM = "est_one_rm";
 
     /**
      * Extra workout table *
@@ -427,7 +430,12 @@ public class SqlHandler {
                 sets.addAll(set);
                 setGroups.add(new SetGroup(SetType.REGULAR, set));
 
-                return new MainExercise(name, oneRm, increment, sets, setGroups, workoutPercentage);
+                int highestEstimated1RM = getHighestEstimated1RM(name);
+
+                int repsToBeat = WendlerMath.getRepsToBeat(mContext, set, highestEstimated1RM);
+
+                return new MainExercise(name, oneRm, increment, sets, setGroups, workoutPercentage,
+                        0, repsToBeat);
             }
             return null;
         } finally {
@@ -542,6 +550,46 @@ public class SqlHandler {
     }
 
     /**
+     * Get the highest estimated 1rm for a given exercise
+     */
+    public int getHighestEstimated1RM(String name) {
+    // TODO this is pretty inefficient, maybe add some caching?
+        String[] cols = new String[]{
+                KEY_WORKOUT_LAST_SET,
+                KEY_WORKOUT_REPS,
+                KEY_WORKOUT_EST_ONE_RM};
+        String selection = KEY_WORKOUT_EXERCISE + "=?" + " AND " + KEY_WORKOUT_EST_ONE_RM + ">0";
+        String[] selectionargs = new String[]{name};
+        String groupby = null;
+        String having = null;
+        String orderBy = KEY_WORKOUT_EST_ONE_RM + " DESC";
+        String limit = "1";
+        int estOneRm = -1;
+
+        Cursor cursor = null;
+        try {
+            WendlerizedLog.v("Trying to get highest 1RM for exercise " + name);
+            cursor = mDatabase.query(DATABASE_TABLE_WENDLER_WORKOUT, cols, selection,
+                    selectionargs, groupby, having, orderBy, limit);
+            if (cursor != null && cursor.moveToFirst()) {
+                estOneRm = cursor.getInt(cursor.getColumnIndex(KEY_WORKOUT_EST_ONE_RM));
+                WendlerizedLog.v("Found highest 1RM for exercise " + name + ": " + estOneRm);
+            } else {
+                WendlerizedLog.v("Could not find highest 1RM for exercise " + name + "!");
+            }
+        }catch(Exception e) {
+            WendlerizedLog.v("Error while trying to find highest 1RM for exercise " + name + "!");
+        }
+        finally
+        {
+            if(cursor != null) {
+                cursor.close();
+            }
+        }
+        return estOneRm;
+    }
+
+    /**
      * Return additional exercise names stored as permanent exercises.
      */
     public ArrayList<String> getAdditionalExerciseNames() {
@@ -586,6 +634,7 @@ public class SqlHandler {
 
     }
 
+
     /**
      * Store the main exercise and return if it was successful.
      */
@@ -595,6 +644,7 @@ public class SqlHandler {
         double oneRm = workout.getMainExercise().getWeight();
         int size = workout.getMainExercise().getExerciseSets().size();
         double lastSet = workout.getMainExercise().getExerciseSet(size - 1).getWeight();
+        int estOneRm = workout.getMainExercise().getEstOneRm();
 
         cv.put(KEY_WORKOUT_ID, workout.getWorkoutId());
         cv.put(KEY_WORKOUT_EXERCISE, workout.getName());
@@ -612,6 +662,8 @@ public class SqlHandler {
         cv.put(KEY_WORKOUT_DAY, workout.getWorkoutTime().monthDay);
 
         cv.put(KEY_TRAINING_PERCENTAGE, workout.getMainExercise().getWorkoutPercentage());
+
+        cv.put(KEY_WORKOUT_EST_ONE_RM, estOneRm);
 
         if (!workout.isComplete()) {
             cv.put(KEY_WORKOUT_COMPLETED, complete ? 1 : 0);
@@ -1305,8 +1357,12 @@ public class SqlHandler {
                 sets.addAll(set);
                 setGroups.add(new SetGroup(SetType.REGULAR, sets));
 
-                mainExercise = new MainExercise(
-                        name, oneRm, increment, sets, setGroups, workoutPercentage);
+                int estOneRm = cursor.getInt(cursor.getColumnIndex(KEY_WORKOUT_EST_ONE_RM));
+
+                int repsToBeat = -1; // Workout has been done, so no need to show the reps-to-beat
+
+                mainExercise = new MainExercise(name, oneRm, increment, sets, setGroups,
+                        workoutPercentage, estOneRm, repsToBeat);
             }
 
             if (!isComplete && mainExercise != null && mainExercise.getLastSetProgress() < 0) {
@@ -1538,6 +1594,7 @@ public class SqlHandler {
      */
     private static class DbHelper extends SQLiteOpenHelper {
 
+
         private final Context mContext;
 
         /**
@@ -1599,7 +1656,8 @@ public class SqlHandler {
                     KEY_WORKOUT_NOTES + " TEXT NOT NULL, " +
                     KEY_WORKOUT_COMPLETED + " INTEGER NOT NULL, " +
                     KEY_TRAINING_PERCENTAGE + " INTEGER NOT NULL, " +
-                    KEY_WORKOUT_WON + " INTEGER);");
+                    KEY_WORKOUT_WON + " INTEGER, " +
+                    KEY_WORKOUT_EST_ONE_RM + " INTEGER) ;");
 
             /**
              * Table for managing extra exercises for a specific workout.
@@ -1718,6 +1776,18 @@ public class SqlHandler {
                 WendlerizedLog.v("Failed to add column " + DATABASE_TABLE_WENDLER_EXTRA
                         + " in " + KEY_IS_STARTED);
             }
+
+            if (oldVersion < 12 && newVersion >= 12) {
+                try {
+                    db.execSQL("ALTER TABLE " + DATABASE_TABLE_WENDLER_WORKOUT + " ADD COLUMN " +
+                    KEY_WORKOUT_EST_ONE_RM + " INTEGER DEFAULT 0");
+
+                    setEst1rmForExistingWorkouts(db);
+                } catch(Exception e) {
+                    WendlerizedLog.v("Failed to add column " + DATABASE_TABLE_WENDLER_WORKOUT
+                    + " in " + KEY_WORKOUT_EST_ONE_RM);
+                }
+            }
         }
 
         /**
@@ -1759,6 +1829,20 @@ public class SqlHandler {
                     }
                 }
             }
+        }
+
+        private static void setEst1rmForExistingWorkouts(SQLiteDatabase database)
+                throws android.database.SQLException{
+                String format =
+                        "UPDATE %1$s SET %2$s =" +
+                                " CASE WHEN %4$s > 0" +
+                                " THEN %3$s * %4$s * 0.0333 + %3$s" +
+                                " ELSE -1" +
+                                " END"                                ;
+                Object[] args = {DATABASE_TABLE_WENDLER_WORKOUT, KEY_WORKOUT_EST_ONE_RM,
+                        KEY_WORKOUT_LAST_SET, KEY_WORKOUT_REPS};
+                String sql = String.format(Locale.ROOT, format, args);
+                database.execSQL(sql);
         }
     }
 }
